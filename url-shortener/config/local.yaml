@@ -1,6 +1,15 @@
 env: "local" #local, dev, prod
 storage_path: "./storage/storage.db"
+# storage_path: ".storcdage.db"
 http_server:
   address: "localhost:8082"
   timeout: 4s
   iddle_timeout: 60s
+
+# $env:CONFIG_PATH = "C:\Go\Go\url-shortener\config\local.yaml"
+# установить переменную окружения в PowerShell
+
+# export CONFIG_PATH=C:\Go\Go\url-shortener\config\local.yaml
+# установить переменную окружения в linux (путь изменить)
+
+# $env:CGO_ENABLED=1
