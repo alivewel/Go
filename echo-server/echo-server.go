@@ -39,6 +39,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("Unable to bind to port")
 	}
+	defer listener.Close()
 	log.Println("Listening on 0.0.0.0:20080")
 	for {
 		// Ожидаем соединения и при его установке создаем net.Conn

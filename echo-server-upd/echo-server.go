@@ -6,25 +6,28 @@ import (
 	"net"
 )
 
-// echo - функция-обработчик, просто отражающая полученные данные
 func echo(conn net.Conn) {
 	defer conn.Close()
 
-	// Получаем данные через reader
 	reader := bufio.NewReader(conn)
-	s, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatalln("Unable to read data")
-	}
-	log.Printf("Read %d bytes: %s\n", len(s), s)
-
-	// Отправляем данные через writer
-	log.Println("Writing data")
 	writer := bufio.NewWriter(conn)
-	if _, err := writer.WriteString(s); err != nil {
-		log.Fatalln("Unable to write data")
+	for {
+		// Получаем данные через reader
+		s, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatalln("Unable to read data:", err)
+			return
+		}
+		log.Printf("Read %d bytes: %s\n", len(s), s)
+
+		// Отправляем данные через writer
+		log.Println("Writing data")
+		if _, err := writer.WriteString(s); err != nil {
+			log.Fatalln("Unable to write data:", err)
+			return
+		}
+		writer.Flush()
 	}
-	writer.Flush()
 }
 
 func main() {
@@ -33,6 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("Unable to bind to port")
 	}
+	defer listener.Close()
 	log.Println("Listening on 0.0.0.0:20080")
 	for {
 		// Ожидаем соединения и при его установке создаем net.Conn
