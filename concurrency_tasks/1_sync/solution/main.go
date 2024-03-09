@@ -13,7 +13,7 @@ func main() {
 		wg.Add(1)
 		// i := i // можно внутри цикла объявить новую переменную
 		go func(i int) {
-			wg.Add(1) // так неправильно
+			// wg.Add(1) // так неправильно
 			defer wg.Done()
 			fmt.Println(i * i)
 		}(i)
