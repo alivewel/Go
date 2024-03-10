@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"time"
@@ -11,11 +12,26 @@ func main() {
 	// rand.Seed(time.Now().Unix())
 	rand.New(rand.NewSource(time.Now().Unix()))
 
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, time.Second*2)
+
 	chanForResp := make(chan int)
 	go RPCCall(chanForResp)
 
-	result := <-chanForResp
-	fmt.Println(result)
+	select {
+	case <-ctx.Done():
+		fmt.Println("timeout")
+	case result := <-chanForResp:
+		fmt.Println(result)
+	}
+	<-ctx.Done()
+
+	cancel()
+}
+
+type resp struct {
+	id int
+	err error
 }
 
 func RPCCall(ch chan<- int) {
@@ -37,3 +53,12 @@ func RPCCall(ch chan<- int) {
 
 // у контекста есть метод ctx.Done(), он возвращает канал из которого
 // мы что-то прочтем если его отменили, если его не отменили, то ничего мы прочитать не сможем
+
+// создадим контекст с таймаутом 2 секунды,
+// наша функция RPCCall создает задержку от 0 до 4 секунд
+// и в зависимости от этого мы ожидаем разный результат
+// создадим структуру resp для вывода результата
+
+// в этой задаче у нас 2 решения
+// 1. select в функции main
+// 2. select в функции RPCCall
