@@ -29,11 +29,6 @@ func main() {
 	cancel()
 }
 
-type resp struct {
-	id int
-	err error
-}
-
 func RPCCall(ch chan<- int) {
 	// sleep 0-4 sec
 	time.Sleep(time.Second * time.Duration(rand.Intn(5)))
