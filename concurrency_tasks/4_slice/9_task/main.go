@@ -25,5 +25,4 @@ func main() {
 	// nums := []int{}
 	k := removeDuplicates(nums)
 	fmt.Println(nums, k)
-	fmt.Println(k)
 }
