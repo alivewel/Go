@@ -28,6 +28,6 @@ func main() {
 
 func getDiscountWithContext(ctx context.Context) int {
 	// ctx := 
-	// ctx.Err()
+	// ctx.Err() 
 	return getDiscount()
 }
