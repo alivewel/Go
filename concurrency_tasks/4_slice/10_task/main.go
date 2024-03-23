@@ -5,7 +5,7 @@ import "fmt"
 // Best Time to Buy and Sell Stock II
 func maxProfit(prices []int) int {
 	profit := 0
-	for i, _ := range prices {
+	for i := range prices {
 		if i == 0 {
 			continue
 		}
