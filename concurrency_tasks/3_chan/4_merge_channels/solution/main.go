@@ -18,8 +18,8 @@ func main() {
 
 	ch3 := merge[int](ch1, ch2)
 
-	for val := range ch3 {
-		fmt.Println(val)
+	for val := range ch3 { // здесь читаем данные из канала
+		fmt.Println(val) 
 	}
 }
 
@@ -32,12 +32,12 @@ func merge[T any](chans ...chan T) chan T {
 		go func(in chan T) { // для каждого канала запускаем отдельную горутину
 			defer wg.Done()
 			for val := range in { // учитываем буф. и небуф. каналы
-				ch <- val
+				ch <- val // здесь пишем данные в канал
 			}
 		}(in)
 	}
 
-	go func() {
+	go func() { // закрываем канал, когда уже все данные записали в канал
 		wg.Wait()
 		close(ch) // не забываем закрывать канал
 	}()
