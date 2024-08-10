@@ -16,4 +16,6 @@ func main() {
 	for elem := range c {
 		fmt.Println(elem)
 	}
+	val, ok := <-c
+	fmt.Println(val, ok)
 }

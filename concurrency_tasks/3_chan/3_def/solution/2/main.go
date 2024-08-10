@@ -20,7 +20,7 @@ func main() {
 			fmt.Println("Done")
 		}
 	}()
-	ch <- 42
+	// ch <- 42
 	cancel()
 	time.Sleep(time.Second)
 }
