@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"runtime"
 	"time"
 )
 
@@ -23,6 +24,7 @@ func main() {
 	// ch <- 42
 	cancel()
 	time.Sleep(time.Second)
+	fmt.Println(runtime.NumGoroutine())
 }
 
 // здесь мы добавили контекст

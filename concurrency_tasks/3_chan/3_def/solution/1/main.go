@@ -14,8 +14,8 @@ func main() {
 		select {
 		case val := <-ch:
 			fmt.Println(val)
-		default:
-			fmt.Println("default")
+		default:                   // закомментируй меня
+			fmt.Println("default") // и меня тоже
 		}
 	}()
 	time.Sleep(time.Second)
