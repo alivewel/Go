@@ -1,11 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	// "time"
+)
 
 // fib returns a channel which transports fibonacci numbers
 func fib(length int) <-chan int {
 	// make buffered channel
-	c := make(chan int, length)
+	c := make(chan int)
 
 	// run generation concurrently
 	go func() {
@@ -24,6 +27,7 @@ func fib(length int) <-chan int {
 func main() {
 	// read 10 fibonacci numbers from channel returned by `fib` function
 	for fn := range fib(10) {
+		// time.Sleep(1 * time.Second)
 		fmt.Println("Current fibonacci number is", fn)
 	}
 }

@@ -36,6 +36,7 @@ func main() {
 	select {
 	case res := <-chan1:
 		fmt.Println("Response from service 1", res, time.Since(start))
+		
 	case res := <-chan2:
 		fmt.Println("Response from service 2", res, time.Since(start))
 	}

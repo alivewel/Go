@@ -1,12 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	// "time"
+)
 
 func squares(c chan int) {
-	for i := 0; i <= 3; i++ {
+	// for i := 0; i <= 10; i++ {
+	for i := range c {
 		num := <-c
-		fmt.Println(num * num)
+		// fmt.Println(i, num)
+		fmt.Println(i, num * num)
+
 	}
+	
 }
 
 // что мы увидим при запуске программы?
@@ -16,12 +23,16 @@ func main() {
 	c := make(chan int, 3)
 
 	go squares(c)
-
+	go squares(c)
 	c <- 1
 	c <- 2
 	c <- 3
 	c <- 4 // blocks here
-
+	c <- 5
+	c <- 6
+	c <- 7
+	c <- 8
+	// time.Sleep(time.Second)
 	fmt.Println("main() stopped")
 }
 
