@@ -194,20 +194,14 @@ func isGood(data []int, rows, cols int) bool {
 func PrintMaze(maze MazeWrapper) {
 	width, height := maze.Cols, maze.Rows
 
-	for y := 0; y < height; y++ {
-		// Верхняя граница каждой строки
-		for x := 0; x < width; x++ {
-			fmt.Print("+")
-			if y == height-1 || maze.Vertical[y*width+x] == 1 {
-				fmt.Print("---")
-			} else {
-				fmt.Print("   ")
-			}
-		}
-		fmt.Println("+")
+	for x := 0; x < width; x++ {
+		fmt.Print("+---")
+	}
+	fmt.Println("+")
 
-		// Левая граница и горизонтальные соединения
-		for x := 0; x < width; x++ {
+	for y := 0; y < height; y++ {
+		// Печать левой границы и содержимого текущей строки
+		for x := 0; x < width+1; x++ {
 			if x == 0 || maze.Horizontal[y*width+x-1] == 1 {
 				fmt.Print("|")
 			} else {
@@ -215,14 +209,19 @@ func PrintMaze(maze MazeWrapper) {
 			}
 			fmt.Print("   ")
 		}
-		fmt.Println("|")
-	}
+		fmt.Println()
 
-	// Нижняя граница лабиринта
-	for x := 0; x < width; x++ {
-		fmt.Print("+---")
+		// Печать нижней границы текущей строки
+		for x := 0; x < width; x++ {
+			fmt.Print("+")
+			if maze.Vertical[y*width+x] == 1 {
+				fmt.Print("---")
+			} else {
+				fmt.Print("   ")
+			}
+		}
+		fmt.Println("+")
 	}
-	fmt.Println("+")
 }
 
 func main() {
@@ -237,11 +236,3 @@ func main() {
 	PrintMaze(maze)
 }
 
-// // MazeGenerationSettings содержит настройки для генерации лабиринта
-// type MazeGenerationSettings struct {
-// 	Rows int
-// 	Cols int
-// }
-
-// // Generate генерирует лабиринт с использованием алгоритма Эллера
-// func Generate(s MazeGenerationSettings) MazeWrapper {
