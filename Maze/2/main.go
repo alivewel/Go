@@ -149,32 +149,78 @@ func isGood(data []int, rows, cols int) bool {
 	return true
 }
 
-// PrintMaze выводит сгенерированный лабиринт в консоль
-func PrintMaze(m MazeWrapper) {
-	for row := 0; row < m.Rows; row++ {
-		// Печатаем горизонтальные стены
-		for col := 0; col < m.Cols; col++ {
-			if row == 0 { // Верхняя граница лабиринта
-				fmt.Print("_")
-			} else if m.Horizontal[(row-1)*m.Cols+col] == 1 {
-				fmt.Print("_")
+// // PrintMaze выводит сгенерированный лабиринт в консоль
+// func PrintMaze(m MazeWrapper) {
+// 	for row := 0; row < m.Rows; row++ {
+// 		// Печатаем горизонтальные стены
+// 		for col := 0; col < m.Cols; col++ {
+// 			if row == 0 { // Верхняя граница лабиринта
+// 				// fmt.Print("1")
+// 				continue
+// 			} else if m.Horizontal[(row-1)*m.Cols+col] == 1 {
+// 				fmt.Print("---")
+// 			} else {
+// 				// fmt.Print("  ")
+// 				fmt.Print("   ")
+// 			}
+// 		}
+// 		// fmt.Println()
+// 		fmt.Println("+")
+
+// 		// Печатаем вертикальные стены и пространство для ячеек
+// 		for col := 0; col < m.Cols; col++ {
+// 			if m.Vertical[row*m.Cols+col] == 1 {
+// 				fmt.Print("|")
+// 			} else {
+// 				fmt.Print(" ")
+// 			}
+// 			// fmt.Print("_")
+// 			fmt.Print("   ")
+// 		}
+// 		// fmt.Println("|") // Правая граница лабиринта
+// 		fmt.Println("+")
+// 	}
+
+// 	// Нижняя граница лабиринта
+// 	for x := 0; x < m.Cols; x++ {
+// 		fmt.Print("----")
+// 	}
+// 	fmt.Println("+")
+// }
+
+// drawMaze выводит сгенерированный лабиринт в консоль
+func PrintMaze(maze MazeWrapper) {
+	width, height := maze.Cols, maze.Rows
+
+	for y := 0; y < height; y++ {
+		// Верхняя граница каждой строки
+		for x := 0; x < width; x++ {
+			fmt.Print("+")
+			if y == height-1 || maze.Vertical[y*width+x] == 1 {
+				fmt.Print("---")
 			} else {
-				fmt.Print("  ")
+				fmt.Print("   ")
 			}
 		}
-		fmt.Println()
+		fmt.Println("+")
 
-		// Печатаем вертикальные стены и пространство для ячеек
-		for col := 0; col < m.Cols; col++ {
-			if m.Vertical[row*m.Cols+col] == 1 {
+		// Левая граница и горизонтальные соединения
+		for x := 0; x < width; x++ {
+			if x == 0 || maze.Horizontal[y*width+x-1] == 1 {
 				fmt.Print("|")
 			} else {
 				fmt.Print(" ")
 			}
-			fmt.Print("_")
+			fmt.Print("   ")
 		}
-		fmt.Println("|") // Правая граница лабиринта
+		fmt.Println("|")
 	}
+
+	// Нижняя граница лабиринта
+	for x := 0; x < width; x++ {
+		fmt.Print("+---")
+	}
+	fmt.Println("+")
 }
 
 func main() {
@@ -182,7 +228,7 @@ func main() {
 	// horizontalConnections, verticalConnections := generateMaze(width, height)
 	// PrintMaze(horizontalConnections, verticalConnections, width, height)
 
-	mazeGenerationSettings := MazeGenerationSettings{ Rows: 3, Cols: 3}
+	mazeGenerationSettings := MazeGenerationSettings{Rows: 3, Cols: 3}
 	maze := Generate(mazeGenerationSettings)
 	PrintMaze(maze)
 }
