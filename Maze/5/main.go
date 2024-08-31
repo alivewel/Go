@@ -52,7 +52,7 @@ func parseFileContent(content string) (MazeWrapper, error) {
 		}
 	}
 
-	for i := rows + 1; i <= 2*rows; i++ {
+	for i := rows + 2; i <= 2*rows+1; i++ {
 		values := strings.Fields(lines[i])
 		if len(values) != cols {
 			return MazeWrapper{}, fmt.Errorf("2неверное количество значений в строке %d", i)
@@ -75,6 +75,72 @@ func parseFileContent(content string) (MazeWrapper, error) {
 	}, nil
 }
 
+func drawMaze(maze MazeWrapper) {
+	width, height := maze.Cols, maze.Rows
+
+	for x := 0; x < width; x++ {
+		fmt.Print("+---")
+	}
+	fmt.Println("+")
+
+	for y := 0; y < height; y++ {
+		// Печать левой границы и содержимого текущей строки
+		for x := 0; x < width+1; x++ {
+			if x == 0 || maze.Horizontal[y*width+x-1] == 1 {
+				fmt.Print("|")
+			} else {
+				fmt.Print(" ")
+			}
+			fmt.Print("   ")
+		}
+		fmt.Println()
+
+		// Печать нижней границы текущей строки
+		for x := 0; x < width; x++ {
+			fmt.Print("+")
+			if maze.Vertical[y*width+x] == 1 {
+				fmt.Print("---")
+			} else {
+				fmt.Print("   ")
+			}
+		}
+		fmt.Println("+")
+	}
+}
+
+func PrintMaze(maze MazeWrapper) {
+	width, height := maze.Cols, maze.Rows
+
+	for x := 0; x < width; x++ {
+		fmt.Print("+---")
+	}
+	fmt.Println("+")
+
+	for y := 0; y < height; y++ {
+		// Печать левой границы и содержимого текущей строки
+		for x := 0; x < width+1; x++ {
+			if x == 0 || maze.Horizontal[y*width+x-1] == 1 {
+				fmt.Print("|")
+			} else {
+				fmt.Print(" ")
+			}
+			fmt.Print("   ")
+		}
+		fmt.Println()
+
+		// Печать нижней границы текущей строки
+		for x := 0; x < width; x++ {
+			fmt.Print("+")
+			if maze.Vertical[y*width+x] == 1 {
+				fmt.Print("---")
+			} else {
+				fmt.Print("   ")
+			}
+		}
+		fmt.Println("+")
+	}
+}
+
 func main() {
 	// Чтение содержимого файла
 	content, err := ioutil.ReadFile("maze.txt")
@@ -93,6 +159,9 @@ func main() {
 	// Вывод результата
 	fmt.Println("Rows:", maze.Rows)
 	fmt.Println("Cols:", maze.Cols)
-	fmt.Println("Vertical:", maze.Vertical)
-	fmt.Println("Horizontal:", maze.Horizontal)
+	fmt.Println("Vertical:", maze.Vertical, len(maze.Vertical))
+	fmt.Println("Horizontal:", maze.Horizontal, len(maze.Horizontal))
+
+	// drawMaze(maze)
+	PrintMaze(maze)
 }
