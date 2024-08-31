@@ -35,8 +35,6 @@ func Generate(s MazeGenerationSettings) MazeWrapper {
 		random[i] = rand.Intn(2)
 	}
 
-	fmt.Println("random", random)
-
 	randIndex := 0
 	counter := 1
 
@@ -54,11 +52,15 @@ func Generate(s MazeGenerationSettings) MazeWrapper {
 	for row := 0; row < s.Rows-1; row++ {
 		for i := range line {
 			if line[i] == 0 {
+				fmt.Println("line[i]", line[i])
 				line[i] = counter
 				counter++
+				// fmt.Println("line1", line)
+				// fmt.Println("line[i]", line[i])
 			}
 		}
-
+		fmt.Println("---", )
+		fmt.Println("line", line)
 		for col := 0; col < s.Cols-1; col++ {
 			if line[col] == line[col+1] {
 				vertical[row*s.Cols+col] = 1
@@ -74,6 +76,7 @@ func Generate(s MazeGenerationSettings) MazeWrapper {
 				merge(col)
 			}
 		}
+		fmt.Println("row*s.Cols+s.Cols-1", row*s.Cols+s.Cols-1)
 		vertical[row*s.Cols+s.Cols-1] = 1
 
 		for col := 0; col < s.Cols; col++ {
@@ -230,9 +233,8 @@ func main() {
 	// PrintMaze(horizontalConnections, verticalConnections, width, height)
 
 	// mazeGenerationSettings := MazeGenerationSettings{Rows: 3, Cols: 3}
-	mazeGenerationSettings := MazeGenerationSettings{Rows: 3, Cols: 5}
+	mazeGenerationSettings := MazeGenerationSettings{Rows: 10, Cols: 10}
 
 	maze := Generate(mazeGenerationSettings)
 	PrintMaze(maze)
 }
-
