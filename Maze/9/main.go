@@ -134,7 +134,7 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 			{p.X, p.Y + 1, 0},
 			{p.X, p.Y - 1, 0},
 		}
-
+		fmt.Println("pf.WaveStep", pf.WaveStep)
 		for _, n := range neighbors {
 			// Проверка на допустимость координат
 			if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
@@ -162,8 +162,9 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	path := []Point{to}
 	row, col := to.X, to.Y
-
+	fmt.Println("pf.path1", path, to.X, to.Y)
 	for pf.LengthMap.Get(row, col) != 0 {
+		fmt.Println("for 1", pf.LengthMap.Get(row, col))
 		if col > 0 && pf.LengthMap.Get(row, col-1)+1 == pf.LengthMap.Get(row, col) && maze.At(row, col-1, true) == 0 {
 			col--
 		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1)+1 == pf.LengthMap.Get(row, col) && maze.At(row, col+1, true) == 0 {
@@ -177,7 +178,9 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 		}
 		path = append(path, Point{row, col})
 	}
+	fmt.Println("pf.path2", path)
 	reversePath(path)
+	fmt.Println("pf.path3", path)
 	return path
 }
 
