@@ -248,33 +248,33 @@ func isGood(data []int, rows, cols int) bool {
 
 func main() {
 	// Чтение содержимого файла
-	// content, err := ioutil.ReadFile("maze5x5.txt")
+	content, err := ioutil.ReadFile("maze5x5.txt")
 	// content, err := ioutil.ReadFile("maze4x4.txt")
 	// content, err := ioutil.ReadFile("maze.txt")
-	_, err := ioutil.ReadFile("maze.txt")
+	// _, err := ioutil.ReadFile("maze.txt")
 	if err != nil {
 		fmt.Println("Ошибка при чтении файла:", err)
 		return
 	}
 
 	// Парсинг содержимого в структуру
-	// maze, err := parseFileContent(string(content))
+	maze, err := parseFileContent(string(content))
 	if err != nil {
 		fmt.Println("Ошибка при парсинге файла:", err)
 		return
 	}
 
 	// Вывод результата
-	// fmt.Println("Rows:", maze.Rows)
-	// fmt.Println("Cols:", maze.Cols)
-	// fmt.Println("Vertical:", maze.Vertical, len(maze.Vertical))
-	// fmt.Println("Horizontal:", maze.Horizontal, len(maze.Horizontal))
+	fmt.Println("Rows:", maze.Rows)
+	fmt.Println("Cols:", maze.Cols)
+	fmt.Println("Vertical:", maze.Vertical, len(maze.Vertical))
+	fmt.Println("Horizontal:", maze.Horizontal, len(maze.Horizontal))
 
 	// drawMaze(maze)
 
-	mazeGenerationSettings := MazeGenerationSettings{Rows: 3, Cols: 3}
+	// mazeGenerationSettings := MazeGenerationSettings{Rows: 3, Cols: 3}
 
-	maze := Generate(mazeGenerationSettings)
+	// maze := Generate(mazeGenerationSettings)
 
 	PrintMaze(maze)
 }
