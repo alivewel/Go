@@ -138,10 +138,11 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 			{p.X, p.Y + 1, 0},
 			{p.X, p.Y - 1, 0},
 		}
-		fmt.Println("neighbors", neighbors)
+		// fmt.Println("neighbors", neighbors)
 		for _, n := range neighbors {
 			// Проверка на допустимость координат
-			if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
+			// if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
+			if n.x > 0 && n.x < maze.Rows && n.y > 0 && n.y < maze.Cols {
 				// Только теперь вызываем At для получения значения
 				n.value = maze.At(n.x, n.y, n.x != p.X)
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
@@ -209,7 +210,8 @@ func main() {
 	// 	Cols:       5,
 	// }
 	from := Point{1, 1}
-	to := Point{3, 1}
+	// to := Point{3, 1}
+	to := Point{1, 3}
 
 	pf := NewPathFinder(maze)
 	path := pf.Solve(maze, from, to)
