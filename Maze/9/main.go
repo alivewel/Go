@@ -25,19 +25,25 @@ func (m *MazeWrapper) IsGood() bool {
 
 // At возвращает значение ячейки в вертикальной или горизонтальной линии
 func (m *MazeWrapper) At(x, y int, vertical bool) int {
-	index := (x-1)*m.Cols + y - 1
+	// index := (x-1)*m.Cols + y - 1
+	index := (x)*m.Cols + y - 1
 	if index < 0 {
-		return -1
+		// fmt.Println("")
+		fmt.Println(index)
+		panic("index out of range")
+		// return -1
 	}
 	if vertical {
+		// index = (x-1)*m.Cols + y - 1
 		// fmt.Println("index:", index, "val:", m.Vertical[index], "| x, y:", x, y, "Vertical")
-		// return m.Vertical[index]
-		return m.Horizontal[index]
+		return m.Vertical[index]
+		// return m.Horizontal[index]
 	}
 	// fmt.Println("index:", index, "val:", m.Horizontal[index], "| x, y:", x, y, "Horizontal")
-	// return m.Horizontal[index]
-	index = (x)*m.Cols + y
-	return m.Vertical[index]
+
+	// index = (x-2)*m.Cols + y- 1
+	return m.Horizontal[index]
+	// return m.Vertical[index]
 }
 
 // CaveWrapper представляет матрицу для хранения длины пути
@@ -141,22 +147,28 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 	for _, p := range pf.OldWave {
 		neighbors := []struct {
 			x, y, value int
+			// }{
+			// 	{p.X + 1, p.Y, 0}, // здесь убираем вызов At, значение будем получать позднее
+			// 	{p.X - 1, p.Y, 0},
+			// 	{p.X, p.Y + 1, 0},
+			// 	{p.X, p.Y - 1, 0},
+			// }
 		}{
-			{p.X + 1, p.Y, 0}, // здесь убираем вызов At, значение будем получать позднее
-			{p.X - 1, p.Y, 0},
-			{p.X, p.Y + 1, 0},
-			{p.X, p.Y - 1, 0},
+			{p.X + 1, p.Y, maze.At(p.X, p.Y, false)},
+			{p.X - 1, p.Y, maze.At(p.X-1, p.Y, false)},
+			{p.X, p.Y + 1, maze.At(p.X, p.Y, true)},
+			{p.X, p.Y - 1, maze.At(p.X, p.Y-1, true)},
 		}
 		// fmt.Println("neighbors", neighbors)
-		for _, n := range neighbors {
+		for ind, n := range neighbors {
 			// Проверка на допустимость координат
 			// if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
 			if n.x > 0 && n.x < maze.Rows && n.y > 0 && n.y < maze.Cols {
 				// Только теперь вызываем At для получения значения
-				n.value = maze.At(n.x, n.y, n.x != p.X)
+				// n.value = maze.At(n.x, n.y, n.x == p.X)
 				// n.value = maze.At(n.x-1, n.y-1, n.x != p.X)
 				// fmt.Println()
-				fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", "vert:", n.x != p.X, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue)
+				fmt.Println(ind, "val:", n.value, "| x, y:", n.x, n.y, "|", "vert:", n.x != p.X, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue)
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
 					fmt.Println("Debag2.2", pf.WaveStep, Point{n.x, n.y})
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
@@ -215,6 +227,7 @@ func main() {
 		Rows:       5,
 		Cols:       5,
 	}
+	// fmt.Println("maze2.At", maze.At(2, 1, false))
 	// maze2 := MazeWrapper{
 	// 	Vertical:   []int{11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35},                          // Инициализация вертикальных стен
 	// 	Horizontal: []int{111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135}, // Инициализация горизонтальных стен
