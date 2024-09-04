@@ -25,10 +25,19 @@ func (m *MazeWrapper) IsGood() bool {
 
 // At возвращает значение ячейки в вертикальной или горизонтальной линии
 func (m *MazeWrapper) At(x, y int, vertical bool) int {
-	if vertical {
-		return m.Vertical[x*m.Cols+y]
+	index := (x-1)*m.Cols + y - 1
+	if index < 0 {
+		return -1
 	}
-	return m.Horizontal[x*m.Cols+y]
+	if vertical {
+		// fmt.Println("index:", index, "val:", m.Vertical[index], "| x, y:", x, y, "Vertical")
+		// return m.Vertical[index]
+		return m.Horizontal[index]
+	}
+	// fmt.Println("index:", index, "val:", m.Horizontal[index], "| x, y:", x, y, "Horizontal")
+	// return m.Horizontal[index]
+	index = (x)*m.Cols + y
+	return m.Vertical[index]
 }
 
 // CaveWrapper представляет матрицу для хранения длины пути
@@ -145,8 +154,11 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 			if n.x > 0 && n.x < maze.Rows && n.y > 0 && n.y < maze.Cols {
 				// Только теперь вызываем At для получения значения
 				n.value = maze.At(n.x, n.y, n.x != p.X)
+				// n.value = maze.At(n.x-1, n.y-1, n.x != p.X)
+				// fmt.Println()
+				fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", "vert:", n.x != p.X, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue)
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
-					fmt.Println("Debag2", pf.WaveStep, Point{n.x, n.y})
+					fmt.Println("Debag2.2", pf.WaveStep, Point{n.x, n.y})
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
 					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
 					if n.x == to.X && n.y == to.Y {
@@ -203,6 +215,14 @@ func main() {
 		Rows:       5,
 		Cols:       5,
 	}
+	// maze2 := MazeWrapper{
+	// 	Vertical:   []int{11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35},                          // Инициализация вертикальных стен
+	// 	Horizontal: []int{111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135}, // Инициализация горизонтальных стен
+	// 	Rows:       5,
+	// 	Cols:       5,
+	// }
+	// fmt.Println("maze2.At", maze2.At(1, 1, false))
+
 	// maze := MazeWrapper{
 	// 	Vertical:   make([]int, 25), // Инициализация вертикальных стен
 	// 	Horizontal: make([]int, 25), // Инициализация горизонтальных стен
