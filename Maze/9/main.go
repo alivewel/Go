@@ -26,7 +26,8 @@ func (m *MazeWrapper) IsGood() bool {
 // At возвращает значение ячейки в вертикальной или горизонтальной линии
 func (m *MazeWrapper) At(x, y int, vertical bool) int {
 	// index := (x-1)*m.Cols + y - 1
-	index := (x)*m.Cols + y - 1
+	// index := (x)*m.Cols + y - 1
+	index := (x)*m.Cols + y
 	if index < 0 {
 		// fmt.Println("")
 		fmt.Println(index)
@@ -119,7 +120,7 @@ func (pf *PathFinder) Solve(maze MazeWrapper, from, to Point) []Point {
 			break
 		}
 	}
-	fmt.Println("Debag03", pf.OldWave)
+	// fmt.Println("Debag03", pf.OldWave)
 	fmt.Println("Debag04", pf.Wave)
 	return pf.MakePath(maze, to)
 }
@@ -168,7 +169,8 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 				// n.value = maze.At(n.x, n.y, n.x == p.X)
 				// n.value = maze.At(n.x-1, n.y-1, n.x != p.X)
 				// fmt.Println()
-				fmt.Println(ind, "val:", n.value, "| x, y:", n.x, n.y, "|", "vert:", n.x != p.X, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue)
+				_ = ind
+				// fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", "vert:", n.x != p.X, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue, "| ind", ind)
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
 					fmt.Println("Debag2.2", pf.WaveStep, Point{n.x, n.y})
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
@@ -244,7 +246,7 @@ func main() {
 	// }
 	from := Point{1, 1}
 	// to := Point{3, 1}
-	to := Point{1, 3}
+	to := Point{4, 3}
 
 	pf := NewPathFinder(maze)
 	path := pf.Solve(maze, from, to)
