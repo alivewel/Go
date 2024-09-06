@@ -47,7 +47,7 @@ func (m *MazeWrapper) At2(x, y int, vertical bool) int {
 func (m *MazeWrapper) At(x, y int, vertical bool) int {
 	// index := (x-1)*m.Cols + y - 1
 	index := x*m.Cols + y
-	// fmt.Println("index", index, vertical)
+	fmt.Println("index", index, vertical)
 	if index < 0 {
 		fmt.Println(index, x, y)
 		panic("index out of range")
@@ -98,6 +98,22 @@ func (cw *CaveWrapper) Get(x, y int) int {
 // Set устанавливает значение в матрице по координатам
 func (cw *CaveWrapper) Set(x, y, value int) {
 	cw.Data[cw.Index(x, y)] = value
+}
+
+func (cw *CaveWrapper) Print() {
+	fmt.Println("CaveWrapper visualization:")
+
+	for i := 0; i < cw.Rows; i++ { // Итерация по строкам
+		for j := 0; j < cw.Cols; j++ { // Итерация по столбцам
+			ind := cw.Get(i, j)
+			if ind > 10 {
+				fmt.Printf("%4d ", 0) // Печать значения элемента
+			} else {
+				fmt.Printf("%4d ", ind) // Печать значения элемента
+			}
+		}
+		fmt.Println() // Переход на новую строку после печати строки
+	}
 }
 
 // PathFinder представляет алгоритм поиска пути
@@ -158,6 +174,7 @@ func (pf *PathFinder) IsValid(maze MazeWrapper, from, to Point) bool {
 func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 	pf.WaveStep++
 	for _, p := range pf.OldWave {
+		// fmt.Println("p.X, p.Y", p.X, p.Y)
 		neighbors := []struct {
 			x, y, value int
 		}{
@@ -174,11 +191,11 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 				// 	fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue, "|", "vert:", n.x != p.X)
 				// }
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
-					fmt.Println("Debag2.2", pf.WaveStep, Point{n.x, n.y})
+					fmt.Println("Debag2.2", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep)
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
 					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
-					if n.x == to.X && n.y == to.Y {
-						fmt.Println("Debag3", pf.Wave)
+					if n.x == to.X && n.y == to.Y { // if p.X == to.X && p.Y == to.Y {
+						fmt.Println("Debag3", pf.Wave, p.X, p.Y, n.x, n.y)
 						return true
 					}
 				}
@@ -197,17 +214,21 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 
 	for pf.LengthMap.Get(row, col) != 0 {
 		currentLen := pf.LengthMap.Get(row, col)
-		fmt.Println("currentLen", currentLen, "|", row, col)
+		// fmt.Println("currentLen", currentLen, "|", row, col,  "|", pf.LengthMap.Get(row, col-1))
+		// pf.LengthMap.Print()
+		if row == 4 && col == 3 {
+			fmt.Println("currentLen", currentLen, "|", row, col, "|", pf.LengthMap.Get(row, col-1), maze.At(row, col-1, true) == 0)
+		}
 		// Проверяем движение влево (если стена отсутствует и длина пути в предыдущей ячейке меньше текущей)
 		if col > 0 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row, col-1, true) == 0 {
+			// fmt.Println("row, col, left", row, col)
 			col-- // Проверяем движение влево
-			// fmt.Println("row, col", row, col)
 		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1) == currentLen-1 && maze.At(row, col, true) == 0 {
 			col++ // Проверяем движение вправо (если стена отсутствует и длина пути в следующей ячейке меньше текущей)
 			// fmt.Println("row, col", row, col)
 		} else if row > 0 && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-1, col, false) == 0 {
+			fmt.Println("row, col", row, col, maze.At(row, col-1, true), pf.LengthMap.Get(row-1, col))
 			row-- // Проверяем движение вниз (если стена отсутствует и длина пути в нижней ячейке меньше текущей)
-			fmt.Println("row, col", row, col)
 		} else if row+1 < maze.Rows && pf.LengthMap.Get(row+1, col) == currentLen-1 && maze.At(row, col, false) == 0 {
 			// fmt.Println("row, col", row, col)
 			row++ // Проверяем движение вверх
