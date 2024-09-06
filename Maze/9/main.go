@@ -220,7 +220,7 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 			fmt.Println("currentLen", currentLen, "|", row, col, "|", pf.LengthMap.Get(row, col-1), maze.At(row, col-1, true) == 0)
 		}
 		// Проверяем движение влево (если стена отсутствует и длина пути в предыдущей ячейке меньше текущей)
-		if col > 0 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row, col-1, true) == 0 {
+		if col > 0 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row, col, true) == 0 {
 			// fmt.Println("row, col, left", row, col)
 			col-- // Проверяем движение влево
 		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1) == currentLen-1 && maze.At(row, col, true) == 0 {
