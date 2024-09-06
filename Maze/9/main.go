@@ -197,16 +197,20 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 
 	for pf.LengthMap.Get(row, col) != 0 {
 		currentLen := pf.LengthMap.Get(row, col)
-
+		fmt.Println("currentLen", currentLen, "|", row, col)
 		// Проверяем движение влево (если стена отсутствует и длина пути в предыдущей ячейке меньше текущей)
 		if col > 0 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row, col-1, true) == 0 {
-			col--
+			col-- // Проверяем движение влево
+			// fmt.Println("row, col", row, col)
 		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1) == currentLen-1 && maze.At(row, col, true) == 0 {
 			col++ // Проверяем движение вправо (если стена отсутствует и длина пути в следующей ячейке меньше текущей)
+			// fmt.Println("row, col", row, col)
 		} else if row > 0 && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-1, col, false) == 0 {
 			row-- // Проверяем движение вниз (если стена отсутствует и длина пути в нижней ячейке меньше текущей)
+			fmt.Println("row, col", row, col)
 		} else if row+1 < maze.Rows && pf.LengthMap.Get(row+1, col) == currentLen-1 && maze.At(row, col, false) == 0 {
-			row++
+			// fmt.Println("row, col", row, col)
+			row++ // Проверяем движение вверх
 		} else {
 			return nil // Если путь не найден, возвращаем nil
 		}
@@ -235,26 +239,26 @@ func main() {
 		Cols:       5,
 	}
 
-	// from := Point{1, 1}
-	// to := Point{4, 1}
+	from := Point{1, 1}
+	to := Point{4, 3}
 
-	// pf := NewPathFinder(maze)
-	// path := pf.Solve(maze, from, to)
+	pf := NewPathFinder(maze)
+	path := pf.Solve(maze, from, to)
 
-	// fmt.Println("Path:", path)
+	fmt.Println("Path:", path)
 	// printMaze(maze)
 
-	maze2 := MazeWrapper{
-		Vertical:   []int{1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35},                         // Инициализация вертикальных стен
-		Horizontal: []int{2, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135}, // Инициализация горизонтальных стен
-		Rows:       5,
-		Cols:       5,
-	}
+	// maze2 := MazeWrapper{
+	// 	Vertical:   []int{1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35},                         // Инициализация вертикальных стен
+	// 	Horizontal: []int{2, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135}, // Инициализация горизонтальных стен
+	// 	Rows:       5,
+	// 	Cols:       5,
+	// }
 	// res := maze2.At(3, 2, false)
 	// res := maze2.At(1, 1, true)
 	// fmt.Println("res:", res)
-	printMaze2(maze2)
-	printMaze2(maze)
+	// printMaze2(maze2)
+	// printMaze2(maze)
 }
 
 func printMaze(maze MazeWrapper) {
