@@ -23,7 +23,7 @@ func (m *MazeWrapper) IsGood() bool {
 	return len(m.Vertical) == m.Rows*m.Cols && len(m.Horizontal) == m.Rows*m.Cols
 }
 
-func (m *MazeWrapper) At(x, y int, vertical bool) int {
+func (m *MazeWrapper) At2(x, y int, vertical bool) int {
 	if x < 0 || y < 0 || x >= m.Rows || y >= m.Cols {
 		return 1 // Считаем, что за пределами лабиринта есть стена
 	}
@@ -44,29 +44,22 @@ func (m *MazeWrapper) At(x, y int, vertical bool) int {
 }
 
 // At возвращает значение ячейки в вертикальной или горизонтальной линии
-// func (m *MazeWrapper) At(x, y int, vertical bool) int {
-// 	// index := (x-1)*m.Cols + y - 1
-// 	// index := (x)*m.Cols + y - 1
-// 	index := (x)*m.Cols + y
-// 	fmt.Println("index", index, vertical)
-// 	if index < 0 {
-// 		// fmt.Println("")
-// 		fmt.Println(index)
-// 		panic("index out of range")
-// 		// return -1
-// 	}
-// 	if vertical {
-// 		// index = (x)*m.Cols + y - 1
-// 		// fmt.Println("index:", index, "val:", m.Vertical[index], "| x, y:", x, y, "Vertical")
-// 		return m.Vertical[index]
-// 		// return m.Horizontal[index]
-// 	}
-// 	// fmt.Println("index:", index, "val:", m.Horizontal[index], "| x, y:", x, y, "Horizontal")
-
-// 	// index = (x-2)*m.Cols + y- 1
-// 	return m.Horizontal[index]
-// 	// return m.Vertical[index]
-// }
+func (m *MazeWrapper) At(x, y int, vertical bool) int {
+	// index := (x-1)*m.Cols + y - 1
+	index := x*m.Cols + y
+	// fmt.Println("index", index, vertical)
+	if index < 0 {
+		fmt.Println(index, x, y)
+		panic("index out of range")
+		// return -1
+	}
+	if vertical {
+		// fmt.Println("index:", index, "val:", m.Vertical[index], "| x, y:", x, y, "Vertical")
+		return m.Vertical[index]
+	}
+	// fmt.Println("index:", index, "val:", m.Horizontal[index], "| x, y:", x, y, "Horizontal")
+	return m.Horizontal[index]
+}
 
 // CaveWrapper представляет матрицу для хранения длины пути
 type CaveWrapper struct {
@@ -135,9 +128,7 @@ func (pf *PathFinder) Solve(maze MazeWrapper, from, to Point) []Point {
 
 	pf.InitializeStartState(maze, from)
 	for len(pf.OldWave) > 0 {
-		// fmt.Println("Debag01")
 		if pf.StepWave(maze, to) {
-			// fmt.Println("Debag02")
 			break
 		}
 	}
@@ -179,15 +170,15 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 			// Проверка на допустимость координат
 			// if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
 			if n.x > 0 && n.x < maze.Rows && n.y > 0 && n.y < maze.Cols {
-				if n.x == 3 && n.y == 2 {
-					fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue, "|", "vert:", n.x != p.X)
-				}
+				// if n.x == 3 && n.y == 2 {
+				// 	fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue, "|", "vert:", n.x != p.X)
+				// }
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
 					fmt.Println("Debag2.2", pf.WaveStep, Point{n.x, n.y})
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
 					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
 					if n.x == to.X && n.y == to.Y {
-						fmt.Println("Debag3")
+						fmt.Println("Debag3", pf.Wave)
 						return true
 					}
 				}
@@ -228,56 +219,6 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	return path
 }
 
-// func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
-// 	path := []Point{to}
-// 	row, col := to.X, to.Y
-
-// 	for pf.LengthMap.Get(row, col) != 0 {
-// 		// Проверяем направление и наличие стены
-// 		if col > 0 && pf.LengthMap.Get(row, col-1)+1 == pf.LengthMap.Get(row, col) && maze.At(row, col-1, true) == 0 {
-// 			col-- // Влево
-// 		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1)+1 == pf.LengthMap.Get(row, col) && maze.At(row, col, true) == 0 {
-// 			col++ // Вправо
-// 		} else if row > 0 && pf.LengthMap.Get(row-1, col)+1 == pf.LengthMap.Get(row, col) && maze.At(row-1, col, false) == 0 {
-// 			row-- // Вверх
-// 		} else if row+1 < maze.Rows && pf.LengthMap.Get(row+1, col)+1 == pf.LengthMap.Get(row, col) && maze.At(row, col, false) == 0 {
-// 			row++ // Вниз
-// 		} else {
-// 			return nil // Если путь не найден
-// 		}
-// 		path = append(path, Point{row, col})
-// 	}
-
-// 	reversePath(path)
-// 	return path
-// }
-
-// MakePath восстанавливает путь из конечной точки в начальную
-// func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
-// 	path := []Point{to}
-// 	row, col := to.X, to.Y
-// 	// fmt.Println("pf.path1", path, to.X, to.Y)
-// 	for pf.LengthMap.Get(row, col) != 0 {
-// 		// fmt.Println("for 1", pf.LengthMap.Get(row, col))
-// 		if col > 0 && pf.LengthMap.Get(row, col-1)+1 == pf.LengthMap.Get(row, col) && maze.At(row, col-1, true) == 0 {
-// 			col--
-// 		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1)+1 == pf.LengthMap.Get(row, col) && maze.At(row, col+1, true) == 0 {
-// 			col++
-// 		} else if row > 0 && pf.LengthMap.Get(row-1, col)+1 == pf.LengthMap.Get(row, col) && maze.At(row-1, col, false) == 0 {
-// 			row--
-// 		} else if row+1 < maze.Rows && pf.LengthMap.Get(row+1, col)+1 == pf.LengthMap.Get(row, col) && maze.At(row+1, col, false) == 0 {
-// 			row++
-// 		} else {
-// 			return nil
-// 		}
-// 		path = append(path, Point{row, col})
-// 	}
-// 	fmt.Println("pf.path2", path)
-// 	reversePath(path)
-// 	fmt.Println("pf.path3", path)
-// 	return path
-// }
-
 // reversePath переворачивает путь
 func reversePath(path []Point) {
 	for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
@@ -294,49 +235,111 @@ func main() {
 		Cols:       5,
 	}
 
-	from := Point{1, 1}
-	to := Point{4, 3}
+	// from := Point{1, 1}
+	// to := Point{4, 1}
 
-	pf := NewPathFinder(maze)
-	path := pf.Solve(maze, from, to)
+	// pf := NewPathFinder(maze)
+	// path := pf.Solve(maze, from, to)
 
-	fmt.Println("Path:", path)
+	// fmt.Println("Path:", path)
 	// printMaze(maze)
+
+	maze2 := MazeWrapper{
+		Vertical:   []int{1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35},                         // Инициализация вертикальных стен
+		Horizontal: []int{2, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135}, // Инициализация горизонтальных стен
+		Rows:       5,
+		Cols:       5,
+	}
+	// res := maze2.At(3, 2, false)
+	// res := maze2.At(1, 1, true)
+	// fmt.Println("res:", res)
+	printMaze2(maze2)
+	printMaze2(maze)
 }
 
 func printMaze(maze MazeWrapper) {
-    fmt.Println("Maze visualization:")
-    for i := 0; i < maze.Rows; i++ {
-        // Верхние стены
-        for j := 0; j < maze.Cols; j++ {
-            fmt.Print("+")
-            if i == 0 {
-                fmt.Print("-----") // Верхняя граница
-            } else {
-                if maze.At(i-1, j, false) == 1 {
-                    fmt.Print("-----") // Горизонтальная стена
-                } else {
-                    fmt.Print("     ")
-                }
-            }
-        }
-        fmt.Println("+")
-        
-        // Вертикальные стены и пространство между ними
-        for j := 0; j < maze.Cols; j++ {
-            if j == 0 || maze.At(i, j-1, true) == 1 {
-                fmt.Print("|")
-            } else {
-                fmt.Print(" ")
-            }
-            fmt.Print("     ")
-        }
-        fmt.Println("|")
-    }
+	fmt.Println("Maze visualization:")
+	for i := 0; i < maze.Rows; i++ {
+		// Верхние стены
+		for j := 0; j < maze.Cols; j++ {
+			fmt.Print("+")
+			if i == 0 {
+				fmt.Print("-----") // Верхняя граница
+			} else {
+				if maze.At(i-1, j, false) == 1 {
+					fmt.Print("-----") // Горизонтальная стена
+				} else {
+					fmt.Print("     ")
+				}
+			}
+		}
+		fmt.Println("+")
 
-    // Нижние стены
-    for j := 0; j < maze.Cols; j++ {
-        fmt.Print("+-----")
-    }
-    fmt.Println("+")
+		// Вертикальные стены и пространство между ними
+		for j := 0; j < maze.Cols; j++ {
+			if j == 0 || maze.At(i, j-1, true) == 1 {
+				fmt.Print("|")
+				// maze.At(i, j-1, true)
+			} else {
+				fmt.Print(" ")
+			}
+			fmt.Print("     ")
+		}
+		fmt.Println("|")
+	}
+
+	// Нижние стены
+	for j := 0; j < maze.Cols; j++ {
+		fmt.Print("+-----")
+	}
+	fmt.Println("+")
 }
+
+func printMaze2(maze MazeWrapper) {
+	fmt.Println("Maze visualization:")
+	for i := 0; i < maze.Rows; i++ {
+		// Верхние стены
+		for j := 0; j < maze.Cols; j++ {
+			fmt.Print("+")
+			if i == 0 {
+				fmt.Print("-----") // Верхняя граница
+			} else {
+				if maze.At(i-1, j, false) == 1 {
+					fmt.Print("-----") // Горизонтальная стена
+				} else {
+					fmt.Printf("  %d  ", maze.At(i-1, j, false)) // Печать значения ячейки вместо стены
+				}
+			}
+		}
+		fmt.Println("+")
+
+		// Вертикальные стены и пространство между ними
+		for j := 0; j <= maze.Cols; j++ {
+			if j == 0 || maze.At(i, j-1, true) == 1 {
+				if j == 0 {
+					fmt.Print("|")
+				} else {
+					fmt.Printf("%d", maze.At(i, j-1, true)) // Печать значения ячейки вместо стены
+				}
+			} else {
+				// fmt.Print(" ")
+				fmt.Printf("%d", maze.At(i, j-1, true)) // Печать значения ячейки вместо стены
+			}
+			fmt.Print("     ")
+		}
+		fmt.Println()
+		// fmt.Println("|")
+		// fmt.Println("/")
+	}
+
+	// Нижние стены
+	for j := 0; j < maze.Cols; j++ {
+		fmt.Print("+")
+		fmt.Printf("  %d  ", maze.At(maze.Rows-1, j, false)) // Печать значения ячейки вместо нижней стены
+	}
+	fmt.Println("+")
+}
+
+// функция At - корректная
+// maze.At(i-1, j, false) - для горизонтальных стен
+// maze.At(i, j-1, true) - для вертикальных стен
