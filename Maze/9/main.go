@@ -70,7 +70,7 @@ type CaveWrapper struct {
 // NewCaveWrapper создает новый CaveWrapper
 func NewCaveWrapper(rows, cols, emptyValue int) CaveWrapper {
 	// Создаем срез длиной rows*cols и заполняем его значениями emptyValue
-	data := make([]int, rows*cols)
+	data := make([]int, (rows+1)*(cols+1))
 	for i := range data {
 		data[i] = emptyValue
 	}
@@ -85,13 +85,21 @@ func NewCaveWrapper(rows, cols, emptyValue int) CaveWrapper {
 
 // Index возвращает индекс ячейки в линейном массиве
 func (cw *CaveWrapper) Index(x, y int) int {
-	// fmt.Println("x*cw.Cols + y", x*cw.Cols+y)
-	if x < 0 || x >= cw.Rows || y < 0 || y >= cw.Cols {
-		// panic("Index out of bounds")
-		fmt.Println("Index out of bounds |", x, y, "|", cw.Rows, "|", x < 0, x >= cw.Rows, y < 0, y >= cw.Cols)
+	// index := (x-1)*cw.Cols + y - 1
+	index := x*cw.Cols + y
+	// if x < 0 || x >= cw.Rows || y < 0 || y >= cw.Cols {
+	// 	// panic("Index out of bounds")
+	// 	fmt.Println("Index out of bounds |", x, y, "|", cw.Rows, "|", x < 0, x >= cw.Rows, y < 0, y >= cw.Cols)
+
+	// 	return 0
+	// }
+	if index < 0 {
+		fmt.Println("Index out of bounds |", x, y, index)
 		return 0
 	}
-	return x*cw.Cols + y
+	// return x*cw.Cols + y
+	// fmt.Println("Index", index)
+	return index
 }
 
 // Get возвращает значение из матрицы по координатам
@@ -99,20 +107,41 @@ func (cw *CaveWrapper) Get(x, y int) int {
 	return cw.Data[cw.Index(x, y)]
 }
 
-
 // Set устанавливает значение в матрице по координатам
 func (cw *CaveWrapper) Set(x, y, value int) {
 	cw.Data[cw.Index(x, y)] = value
 }
 
+// func (cw *CaveWrapper) Set(x, y, value int) {
+//     if x > 0 && x < cw.Rows-1 && y > 0 && y < cw.Cols-1 { // Проверяем границы
+//         cw.Data[cw.Index(x, y)] = value
+//     }
+// }
+
 func (cw *CaveWrapper) Print() {
 	fmt.Println("CaveWrapper visualization:")
 
-	for i := 0; i < cw.Rows; i++ { // Итерация по строкам
-		for j := 0; j < cw.Cols; j++ { // Итерация по столбцам
+	for i := 0; i < cw.Rows+1; i++ { // Итерация по строкам
+		for j := 0; j < cw.Cols+1; j++ { // Итерация по столбцам
 			ind := cw.Get(i, j)
 			if ind > 20 {
 				fmt.Printf("%4d ", 0) // Печать значения элемента
+			} else {
+				fmt.Printf("%4d ", ind) // Печать значения элемента
+			}
+		}
+		fmt.Println() // Переход на новую строку после печати строки
+	}
+}
+
+func (cw *CaveWrapper) Print2() {
+	fmt.Println("CaveWrapper visualization:")
+
+	for i := 1; i < cw.Rows-1; i++ { // Начинаем с 1 и заканчиваем на Rows-1
+		for j := 1; j < cw.Cols-1; j++ { // Начинаем с 1 и заканчиваем на Cols-1
+			ind := cw.Get(i, j)
+			if ind > 20 {
+				fmt.Printf("%4d ", 0) // Печать значения элемента, если больше 20
 			} else {
 				fmt.Printf("%4d ", ind) // Печать значения элемента
 			}
@@ -149,6 +178,7 @@ func (pf *PathFinder) Solve(maze MazeWrapper, from, to Point) []Point {
 	}
 
 	pf.InitializeStartState(maze, from)
+	// pf.LengthMap.Print()
 	for len(pf.OldWave) > 0 {
 		if pf.StepWave(maze, to) {
 			break
@@ -178,7 +208,7 @@ func (pf *PathFinder) IsValid(maze MazeWrapper, from, to Point) bool {
 // StepWave выполняет один шаг алгоритма BFS и возвращает true, если достигнута конечная точка
 func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 	pf.WaveStep++
-
+	// pf.LengthMap.Print()
 	for _, p := range pf.OldWave {
 		neighbors := []struct {
 			x, y, value int
@@ -206,6 +236,7 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 					fmt.Println("Debag2.2", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep)
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
 					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
+					fmt.Println("pf.LengthMap.Set(n.x, n.y, pf.WaveStep)", pf.LengthMap.Get(n.x, n.y,))
 					if n.x == to.X && n.y == to.Y { // if p.X == to.X && p.Y == to.Y {
 						// if p.X == to.X && p.Y == to.Y {
 						// fmt.Println("Debag3", pf.Wave, p.X, p.Y, n.x, n.y)
@@ -230,7 +261,7 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	pf.LengthMap.Print()
 	for pf.LengthMap.Get(row, col) != 0 {
 		currentLen := pf.LengthMap.Get(row, col)
-		fmt.Println("currentLen!!", currentLen-1)
+		fmt.Println("currentLen!!", currentLen-3)
 		// fmt.Println("currentLen", currentLen, "|", row, col,  "|", pf.LengthMap.Get(row, col-1))
 
 		if row == 4 && col == 2 {
