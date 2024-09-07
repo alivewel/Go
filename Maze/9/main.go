@@ -98,7 +98,7 @@ func (cw *CaveWrapper) Index(x, y int) int {
 	// fmt.Println("x*cw.Cols + y", x*cw.Cols+y)
 	if x < 0 || x >= cw.Rows || y < 0 || y >= cw.Cols {
 		// panic("Index out of bounds")
-		fmt.Println("Index out of bounds", x < 0, x >= cw.Rows, y < 0, y >= cw.Cols)
+		fmt.Println("Index out of bounds |", x, y, "|", cw.Rows, "|", x < 0, x >= cw.Rows, y < 0, y >= cw.Cols)
 		return 0
 	}
 	return x*cw.Cols + y
@@ -107,6 +107,10 @@ func (cw *CaveWrapper) Index(x, y int) int {
 // Get возвращает значение из матрицы по координатам
 func (cw *CaveWrapper) Get(x, y int) int {
 	return cw.Data[cw.Index(x, y)]
+}
+
+func (cw *CaveWrapper) Get2(x, y int) int {
+	return cw.Data[cw.Index(x+1, y+1)]
 }
 
 // Set устанавливает значение в матрице по координатам
@@ -241,7 +245,7 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	path := []Point{to}
 	row, col := to.X, to.Y
 
-	pf.LengthMap.Print()
+	// pf.LengthMap.Print()
 	for pf.LengthMap.Get(row, col) != 0 {
 		currentLen := pf.LengthMap.Get(row, col)
 		// fmt.Println("currentLen", currentLen, "|", row, col,  "|", pf.LengthMap.Get(row, col-1))
@@ -257,13 +261,14 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 		if col > 0 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
 			// fmt.Println("row, col, left", row, col)
 			col-- // Проверяем движение влево
-		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1) == currentLen-1 && maze.At(row-1, col-1, true) == 0 {
+		} else if col+1 < maze.Cols && pf.LengthMap.Get2(row, col+1) == currentLen-1 && maze.At(row-1, col, true) == 0 {
 			col++ // Проверяем движение вправо (если стена отсутствует и длина пути в следующей ячейке меньше текущей)
 			// fmt.Println("row, col", row, col)
-		} else if row > 0 && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-1, col-1, false) == 0 {
+		} else if row > 0 && pf.LengthMap.Get2(row+1, col) == currentLen-1 && maze.At(row, col-1, false) == 0 {
 			// fmt.Println("row, col", row, col, maze.At(row, col-1, true), pf.LengthMap.Get(row-1, col))
 			row-- // Проверяем движение вниз (если стена отсутствует и длина пути в нижней ячейке меньше текущей)
-		} else if row < maze.Rows && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
+		} else if row < maze.Rows && pf.LengthMap.Get2(row-1, col) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
+
 			// fmt.Println("row, col", row, col)
 			row++ // Проверяем движение вверх
 		} else {
