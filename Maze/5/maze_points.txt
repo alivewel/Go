@@ -16,8 +16,8 @@ CaveWrapper visualization:
    0    0    0    0    0 
    0    0    5    0    0 
    0    1    4    0    0 
-   0    2    3    4    0 
-   0    5    4    5    0 
+   0    2    3    6    0 
+   0    0    4    5    6 
 
 from := Point{1, 1}
 to := Point{4, 4}
