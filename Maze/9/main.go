@@ -45,14 +45,7 @@ func (m *MazeWrapper) At2(x, y int, vertical bool) int {
 
 // At возвращает значение ячейки в вертикальной или горизонтальной линии
 func (m *MazeWrapper) At(x, y int, vertical bool) int {
-	// index := (x-1)*m.Cols + y - 1
 	index := x*m.Cols + y
-	// if index < 0 || x < 0 || y < 0 {
-	// 	return 1
-	// 	// fmt.Println(index, x, y)
-	// 	// panic("index out of range")
-	// 	// return -1
-	// }
 
 	if index < 0 || x < 0 || y < 0 || x >= m.Rows || y >= m.Cols {
 		index = -1
@@ -61,11 +54,8 @@ func (m *MazeWrapper) At(x, y int, vertical bool) int {
 	}
 	// fmt.Println("index", index, vertical)
 	if vertical {
-		// fmt.Println("index:", index, "val:", m.Vertical[index], "| x, y:", x, y, "Vertical")
-		// index = (x-1)*m.Cols + y - 1
 		return m.Vertical[index]
 	}
-	// fmt.Println("index:", index, "val:", m.Horizontal[index], "| x, y:", x, y, "Horizontal")
 	return m.Horizontal[index]
 }
 
@@ -101,7 +91,6 @@ func (cw *CaveWrapper) Index(x, y int) int {
 		fmt.Println("Index out of bounds |", x, y, "|", cw.Rows, "|", x < 0, x >= cw.Rows, y < 0, y >= cw.Cols)
 		return 0
 	}
-	fmt.Println("Index", x*cw.Cols+y, "|", x, y)
 	return x*cw.Cols + y
 }
 
@@ -124,9 +113,8 @@ func (cw *CaveWrapper) Print() {
 
 	for i := 0; i < cw.Rows; i++ { // Итерация по строкам
 		for j := 0; j < cw.Cols; j++ { // Итерация по столбцам
-			// ind := cw.Get(i+1, j+1)
 			ind := cw.Get(i, j)
-			if ind > 10 {
+			if ind > 20 {
 				fmt.Printf("%4d ", 0) // Печать значения элемента
 			} else {
 				fmt.Printf("%4d ", ind) // Печать значения элемента
@@ -170,8 +158,6 @@ func (pf *PathFinder) Solve(maze MazeWrapper, from, to Point) []Point {
 		}
 	}
 	fmt.Println()
-	// fmt.Println("Debag03", pf.OldWave)
-	// fmt.Println("Debag04", pf.Wave)
 	return pf.MakePath(maze, to)
 }
 
@@ -195,10 +181,8 @@ func (pf *PathFinder) IsValid(maze MazeWrapper, from, to Point) bool {
 // StepWave выполняет один шаг алгоритма BFS и возвращает true, если достигнута конечная точка
 func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 	pf.WaveStep++
-	// fmt.Println("pf.WaveStep", pf.WaveStep)
 
 	for _, p := range pf.OldWave {
-		// fmt.Println("p.X, p.Y", p.X, p.Y)
 		neighbors := []struct {
 			x, y, value int
 			// }{
@@ -231,11 +215,9 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 			}
 		}
 	}
-	// pf.OldWave = pf.Wave
-	// fmt.Println("Before Update - OldWave:", pf.OldWave)
-	// fmt.Println("Before Update - Wave:", pf.Wave)
 
-	pf.OldWave = append([]Point(nil), pf.Wave...) // Создаём копию pf.Wave
+	pf.OldWave = pf.Wave
+	// pf.OldWave = append([]Point(nil), pf.Wave...) // Создаём копию pf.Wave
 	pf.Wave = nil
 	return false
 }
@@ -245,9 +227,10 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	path := []Point{to}
 	row, col := to.X, to.Y
 
-	// pf.LengthMap.Print()
+	pf.LengthMap.Print()
 	for pf.LengthMap.Get(row, col) != 0 {
 		currentLen := pf.LengthMap.Get(row, col)
+		fmt.Println("currentLen!!", currentLen-1)
 		// fmt.Println("currentLen", currentLen, "|", row, col,  "|", pf.LengthMap.Get(row, col-1))
 		// pf.LengthMap.Print()
 
@@ -420,7 +403,7 @@ func main() {
 	}
 
 	from := Point{1, 1}
-	to := Point{4, 4}
+	to := Point{5, 4}
 
 	pf := NewPathFinder(maze)
 	path := pf.Solve(maze, from, to)
