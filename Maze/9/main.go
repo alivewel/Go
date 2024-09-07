@@ -56,16 +56,16 @@ func (m *MazeWrapper) At(x, y int, vertical bool) int {
 
 	if index < 0 || x < 0 || y < 0 || x >= m.Rows || y >= m.Cols {
 		index = -1
-		// fmt.Println("index", index, vertical)
+		fmt.Println("index", index, vertical)
 		return 1 // Считаем, что за пределами лабиринта есть стена
 	}
 	// fmt.Println("index", index, vertical)
 	if vertical {
-		// fmt.Println("index:", index, "val:", m.Vertical[index], "| x, y:", x, y, "Vertical")
+		fmt.Println("index:", index, "val:", m.Vertical[index], "| x, y:", x, y, "Vertical")
 		// index = (x-1)*m.Cols + y - 1
 		return m.Vertical[index]
 	}
-	// fmt.Println("index:", index, "val:", m.Horizontal[index], "| x, y:", x, y, "Horizontal")
+	fmt.Println("index:", index, "val:", m.Horizontal[index], "| x, y:", x, y, "Horizontal")
 	return m.Horizontal[index]
 }
 
@@ -95,6 +95,12 @@ func NewCaveWrapper(rows, cols, emptyValue int) CaveWrapper {
 
 // Index возвращает индекс ячейки в линейном массиве
 func (cw *CaveWrapper) Index(x, y int) int {
+	// fmt.Println("x*cw.Cols + y", x*cw.Cols+y)
+	if x < 0 || x >= cw.Rows || y < 0 || y >= cw.Cols {
+		// panic("Index out of bounds")
+		fmt.Println("Index out of bounds", x < 0, x >= cw.Rows, y < 0, y >= cw.Cols)
+		return 0
+	}
 	return x*cw.Cols + y
 }
 
@@ -113,7 +119,7 @@ func (cw *CaveWrapper) Print() {
 
 	for i := 0; i < cw.Rows; i++ { // Итерация по строкам
 		for j := 0; j < cw.Cols; j++ { // Итерация по столбцам
-			ind := cw.Get(i, j)
+			ind := cw.Get(i+1, j+1)
 			if ind > 10 {
 				fmt.Printf("%4d ", 0) // Печать значения элемента
 			} else {
@@ -157,8 +163,9 @@ func (pf *PathFinder) Solve(maze MazeWrapper, from, to Point) []Point {
 			break
 		}
 	}
-	fmt.Println("Debag03", pf.OldWave)
-	fmt.Println("Debag04", pf.Wave)
+	fmt.Println()
+	// fmt.Println("Debag03", pf.OldWave)
+	// fmt.Println("Debag04", pf.Wave)
 	return pf.MakePath(maze, to)
 }
 
@@ -232,20 +239,19 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 // MakePath восстанавливает путь из конечной точки в начальную
 func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	path := []Point{to}
-	row, col := to.X-1, to.Y-1
-	fmt.Println("!!!", row, col)
+	row, col := to.X, to.Y
 
+	pf.LengthMap.Print()
 	for pf.LengthMap.Get(row, col) != 0 {
-		fmt.Println("!!!", row, col)
 		currentLen := pf.LengthMap.Get(row, col)
 		// fmt.Println("currentLen", currentLen, "|", row, col,  "|", pf.LengthMap.Get(row, col-1))
 		// pf.LengthMap.Print()
 
-		// if row == 4 && col == 3 {
-		// fmt.Println("currentLen", currentLen, "|", row, col, "|", pf.LengthMap.Get(row, col-1), maze.At(row, col-1, true) == 0)
-		// }
-		fmt.Println("!!!")
-		fmt.Println("currentLen", currentLen, "|", row, col, "|", pf.LengthMap.Get(row, col-1), maze.At(row, col-1, true) == 0)
+		if row == 4 && col == 2 {
+			fmt.Println("currentLen", currentLen, "|", row, col, "|", pf.LengthMap.Get(row, col-1), maze.At(row, col-1, true) == 0)
+		} else {
+			fmt.Println("currentLen", currentLen, "|", row, col, "|", pf.LengthMap.Get(row, col-1), maze.At(row, col-1, true) == 0)
+		}
 
 		// Проверяем движение влево (если стена отсутствует и длина пути в предыдущей ячейке меньше текущей)
 		if col > 0 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
@@ -257,18 +263,23 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 		} else if row > 0 && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-1, col-1, false) == 0 {
 			// fmt.Println("row, col", row, col, maze.At(row, col-1, true), pf.LengthMap.Get(row-1, col))
 			row-- // Проверяем движение вниз (если стена отсутствует и длина пути в нижней ячейке меньше текущей)
-		} else if row+1 < maze.Rows && pf.LengthMap.Get(row+1, col) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
+		} else if row < maze.Rows && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
 			// fmt.Println("row, col", row, col)
 			row++ // Проверяем движение вверх
 		} else {
+			fmt.Println()
+			fmt.Println(row+1 < maze.Rows, pf.LengthMap.Get(row-1, col) == currentLen-1, maze.At(row-2, col-1, false) == 0)
+			fmt.Println("pf.LengthMap.Get", pf.LengthMap.Get(row-1, col), currentLen-1)
+			fmt.Println("nil", row, col)
 			return nil // Если путь не найден, возвращаем nil
 		}
 
 		path = append(path, Point{row, col})
+		fmt.Println("pf.path3", path)
 	}
 
 	reversePath(path)
-	fmt.Println("pf.path3", path)
+	// fmt.Println("pf.path3", path)
 	return path
 }
 
@@ -405,6 +416,10 @@ func main() {
 	path := pf.Solve(maze, from, to)
 
 	fmt.Println("Path:", path)
+
+	fmt.Println()
+	fmt.Println("maze.At:", maze.At(4-2, 2-1, false))
+
 	// printMaze(maze)
 
 	// maze2 := MazeWrapper{
