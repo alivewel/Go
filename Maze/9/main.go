@@ -88,11 +88,12 @@ func (cw *CaveWrapper) Set(x, y, value int) {
 }
 
 func (cw *CaveWrapper) Print() {
-	fmt.Println("CaveWrapper visualization:")
+	fmt.Println("CaveWrapper visualization:", cw.Rows, cw.Cols)
 
 	for i := 1; i <= cw.Rows; i++ { // Итерация по строкам
 		for j := 1; j <= cw.Cols; j++ { // Итерация по столбцам
-			ind := cw.Get(j, i) // Получаем значение с учетом смещения
+			// ind := cw.Get(j, i) // Получаем значение с учетом смещения
+			ind := cw.Get(i, j) // Получаем значение с учетом смещения
 			if ind == cw.EmptyValue {
 				fmt.Printf("%4d ", 0) // Печать значения элемента
 			} else {
@@ -183,11 +184,12 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 				fmt.Println("Debag2.1", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep, "|", pf.LengthMap.Get(n.x, n.y), "|", n.value)
 			}
 			// if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
-			if n.x > 0 && n.x < maze.Rows && n.y > 0 && n.y < maze.Cols {
+			if n.x > 0 && n.x <= maze.Rows && n.y > 0 && n.y <= maze.Cols {
 				// fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue, "|", "vert:", n.x != p.X, pf.WaveStep)
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
 					fmt.Println("Debag2.2", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep)
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
+					// pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
 					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
 					fmt.Println("pf.LengthMap.Set(n.x, n.y, pf.WaveStep)", pf.LengthMap.Get(n.x, n.y))
 					if n.x == to.X && n.y == to.Y { // if p.X == to.X && p.Y == to.Y {
@@ -213,8 +215,8 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 
 	pf.LengthMap.Print()
 	for pf.LengthMap.Get(row, col) != 0 {
-		currentLen := pf.LengthMap.Get(row, col)
-		fmt.Println("currentLen!!", currentLen-3)
+		currentLen := pf.LengthMap.Get(row-1, col-1)
+		fmt.Println("currentLen!!", currentLen-1)
 		// fmt.Println("currentLen", currentLen, "|", row, col,  "|", pf.LengthMap.Get(row, col-1))
 
 		if row == 4 && col == 2 {
@@ -335,20 +337,19 @@ func printMaze2(maze MazeWrapper) {
 
 func main() {
 
-	// Создаем новый CaveWrapper с 5 строками и 5 столбцами, заполняем значением -1
-	cw := NewCaveWrapper(5, 5, -1)
+	// // Создаем новый CaveWrapper с 5 строками и 5 столбцами, заполняем значением -1
+	// cw := NewCaveWrapper(5, 5, -1)
 
-	// Заполняем CaveWrapper значениями
-	cw.Set(1, 1, 5)
-	cw.Set(2, 2, 8)
-	cw.Set(3, 3, 9)
-	cw.Set(4, 4, 7)
-	cw.Set(5, 5, 6)
+	// // Заполняем CaveWrapper значениями
+	// cw.Set(1, 1, 5)
+	// cw.Set(2, 2, 8)
+	// cw.Set(3, 3, 9)
+	// cw.Set(4, 4, 7)
+	// cw.Set(5, 5, 6)
 
-	// Печатаем CaveWrapper
-	cw.Print()
+	// // Печатаем CaveWrapper
+	// cw.Print()
 
-	// Пример использования
 	// maze := MazeWrapper{
 	// 	Vertical: []int{
 	// 		1, 1, 1, 1, 1,
