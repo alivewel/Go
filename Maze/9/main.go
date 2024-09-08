@@ -23,26 +23,6 @@ func (m *MazeWrapper) IsGood() bool {
 	return len(m.Vertical) == m.Rows*m.Cols && len(m.Horizontal) == m.Rows*m.Cols
 }
 
-func (m *MazeWrapper) At2(x, y int, vertical bool) int {
-	if x < 0 || y < 0 || x >= m.Rows || y >= m.Cols {
-		return 1 // Считаем, что за пределами лабиринта есть стена
-	}
-
-	if vertical {
-		if y == m.Cols-1 { // Если мы в крайнем правом столбце, справа нет клетки
-			return 1 // Считаем, что есть стена
-		}
-		index := x*m.Cols + y
-		return m.Vertical[index]
-	} else {
-		if x == m.Rows-1 { // Если мы в последней строке, снизу нет клетки
-			return 1 // Считаем, что есть стена
-		}
-		index := x*m.Cols + y
-		return m.Horizontal[index]
-	}
-}
-
 // At возвращает значение ячейки в вертикальной или горизонтальной линии
 func (m *MazeWrapper) At(x, y int, vertical bool) int {
 	index := x*m.Cols + y
@@ -61,7 +41,7 @@ func (m *MazeWrapper) At(x, y int, vertical bool) int {
 
 // CaveWrapper представляет матрицу для хранения длины пути
 type CaveWrapper struct {
-	Data       []int
+	Data       [][]int
 	Rows       int
 	Cols       int
 	EmptyValue int
@@ -70,9 +50,12 @@ type CaveWrapper struct {
 // NewCaveWrapper создает новый CaveWrapper
 func NewCaveWrapper(rows, cols, emptyValue int) CaveWrapper {
 	// Создаем срез длиной rows*cols и заполняем его значениями emptyValue
-	data := make([]int, (rows+1)*(cols+1))
+	data := make([][]int, rows)
 	for i := range data {
-		data[i] = emptyValue
+		data[i] = make([]int, cols) // Инициализируем каждый подмассив
+		for j := range data[i] {
+			data[i][j] = emptyValue // Заполняем значениями emptyValue
+		}
 	}
 
 	return CaveWrapper{
@@ -81,67 +64,37 @@ func NewCaveWrapper(rows, cols, emptyValue int) CaveWrapper {
 		Cols:       cols,
 		EmptyValue: emptyValue,
 	}
-}
 
-// Index возвращает индекс ячейки в линейном массиве
-func (cw *CaveWrapper) Index(x, y int) int {
-	// index := (x-1)*cw.Cols + y - 1
-	index := x*cw.Cols + y
-	// if x < 0 || x >= cw.Rows || y < 0 || y >= cw.Cols {
-	// 	// panic("Index out of bounds")
-	// 	fmt.Println("Index out of bounds |", x, y, "|", cw.Rows, "|", x < 0, x >= cw.Rows, y < 0, y >= cw.Cols)
-
-	// 	return 0
-	// }
-	if index < 0 {
-		fmt.Println("Index out of bounds |", x, y, index)
-		return 0
-	}
-	// return x*cw.Cols + y
-	// fmt.Println("Index", index)
-	return index
 }
 
 // Get возвращает значение из матрицы по координатам
 func (cw *CaveWrapper) Get(x, y int) int {
-	return cw.Data[cw.Index(x, y)]
+	// Проверяем, что индексы находятся в допустимых пределах
+	if x < 1 || y < 1 || y > cw.Rows || x > cw.Cols {
+		// Обработка ошибки
+		panic(fmt.Sprintf("Get: индекс вне диапазона! x: %d, y: %d", x, y))
+	}
+	return cw.Data[y-1][x-1] // сдвиг индексов на -1
 }
 
 // Set устанавливает значение в матрице по координатам
 func (cw *CaveWrapper) Set(x, y, value int) {
-	cw.Data[cw.Index(x, y)] = value
+	// Проверяем, что индексы находятся в допустимых пределах
+	if x < 1 || y < 1 || y > cw.Rows || x > cw.Cols {
+		// Обработка ошибки
+		panic(fmt.Sprintf("Set: индекс вне диапазона! x: %d, y: %d", x, y))
+	}
+	cw.Data[y-1][x-1] = value // сдвиг индексов на -1
 }
-
-// func (cw *CaveWrapper) Set(x, y, value int) {
-//     if x > 0 && x < cw.Rows-1 && y > 0 && y < cw.Cols-1 { // Проверяем границы
-//         cw.Data[cw.Index(x, y)] = value
-//     }
-// }
 
 func (cw *CaveWrapper) Print() {
 	fmt.Println("CaveWrapper visualization:")
 
-	for i := 0; i < cw.Rows+1; i++ { // Итерация по строкам
-		for j := 0; j < cw.Cols+1; j++ { // Итерация по столбцам
-			ind := cw.Get(i, j)
-			if ind > 20 {
+	for i := 1; i <= cw.Rows; i++ { // Итерация по строкам
+		for j := 1; j <= cw.Cols; j++ { // Итерация по столбцам
+			ind := cw.Get(j, i) // Получаем значение с учетом смещения
+			if ind == cw.EmptyValue {
 				fmt.Printf("%4d ", 0) // Печать значения элемента
-			} else {
-				fmt.Printf("%4d ", ind) // Печать значения элемента
-			}
-		}
-		fmt.Println() // Переход на новую строку после печати строки
-	}
-}
-
-func (cw *CaveWrapper) Print2() {
-	fmt.Println("CaveWrapper visualization:")
-
-	for i := 1; i < cw.Rows-1; i++ { // Начинаем с 1 и заканчиваем на Rows-1
-		for j := 1; j < cw.Cols-1; j++ { // Начинаем с 1 и заканчиваем на Cols-1
-			ind := cw.Get(i, j)
-			if ind > 20 {
-				fmt.Printf("%4d ", 0) // Печать значения элемента, если больше 20
 			} else {
 				fmt.Printf("%4d ", ind) // Печать значения элемента
 			}
@@ -236,7 +189,7 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 					fmt.Println("Debag2.2", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep)
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
 					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
-					fmt.Println("pf.LengthMap.Set(n.x, n.y, pf.WaveStep)", pf.LengthMap.Get(n.x, n.y,))
+					fmt.Println("pf.LengthMap.Set(n.x, n.y, pf.WaveStep)", pf.LengthMap.Get(n.x, n.y))
 					if n.x == to.X && n.y == to.Y { // if p.X == to.X && p.Y == to.Y {
 						// if p.X == to.X && p.Y == to.Y {
 						// fmt.Println("Debag3", pf.Wave, p.X, p.Y, n.x, n.y)
@@ -381,6 +334,20 @@ func printMaze2(maze MazeWrapper) {
 }
 
 func main() {
+
+	// Создаем новый CaveWrapper с 5 строками и 5 столбцами, заполняем значением -1
+	cw := NewCaveWrapper(5, 5, -1)
+
+	// Заполняем CaveWrapper значениями
+	cw.Set(1, 1, 5)
+	cw.Set(2, 2, 8)
+	cw.Set(3, 3, 9)
+	cw.Set(4, 4, 7)
+	cw.Set(5, 5, 6)
+
+	// Печатаем CaveWrapper
+	cw.Print()
+
 	// Пример использования
 	// maze := MazeWrapper{
 	// 	Vertical: []int{
