@@ -180,18 +180,17 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 		}
 		for _, n := range neighbors {
 			// Проверка на допустимость координат
-			if p.X == 4 && p.Y == 4 {
-				fmt.Println("Debag2.1", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep, "|", pf.LengthMap.Get(n.x, n.y), "|", n.value)
-			}
+			// if p.X == 4 && p.Y == 4 {
+			// 	fmt.Println("Debag2.1", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep, "|", pf.LengthMap.Get(n.x, n.y), "|", n.value)
+			// }
 			// if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
 			if n.x > 0 && n.x <= maze.Rows && n.y > 0 && n.y <= maze.Cols {
 				// fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue, "|", "vert:", n.x != p.X, pf.WaveStep)
 				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
-					fmt.Println("Debag2.2", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep)
+					// fmt.Println("Debag2.2", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep)
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
 					// pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
 					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
-					fmt.Println("pf.LengthMap.Set(n.x, n.y, pf.WaveStep)", pf.LengthMap.Get(n.x, n.y))
 					if n.x == to.X && n.y == to.Y { // if p.X == to.X && p.Y == to.Y {
 						// if p.X == to.X && p.Y == to.Y {
 						// fmt.Println("Debag3", pf.Wave, p.X, p.Y, n.x, n.y)
@@ -213,7 +212,7 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	path := []Point{to}
 	row, col := to.X, to.Y
 
-	pf.LengthMap.Print()
+	// pf.LengthMap.Print()
 	for pf.LengthMap.Get(row, col) != 0 {
 		currentLen := pf.LengthMap.Get(row-1, col-1)
 		fmt.Println("currentLen!!", currentLen-1)
