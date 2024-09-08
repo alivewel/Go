@@ -70,10 +70,11 @@ func NewCaveWrapper(rows, cols, emptyValue int) CaveWrapper {
 // Get возвращает значение из матрицы по координатам
 func (cw *CaveWrapper) Get(x, y int) int {
 	// Проверяем, что индексы находятся в допустимых пределах
-	if x < 1 || y < 1 || y > cw.Rows || x > cw.Cols {
+	if x < 1 || y < 1 || y > cw.Rows+1 || x > cw.Cols+1 {
 		// Обработка ошибки
 		panic(fmt.Sprintf("Get: индекс вне диапазона! x: %d, y: %d", x, y))
 	}
+	fmt.Println("y, x", y, x, "|", cw.Data[y-1][x-1])
 	return cw.Data[y-1][x-1] // сдвиг индексов на -1
 }
 
@@ -210,28 +211,28 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 // MakePath восстанавливает путь из конечной точки в начальную
 func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	path := []Point{to}
-	row, col := to.X, to.Y
+	row, col := to.Y, to.X // Обратите внимание на порядок: Y (строка), X (столбец)
 
-	// pf.LengthMap.Print()
-	for pf.LengthMap.Get(row, col) != 0 {
-		currentLen := pf.LengthMap.Get(row-1, col-1)
-		fmt.Println("currentLen!!", currentLen-1)
-		// fmt.Println("currentLen", currentLen, "|", row, col,  "|", pf.LengthMap.Get(row, col-1))
+	for pf.LengthMap.Get(col, row) != 0 { // Используем (col, row)
+		currentLen := pf.LengthMap.Get(col, row) // Используем (col, row)
+		fmt.Println()
+		fmt.Println("MakePath")
+		fmt.Println("currentLen", currentLen-1)
+		fmt.Println("row, col", row, col)
 
-		if row == 4 && col == 2 {
-			fmt.Println("currentLen", currentLen, "|", row, col, "|", pf.LengthMap.Get(row-2, col))
-		}
-
-		// Проверяем движение влево (если стена отсутствует и длина пути в предыдущей ячейке меньше текущей)
-		if col > 0 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
-			col-- // Проверяем движение влево
-		} else if col+1 < maze.Cols && pf.LengthMap.Get(row, col+1) == currentLen-1 && maze.At(row-1, col, true) == 0 {
-			col++ // Проверяем движение вправо (если стена отсутствует и длина пути в следующей ячейке меньше текущей)
-		} else if row > 0 && pf.LengthMap.Get(row+1, col) == currentLen-1 && maze.At(row, col-1, false) == 0 {
-			row++ // Проверяем движение вниз (если стена отсутствует и длина пути в нижней ячейке меньше текущей)
-		} else if row < maze.Rows && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
-			row-- // Проверяем движение вверх
+		// Проверяем движение влево
+		if col > 1 && pf.LengthMap.Get(col, row-1) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
+			fmt.Println("влево")
+			row-- // Движение влево
+		} else if col < maze.Cols && pf.LengthMap.Get(col-1, row) == currentLen-1 && maze.At(row-1, col, true) == 0 {
+			row++  // Движение вправо
+		} else if row < maze.Rows && pf.LengthMap.Get(col-1, row) == currentLen-1 && maze.At(row, col-1, false) == 0 {
+			col++// Движение вниз
+		} else if row > 1 && pf.LengthMap.Get(col, row-1) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
+			fmt.Println("вверх")
+			col-- // Движение вверх
 		} else {
+			fmt.Println("nil", row, col)
 			return nil // Если путь не найден, возвращаем nil
 		}
 
@@ -240,7 +241,6 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	}
 
 	reversePath(path)
-	// fmt.Println("pf.path3", path)
 	return path
 }
 
