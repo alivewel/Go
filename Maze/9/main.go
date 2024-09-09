@@ -74,7 +74,7 @@ func (cw *CaveWrapper) Get(x, y int) int {
 		// Обработка ошибки
 		panic(fmt.Sprintf("Get: индекс вне диапазона! x: %d, y: %d", x, y))
 	}
-	// fmt.Println("y, x", y, x, "|", cw.Data[y-1][x-1])
+	fmt.Println("y, x", y, x, "|", cw.Data[y-1][x-1])
 	return cw.Data[y-1][x-1] // сдвиг индексов на -1
 }
 
@@ -93,8 +93,8 @@ func (cw *CaveWrapper) Print() {
 
 	for i := 1; i <= cw.Rows; i++ { // Итерация по строкам
 		for j := 1; j <= cw.Cols; j++ { // Итерация по столбцам
-			// ind := cw.Get(j, i) // Получаем значение с учетом смещения
-			ind := cw.Get(i, j) // Получаем значение с учетом смещения
+			ind := cw.Get(j, i) // Получаем значение с учетом смещения
+			// ind := cw.Get(i, j) // Получаем значение с учетом смещения
 			if ind == cw.EmptyValue {
 				fmt.Printf("%4d ", 0) // Печать значения элемента
 			} else {
@@ -188,11 +188,11 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 			// if n.x >= 0 && n.x < maze.Rows && n.y >= 0 && n.y < maze.Cols {
 			if n.x > 0 && n.x <= maze.Rows && n.y > 0 && n.y <= maze.Cols {
 				// fmt.Println("val:", n.value, "| x, y:", n.x, n.y, "|", pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue, "|", "vert:", n.x != p.X, pf.WaveStep)
-				if n.value == 0 && pf.LengthMap.Get(n.x, n.y) == pf.EmptyValue {
+				if n.value == 0 && pf.LengthMap.Get(n.y, n.x) == pf.EmptyValue {
 					// fmt.Println("Debag2.2", p.X, p.Y, "|", Point{n.x, n.y}, "|", pf.WaveStep)
 					pf.Wave = append(pf.Wave, Point{n.x, n.y})
 					// pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
-					pf.LengthMap.Set(n.x, n.y, pf.WaveStep)
+					pf.LengthMap.Set(n.y, n.x, pf.WaveStep)
 					if n.x == to.X && n.y == to.Y { // if p.X == to.X && p.Y == to.Y {
 						// if p.X == to.X && p.Y == to.Y {
 						// fmt.Println("Debag3", pf.Wave, p.X, p.Y, n.x, n.y)
@@ -212,10 +212,10 @@ func (pf *PathFinder) StepWave(maze MazeWrapper, to Point) bool {
 // MakePath восстанавливает путь из конечной точки в начальную
 func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 	path := []Point{to}
-	row, col := to.X, to.Y // Обратите внимание на порядок: Y (строка), X (столбец)
-	pf.LengthMap.Print()
+	row, col := to.X, to.Y
+	// pf.LengthMap.Print()
 	for pf.LengthMap.Get(col, row) != 0 { // Используем (col, row)
-		currentLen := pf.LengthMap.Get(row, col) // Используем (col, row)
+		currentLen := pf.LengthMap.Get(col, row) // Используем (col, row)
 		fmt.Println()
 		fmt.Println("MakePath")
 		fmt.Println("currentLen", currentLen-1)
@@ -225,11 +225,11 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 		if col > 1 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
 			fmt.Println("влево")
 			col-- // Движение влево
-		} else if col < maze.Cols && pf.LengthMap.Get(col+1, row) == currentLen-1 && maze.At(row-1, col, true) == 0 {
+		} else if col < maze.Cols && pf.LengthMap.Get(row, col+1) == currentLen-1 && maze.At(row-1, col, true) == 0 {
 			col++ // Движение вправо
-		} else if row < maze.Rows && pf.LengthMap.Get(col, row+1) == currentLen-1 && maze.At(row, col-1, false) == 0 {
+		} else if row < maze.Rows && pf.LengthMap.Get(row+1, col) == currentLen-1 && maze.At(row, col-1, false) == 0 {
 			row++ // Движение вниз
-		} else if row > 1 && pf.LengthMap.Get(col, row-1) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
+		} else if row > 1 && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
 			fmt.Println("вверх", pf.LengthMap.Get(col, row-1))
 			row-- // Движение вверх
 		} else {
@@ -337,24 +337,24 @@ func printMaze2(maze MazeWrapper) {
 
 func main() {
 
-	// // Создаем новый CaveWrapper с 5 строками и 5 столбцами, заполняем значением -1
-	cw := NewCaveWrapper(5, 5, -1)
+	// // // Создаем новый CaveWrapper с 5 строками и 5 столбцами, заполняем значением -1
+	// cw := NewCaveWrapper(5, 5, -1)
 
-	// Заполняем CaveWrapper значениями
-	cw.Set(1, 1, 5)
-	cw.Set(1, 2, 15)
-	cw.Set(2, 2, 8)
-	cw.Set(3, 3, 9)
-	cw.Set(4, 4, 7)
-	cw.Set(5, 5, 6)
+	// // Заполняем CaveWrapper значениями
+	// cw.Set(1, 1, 5)
+	// cw.Set(1, 2, 15)
+	// cw.Set(2, 2, 8)
+	// cw.Set(3, 3, 9)
+	// cw.Set(4, 4, 7)
+	// cw.Set(5, 5, 6)
 
-	// Печатаем CaveWrapper
-	cw.Print()
+	// // Печатаем CaveWrapper
+	// cw.Print()
 
-	cw2 := NewCaveWrapper(2, 2, -1)
-	cw2.Set(1, 1, 1)
-	// cw2.Set(1, 2, 2)
-	cw2.Print()
+	// cw2 := NewCaveWrapper(2, 2, -1)
+	// cw2.Set(1, 1, 1)
+	// // cw2.Set(1, 2, 2)
+	// cw2.Print()
 	// maze := MazeWrapper{
 	// 	Vertical: []int{
 	// 		1, 1, 1, 1, 1,
