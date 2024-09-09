@@ -70,10 +70,13 @@ func NewCaveWrapper(rows, cols, emptyValue int) CaveWrapper {
 // Get возвращает значение из матрицы по координатам
 func (cw *CaveWrapper) Get(x, y int) int {
 	// Проверяем, что индексы находятся в допустимых пределах
-	if x < 1 || y < 1 || y > cw.Rows+1 || x > cw.Cols+1 {
+	if x < 1 || y < 1 || y > cw.Rows || x > cw.Cols {
 		// Обработка ошибки
-		panic(fmt.Sprintf("Get: индекс вне диапазона! x: %d, y: %d", x, y))
+		// panic(fmt.Sprintf("Get: индекс вне диапазона! x: %d, y: %d", x, y))
+		fmt.Printf("Get: индекс вне диапазона! x: %d, y: %d\n", x, y)
+		return math.MaxInt
 	}
+	fmt.Println("y, x", y, x)
 	fmt.Println("y, x", y, x, "|", cw.Data[y-1][x-1])
 	return cw.Data[y-1][x-1] // сдвиг индексов на -1
 }
@@ -221,16 +224,17 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 		fmt.Println("currentLen", currentLen-1)
 		fmt.Println("row, col", row, col)
 
-		fmt.Println(row < maze.Rows, pf.LengthMap.Get(col, row+1) == currentLen-1, maze.At(row-1, col-1, false) == 0)
+		fmt.Println(col < maze.Cols, pf.LengthMap.Get(col+1, row) == currentLen-1, maze.At(row-1, col-1, true) == 0)
 
 		// Проверяем движение влево
 		if col > 1 && pf.LengthMap.Get(col-1, row) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
 			fmt.Println("влево")
 			col-- // Движение влево
 		} else if col < maze.Cols && pf.LengthMap.Get(col+1, row) == currentLen-1 && maze.At(row-1, col-1, true) == 0 {
+			fmt.Println("вправо")
 			col++ // Движение вправо
-		} else if row < maze.Rows && pf.LengthMap.Get(col, row+1) == currentLen-1 && maze.At(row-1, col-1, false) == 0 {
-			fmt.Println("вверх")
+		} else if row < maze.Rows && pf.LengthMap.Get(col, row+1) == currentLen-1 && maze.At(row, col-1, false) == 0 {
+			fmt.Println("вниз")
 			row++ // Движение вниз
 		} else if row > 1 && pf.LengthMap.Get(col, row-1) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
 			fmt.Println("вверх", pf.LengthMap.Get(col, row-1))
@@ -393,7 +397,7 @@ func main() {
 	}
 
 	from := Point{1, 1}
-	to := Point{4, 1}
+	to := Point{5, 1}
 
 	pf := NewPathFinder(maze)
 	path := pf.Solve(maze, from, to)
