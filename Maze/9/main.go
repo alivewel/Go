@@ -32,7 +32,7 @@ func (m *MazeWrapper) At(x, y int, vertical bool) int {
 		// fmt.Println("index", index, vertical)
 		return 1 // Считаем, что за пределами лабиринта есть стена
 	}
-	// fmt.Println("index", index, vertical)
+	fmt.Println("index", index, vertical)
 	if vertical {
 		return m.Vertical[index]
 	}
@@ -221,13 +221,16 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 		fmt.Println("currentLen", currentLen-1)
 		fmt.Println("row, col", row, col)
 
+		fmt.Println(row < maze.Rows, pf.LengthMap.Get(col, row+1) == currentLen-1, maze.At(row-1, col-1, false) == 0)
+
 		// Проверяем движение влево
 		if col > 1 && pf.LengthMap.Get(col-1, row) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
 			fmt.Println("влево")
 			col-- // Движение влево
-		} else if col < maze.Cols && pf.LengthMap.Get(col+1, row) == currentLen-1 && maze.At(row-1, col, true) == 0 {
+		} else if col < maze.Cols && pf.LengthMap.Get(col+1, row) == currentLen-1 && maze.At(row-1, col-1, true) == 0 {
 			col++ // Движение вправо
-		} else if row < maze.Rows && pf.LengthMap.Get(col, row+1) == currentLen-1 && maze.At(row, col-1, false) == 0 {
+		} else if row < maze.Rows && pf.LengthMap.Get(col, row+1) == currentLen-1 && maze.At(row-1, col-1, false) == 0 {
+			fmt.Println("вверх")
 			row++ // Движение вниз
 		} else if row > 1 && pf.LengthMap.Get(col, row-1) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
 			fmt.Println("вверх", pf.LengthMap.Get(col, row-1))
@@ -390,7 +393,7 @@ func main() {
 	}
 
 	from := Point{1, 1}
-	to := Point{5, 4}
+	to := Point{4, 1}
 
 	pf := NewPathFinder(maze)
 	path := pf.Solve(maze, from, to)
