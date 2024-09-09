@@ -222,14 +222,14 @@ func (pf *PathFinder) MakePath(maze MazeWrapper, to Point) []Point {
 		fmt.Println("row, col", row, col)
 
 		// Проверяем движение влево
-		if col > 1 && pf.LengthMap.Get(row, col-1) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
+		if col > 1 && pf.LengthMap.Get(col-1, row) == currentLen-1 && maze.At(row-1, col-2, true) == 0 {
 			fmt.Println("влево")
 			col-- // Движение влево
-		} else if col < maze.Cols && pf.LengthMap.Get(row, col+1) == currentLen-1 && maze.At(row-1, col, true) == 0 {
+		} else if col < maze.Cols && pf.LengthMap.Get(col+1, row) == currentLen-1 && maze.At(row-1, col, true) == 0 {
 			col++ // Движение вправо
-		} else if row < maze.Rows && pf.LengthMap.Get(row+1, col) == currentLen-1 && maze.At(row, col-1, false) == 0 {
+		} else if row < maze.Rows && pf.LengthMap.Get(col, row+1) == currentLen-1 && maze.At(row, col-1, false) == 0 {
 			row++ // Движение вниз
-		} else if row > 1 && pf.LengthMap.Get(row-1, col) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
+		} else if row > 1 && pf.LengthMap.Get(col, row-1) == currentLen-1 && maze.At(row-2, col-1, false) == 0 {
 			fmt.Println("вверх", pf.LengthMap.Get(col, row-1))
 			row-- // Движение вверх
 		} else {
