@@ -5,9 +5,11 @@ import (
 )
 
 func replaceAndValidation(precipitation *[]int) (bool, []int) {
-	precDif := make([]int, 1)
-	precDif[0] = (*precipitation)[0]
+	precDif := make([]int, 0)
+	// precDif[0] = (*precipitation)[0]
+	currentDiff := 1
 	for i := 0; i < len(*precipitation); i++ {
+		
 		if (*precipitation)[i] == -1 {
 			// поиск ближайшего числа, не равного -1
 			left := i - 1
@@ -16,17 +18,24 @@ func replaceAndValidation(precipitation *[]int) (bool, []int) {
 			}
 			// замена чисел, равных -1
 			if left >= 0 {
-				(*precipitation)[i] = (*precipitation)[left] + 1
+				(*precipitation)[i] = (*precipitation)[left] + currentDiff
 			}
 		}
 		// проверка возрастания чисел
-		if i == 0 {
-			continue
+		if i > 0 {
+			if (*precipitation)[i] <= (*precipitation)[i-1] {
+				return false, nil
+			}
+			fmt.Println(i, (*precipitation)[i], (*precipitation)[i]-(*precipitation)[i-1])
+			// Записываем разницу
+			currentDiff = (*precipitation)[i]-(*precipitation)[i-1]
+			precDif = append(precDif, currentDiff)
+			// Увеличиваем текущую разницу для следующего шага
+			currentDiff++
+		} else {
+			// Для первого элемента просто добавляем его значение в разницы
+			precDif = append(precDif, (*precipitation)[i])
 		}
-		if (*precipitation)[i] <= (*precipitation)[i-1] {
-			return false, nil
-		}
-		precDif = append(precDif, (*precipitation)[i]-(*precipitation)[i-1])
 	}
 	return true, precDif
 }
@@ -54,3 +63,4 @@ func main() {
 // 5. Вывести YES, если валидация прошла и вывести график возрастания количества осадков.
 // 6. Переменная количества дней нигде не используется.
 // Добавил проверку равенства количества дней и длины массива чисел количества выпавших осадков.
+// 7. Провалидировать, когда первые несколько чисел равны -1.
