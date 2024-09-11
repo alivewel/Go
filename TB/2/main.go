@@ -50,8 +50,8 @@ func replaceAndValidation(precipitation *[]int) (bool, []int) {
 			precDif = append(precDif, currentDiff)
 			// fmt.Println("precDif", precDif[i], precDif[i-1])
 			if len(precDif) > 1 && precDif[len(precDif)-1] <= precDif[len(precDif)-2] {
-                return false, nil
-            }
+				return false, nil
+			}
 			// if precDif[i] <= precDif[i-1] {
 			// 	return false, nil
 			// }
@@ -67,8 +67,8 @@ func main() {
 	countDays := 5
 	// precipitation := []int{1, 3, -1, 10, -1}
 	// precipitation := []int{1, 3, 6, 10, 15}
-	// precipitation := []int{-1, 3, 6, 10, 15}
-	precipitation := []int{-1, -1, 6, 10, 15}
+	precipitation := []int{-1, 3, 6, 10, 15}
+	// precipitation := []int{-1, -1, 6, 10, 15}
 
 	if countDays != len(precipitation) {
 		fmt.Println("NO")
@@ -96,4 +96,9 @@ func main() {
 // 6. Переменная количества дней нигде не используется.
 // Добавил проверку равенства количества дней и длины массива чисел количества выпавших осадков.
 // 7. Провалидировать, когда первые несколько чисел равны -1.
-// 8. Как еще можно использовать информацию о количестве дней? Она ведь зачем-то нужна.
+// Пример: {-1, 3, 6, 10, 15}, {-1, -1, 6, 10, 15}.
+// 8. Провалидировать, когда несколько чисел равны -1 и находятся в середине.
+// Пример: {1, 3, -1, -1, 15}.
+// 8. Провалидировать, когда несколько чисел равны -1 и находятся в конце.
+// Пример: {1, 3, 6, -1, -1}.
+// 9. Как еще можно использовать информацию о количестве дней? Она ведь зачем-то нужна.
