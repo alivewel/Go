@@ -20,6 +20,7 @@ type MazeWrapper struct {
 	Cols       int
 }
 
+// to do: подправить согласно реадми
 // IsGood проверяет, является ли лабиринт корректным
 func (m *MazeWrapper) IsGood() bool {
 	return len(m.Vertical) == m.Rows*m.Cols && len(m.Horizontal) == m.Rows*m.Cols
@@ -449,7 +450,7 @@ func main() {
 	}
 
 	from := Point{1, 1}
-	to := Point{2, 1}
+	to := Point{5, 5}
 
 	pf := NewPathFinder(maze)
 	path := pf.Solve(maze, from, to)
@@ -465,19 +466,19 @@ func main() {
 	// 	Cols:       5,
 	// }
 
-	mazeGenerationSettings := MazeGenerationSettings{Rows: 10, Cols: 10}
+	// mazeGenerationSettings := MazeGenerationSettings{Rows: 10, Cols: 10}
 
-	maze3 := Generate(mazeGenerationSettings)
+	// maze3 := Generate(mazeGenerationSettings)
 
-	printMaze(maze3)
+	// printMaze2(maze)
 
-	from2 := Point{1, 1}
-	to2 := Point{10, 1}
+	// from2 := Point{1, 1}
+	// to2 := Point{5, 1}
 
-	pf2 := NewPathFinder(maze3)
-	path2 := pf2.Solve(maze3, from2, to2)
+	// pf2 := NewPathFinder(maze)
+	// path2 := pf2.Solve(maze, from2, to2)
 
-	printMaze3(maze3, path2)
+	// printMaze2(maze, path2)
 }
 
 // функция At - корректная
