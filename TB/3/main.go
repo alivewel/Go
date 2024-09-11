@@ -5,62 +5,62 @@ import (
 	"strings"
 )
 
-// Функция для проверки наличия всех символов в подстроке
-func containsAllChars(substring string, containsChar string) bool {
-	for _, char := range containsChar {
-		if !strings.ContainsRune(substring, char) {
+func containsAllChars(charsMap map[rune]int, substring string) bool {
+	window := make(map[rune]int)
+
+	// Заполняем карту символов для подстроки
+	for _, char := range substring {
+		window[char]++
+	}
+
+	// Проверяем, содержатся ли все символы из charsMap в window
+	for char, count := range charsMap {
+		if window[char] < count {
 			return false
 		}
 	}
 	return true
 }
 
-// Основная функция
 func main() {
-	// var lastCharInput string
-	// var containsChar string
-	// var lenPass int
-
-	// // Ввод данных
-	// fmt.Println("Введите большую строку:")
-	// fmt.Scanln(&lastCharInput)
-	// fmt.Println("Введите строку символов:")
-	// fmt.Scanln(&containsChar)
-	// fmt.Println("Введите количество символов для подстроки:")
-	// fmt.Scanln(&lenPass)
-
-	lastCharInput := "abacaba"
+	// bigString := "abcdefg"
+	bigString := "abacba"
 	containsChar := "abc"
 	lenPass := 4
 
-	// Проверка длины строки
-	if lenPass > len(lastCharInput) {
-		fmt.Println(-1)
+	// Создаем карту для символов, которые нужно найти
+	charsMap := make(map[rune]int)
+	for _, char := range containsChar {
+		charsMap[char]++
+	}
+
+	end := len(bigString)
+	start := end - len(containsChar)
+
+	// Получаем подстроку с индексами от start до end
+	substring := bigString[start:end] // end+1, чтобы включить символ на позиции `end`
+
+	fmt.Println("Подстрока:", substring)
+
+	// strings.Contains косячная, заменить ее
+	if containsAllChars(charsMap, substring) {
+		fmt.Printf("Подстрока '%s' найдена в строке.\n", substring)
 		return
 	}
 
-	// Проход по строке с конца
-	for i := len(lastCharInput) - lenPass; i >= 0; i-- {
-		substring := lastCharInput[i : i+lenPass]
-		if containsAllChars(substring, containsChar) {
-			fmt.Println(substring) // подстрока найдена
-			return
+	// Проходим по строке с конца
+	for start >= 0 {
+		substring := bigString[start:end]
+		fmt.Println(substring)
+		if len(substring) < lenPass {
+			start--
+		} else {
+			start--
+			end--
 		}
+		if strings.Contains(substring, containsChar) {
+			fmt.Printf("Подстрока '%s' найдена в строке.\n", substring)
+		}
+
 	}
-	fmt.Println(-1) // подстрока не найдена
 }
-
-// 1. "Среди всех с одинаковым с ним началом - самый длинный" - что это значит?
-// 2. Максимальная длина пароля - не означает, что пароль обязательно должен быть этой длины.
-// Пароль может быть короче. При этом нам нужно взять самый длинный пароль.
-// По сути можно сначала пройтись по всей строке и искать подстроку с длиной максимальной длины пароля.
-
-// Выведите возможный пароль от ноутбука, удовлетворяющий указанным условиям.
-// Если вариантов пароля несколько, выберете тот, который начинается с последовательности из первой строки правее
-// (позже) других, а среди всех с ним началом - самый длинный
-// "Среди всех с одинаковым с ним началом - самый длинный" - что это значит?
-
-// Смущает формулировка - "Среди всех с одинаковым с ним началом - самый длинный"
-// Смущает формулировка - максимальная длина пароля.
-// Я использую подстроку длиной максимальной длины пароля.
-// Кажется, что если в большей подстроке есть пароль, то нет смысла искать в меньшей подстроке.
