@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func containsAllChars(charsMap map[rune]int, substring string) bool {
@@ -12,7 +13,7 @@ func containsAllChars(charsMap map[rune]int, substring string) bool {
 		window[char]++
 	}
 
-	// Проверяем, содержатся ли все символы из charsMap в window
+	// Проверяем, содержатся ли все символы из charsMap в substring
 	for char, count := range charsMap {
 		if window[char] < count {
 			return false
@@ -23,7 +24,23 @@ func containsAllChars(charsMap map[rune]int, substring string) bool {
 
 func main() {
 	// bigString := "abcdefg"
-	bigString := "abacba"
+	// bigString := "abacba"
+	// bigString := "dacbacaba"
+	// bigString := "dabacaba"
+	// bigString := "abacaba"
+	// containsChar := "dac"
+	// containsChar := "abc"
+	// lenPass := 4
+
+	// bigString := "aacbabc"
+	// containsChar := "abc"
+	// lenPass := 4
+
+	// bigString := "xyzabcabcxyz"
+	// containsChar := "abc"
+	// lenPass := 4
+
+	bigString := "abababab"
 	containsChar := "abc"
 	lenPass := 4
 
@@ -35,28 +52,41 @@ func main() {
 
 	end := len(bigString)
 	start := end - len(containsChar)
-
-	// Получаем подстроку с индексами от start до end
-	// substring := bigString[start:end] // end+1, чтобы включить символ на позиции `end`
-
-
-	// strings.Contains косячная, заменить ее
-	// if containsAllChars(charsMap, substring) {
-	// 	fmt.Printf("Подстрока '%s' найдена в строке.\n", substring)
-	// 	return
-	// }
-
+	success := false
 	// Проходим по строке с конца
 	for start >= 0 {
+		if !strings.Contains(containsChar, bigString[start:start+1]) {
+			end = start
+			start = end - len(containsChar)
+			if start < 0 {
+				break
+			}
+			// fmt.Println("отсуп", bigString[start:end], start, end)
+		}
+
 		substring := bigString[start:end]
-		fmt.Println(substring)
+		// fmt.Println(substring)
+		// fmt.Println(bigString[start:start+1])
 		if len(substring) >= lenPass {
 			end--
 		}
 		start--
 		if containsAllChars(charsMap, substring) {
 			fmt.Printf(substring)
+			success = true
 			break
 		}
 	}
+	if !success {
+		fmt.Println("-1")
+	}
+
 }
+
+// В случае
+// bigString := "dcabacaba"
+// containsChar := "dac"
+// Выход
+// dcab
+// возможно должно выходить только dca
+// буквы b точно не должно быть
