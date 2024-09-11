@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 func containsAllChars(charsMap map[rune]int, substring string) bool {
@@ -38,29 +37,26 @@ func main() {
 	start := end - len(containsChar)
 
 	// Получаем подстроку с индексами от start до end
-	substring := bigString[start:end] // end+1, чтобы включить символ на позиции `end`
+	// substring := bigString[start:end] // end+1, чтобы включить символ на позиции `end`
 
-	fmt.Println("Подстрока:", substring)
 
 	// strings.Contains косячная, заменить ее
-	if containsAllChars(charsMap, substring) {
-		fmt.Printf("Подстрока '%s' найдена в строке.\n", substring)
-		return
-	}
+	// if containsAllChars(charsMap, substring) {
+	// 	fmt.Printf("Подстрока '%s' найдена в строке.\n", substring)
+	// 	return
+	// }
 
 	// Проходим по строке с конца
 	for start >= 0 {
 		substring := bigString[start:end]
 		fmt.Println(substring)
-		if len(substring) < lenPass {
-			start--
-		} else {
-			start--
+		if len(substring) >= lenPass {
 			end--
 		}
-		if strings.Contains(substring, containsChar) {
-			fmt.Printf("Подстрока '%s' найдена в строке.\n", substring)
+		start--
+		if containsAllChars(charsMap, substring) {
+			fmt.Printf(substring)
+			break
 		}
-
 	}
 }
