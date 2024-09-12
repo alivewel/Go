@@ -80,8 +80,6 @@ func main() {
 	for _, teamResult := range teamResults {
 		fmt.Printf("Команда: %s %v\n", teamResult.TeamName, teamResult.HackedServers)
 	}
-
-
 }
 
 func parseTime(timeStr string) time.Time {
