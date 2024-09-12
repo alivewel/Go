@@ -20,18 +20,14 @@ func main() {
 	// Временные отрезки
 	timeIntervals := []string{"01:10:21", "02:10:21", "06:10:21", "15:10:21", "00:59:59", "01:00:00", "01:00:01", "01:10:21", "00:10:21"}
 
-	// Константа для 24 часов в секундах
-	const dayInSeconds = 24 * 60 * 60
-	hasNewDay := false
+	hasNewDay, startTimeIsMidnight, hackathonIsOver := false, false, false
 
 	var diff, prevDiff float64
 
-	startTimeIsMidnight := false
 	if startTimeStr == "00:00:00" {
 		startTimeIsMidnight = true
 	}
 
-	hackathonIsOver := false
 	for i, intervalStr := range timeIntervals {
 		intervalTime, _ := time.Parse("15:04:05", intervalStr)
 
@@ -73,3 +69,5 @@ func main() {
 // иначе
 // как только мы перешли за новый день
 // мы должны сравнивать текущую дату со (старт дат - 1 секунда)
+
+// Миша участвует в специ
