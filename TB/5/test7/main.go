@@ -21,21 +21,20 @@ type TeamResult struct {
 }
 
 func main() {
-	// Example requests
+	requests := []Request{
+		{"VK", parseTime("00:10:21"), "A", "FORBIDDEN", false},
+		{"T", parseTime("00:00:23"), "A", "DENIED", false},
+		{"T", parseTime("00:23:23"), "A", "ACCESSED", false},
+		{"VK", parseTime("00:30:23"), "A", "ACCESSED", false},
+		{"YA", parseTime("00:40:23"), "B", "ACCESSED", false},
+	}
 	// requests := []Request{
-	// 	{"T", parseTime("00:10:21"), "A", "FORBIDDEN", false},
-	// 	{"T", parseTime("00:30:22"), "A", "DENIED", false},
-	// 	{"YA", parseTime("00:00:01"), "A", "ACCESSED", false},
-	// 	{"VK", parseTime("00:30:23"), "A", "ACCESSED", false},
+	// 	{"T", parseTime("15:10:21"), "A", "FORBIDDEN", false},
+	// 	{"T", parseTime("00:59:59"), "A", "DENIED", false},
+	// 	{"YA", parseTime("01:00:00"), "A", "ACCESSED", false},
+	// 	{"VK", parseTime("01:00:01"), "A", "ACCESSED", false},
 	// 	{"YA", parseTime("00:40:23"), "A", "ACCESSED", false},
 	// }
-	requests := []Request{
-		{"T", parseTime("15:10:21"), "A", "FORBIDDEN", false},
-		{"T", parseTime("00:59:59"), "A", "DENIED", false},
-		{"YA", parseTime("01:00:00"), "A", "ACCESSED", false},
-		{"VK", parseTime("01:00:01"), "A", "ACCESSED", false},
-		{"YA", parseTime("00:40:23"), "A", "ACCESSED", false},
-	}
 
 	startTimeStr := "01:00:00"
 	startTime, _ := time.Parse("15:04:05", startTimeStr)
@@ -52,8 +51,9 @@ func main() {
 			TeamName:      req.TeamName,
 			HackedServers: make(map[string]struct{}),
 		}
-		if req.Result == "ACCESSED" {
+		if req.Result == "ACCESSED" && !req.HackathonIsOver {
 			teamResults[req.TeamName].HackedServers[req.ServerID] = struct{}{}
+
 		}
 	}
 
@@ -100,3 +100,6 @@ func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
 		prevDiff = diff
 	}
 }
+
+// краевой случай startTime == 23:55:00
+// посчитать количество баллов
