@@ -15,23 +15,33 @@ func main() {
 
 	// Константа для 24 часов в секундах
 	const dayInSeconds = 24 * 60 * 60
+	hasNewDay := false
 
-	for _, intervalStr := range timeIntervals {
+	var diff, prevDiff float64
+
+	for i, intervalStr := range timeIntervals {
 		intervalTime, _ := time.Parse("15:04:05", intervalStr)
 
-		// Вычисляем разницу в секундах
-		diff := intervalTime.Sub(startTime).Seconds()
+		if i == 0 && intervalTime.Before(startTime) {
+			hasNewDay = true
+			fmt.Printf("Первое время с переходом!\n")
+		}
 
-		// Если разница отрицательная, добавляем 24 часа
-		if diff < 0 {
-			diff += dayInSeconds
+		diff = intervalTime.Sub(startTime).Seconds()
+
+		if !hasNewDay && i != 0 && diff < prevDiff {
+			fmt.Printf("Переход на новый день!\n")
+			hasNewDay = true
 		}
 
 		// Проверяем, превышает ли разница 24 часа
 		if diff >= dayInSeconds {
-			fmt.Printf("Время %s выходит за 24-часовой интервал.\n", intervalStr)
+			fmt.Printf("Время %s выходит за 24-часовой интервал. %v %v %v\n", intervalStr, diff, prevDiff, diff < prevDiff)
 		} else {
-			fmt.Printf("Время %s в пределах 24-часового интервала.\n", intervalStr)
+			fmt.Printf("Время %s в пределах 24-часового интервала. %v %v %v\n", intervalStr, diff, prevDiff, diff < prevDiff)
 		}
+
+		// Вычисляем разницу в секундах
+		prevDiff = diff
 	}
 }
