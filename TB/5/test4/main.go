@@ -19,23 +19,37 @@ func main() {
 
 	var diff, prevDiff float64
 
+	startTimeIsMidnight := false
+	if startTimeStr == "00:00:00" {
+		startTimeIsMidnight = true
+	}
+
+	hackathonIsOver := false
 	for i, intervalStr := range timeIntervals {
 		intervalTime, _ := time.Parse("15:04:05", intervalStr)
 
-		if i == 0 && intervalTime.Before(startTime) {
+		if i == 0 && intervalTime.Before(startTime) && !startTimeIsMidnight {
 			hasNewDay = true
 			fmt.Printf("Первое время с переходом!\n")
 		}
 
 		diff = intervalTime.Sub(startTime).Seconds()
 
-		if !hasNewDay && i != 0 && diff < prevDiff {
+		if !hasNewDay && i != 0 && diff < prevDiff && !startTimeIsMidnight {
 			fmt.Printf("Переход на новый день!\n")
 			hasNewDay = true
 		}
+		// fmt.Println(intervalTime, hasNewDay, !startTimeIsMidnight && intervalTime.Before(startTime))
+		if hasNewDay && !startTimeIsMidnight && intervalTime.After(startTime) {
+			hackathonIsOver = true
+		}
+
+		if startTimeIsMidnight && diff < prevDiff {
+			hackathonIsOver = true
+		}
 
 		// Проверяем, превышает ли разница 24 часа
-		if diff >= dayInSeconds {
+		if hackathonIsOver {
 			fmt.Printf("Время %s выходит за 24-часовой интервал. %v %v %v\n", intervalStr, diff, prevDiff, diff < prevDiff)
 		} else {
 			fmt.Printf("Время %s в пределах 24-часового интервала. %v %v %v\n", intervalStr, diff, prevDiff, diff < prevDiff)
@@ -45,3 +59,10 @@ func main() {
 		prevDiff = diff
 	}
 }
+
+// в случае если у нас стартовое время 00:00:00
+// то как только мы перешли за новый день, значит мы вышли за 24-часовой интервал.
+
+// иначе
+// как только мы перешли за новый день
+// мы должны сравнивать текущую дату со (старт дат - 1 секунда)
