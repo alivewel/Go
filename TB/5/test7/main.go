@@ -14,10 +14,15 @@ type Request struct {
 }
 
 type TeamResult struct {
-	TeamName      string              // имя команды
-	Position      int                 // место команды
-	HackedServers map[string]struct{} // взломанные сервера (чтобы избежать дубликатов, потом вывводить len)
-	NumberPoints  string              // количество очков
+	TeamName      string                // имя команды
+	Position      int                   // место команды
+	HackedServers map[string]ServerInfo // взломанные сервера (чтобы избежать дубликатов, потом вывводить len)
+	NumberPoints  string                // количество очков
+}
+
+type ServerInfo struct {
+	ServerIsHacked      bool
+	FailedAttemptsCount int
 }
 
 func main() {
@@ -49,20 +54,34 @@ func main() {
 	for _, req := range requests {
 		teamResults[req.TeamName] = TeamResult{
 			TeamName:      req.TeamName,
-			HackedServers: make(map[string]struct{}),
+			HackedServers: make(map[string]ServerInfo),
 		}
 		if checkAccessed(req.Result) && !req.HackathonIsOver {
-			teamResults[req.TeamName].HackedServers[req.ServerID] = struct{}{}
-
+			fmt.Println("checkAccessed", teamResults[req.TeamName].HackedServers[req.ServerID].FailedAttemptsCount)
+			fmt.Println("checkAccessed", teamResults[req.TeamName].HackedServers[req.ServerID])
+			teamResults[req.TeamName].HackedServers[req.ServerID] = ServerInfo{
+				ServerIsHacked:      true,
+				FailedAttemptsCount: teamResults[req.TeamName].HackedServers[req.ServerID].FailedAttemptsCount,
+			}
+			// создать структуру в качестве значения мапы с значениями
+			// bool - взломан сервер или нет
+			// количество неудачных попыток
 		}
 		if checkForbidden(req.Result) && !req.HackathonIsOver {
-			
+			fmt.Println("checkForbidden", teamResults[req.TeamName].HackedServers[req.ServerID].FailedAttemptsCount)
+			// teamResults[req.TeamName].HackedServers[req.ServerID].FailedAttemptsCount
+			// прибавить по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
+			teamResults[req.TeamName].HackedServers[req.ServerID] = ServerInfo{
+				ServerIsHacked:      teamResults[req.TeamName].HackedServers[req.ServerID].ServerIsHacked,
+				FailedAttemptsCount: teamResults[req.TeamName].HackedServers[req.ServerID].FailedAttemptsCount + 1,
+			}
+			fmt.Println(teamResults[req.TeamName].HackedServers[req.ServerID])
 		}
-
+		fmt.Println("checkAccessed", teamResults[req.TeamName].HackedServers[req.ServerID])
 	}
 
 	for _, teamResult := range teamResults {
-		fmt.Printf("Команда: %s %s\n", teamResult.TeamName, teamResult.HackedServers)
+		fmt.Printf("Команда: %s %v\n", teamResult.TeamName, teamResult.HackedServers)
 	}
 }
 
