@@ -6,12 +6,19 @@ import (
 )
 
 func main() {
+	// // Время старта
+	// startTimeStr := "00:00:00"
+	// startTime, _ := time.Parse("15:04:05", startTimeStr)
+
+	// // Временные отрезки
+	// timeIntervals := []string{"01:10:21", "02:10:21", "06:10:21", "15:10:21", "23:59:59", "00:00:00", "00:00:01", "01:10:21", "00:10:21"}
+
 	// Время старта
 	startTimeStr := "01:00:00"
 	startTime, _ := time.Parse("15:04:05", startTimeStr)
 
 	// Временные отрезки
-	timeIntervals := []string{"01:10:21", "02:10:21", "06:10:21", "15:10:21", "01:10:21", "00:10:21"}
+	timeIntervals := []string{"01:10:21", "02:10:21", "06:10:21", "15:10:21", "00:59:59", "01:00:00", "01:00:01", "01:10:21", "00:10:21"}
 
 	// Константа для 24 часов в секундах
 	const dayInSeconds = 24 * 60 * 60
@@ -40,7 +47,7 @@ func main() {
 			hasNewDay = true
 		}
 		// fmt.Println(intervalTime, hasNewDay, !startTimeIsMidnight && intervalTime.Before(startTime))
-		if hasNewDay && !startTimeIsMidnight && intervalTime.After(startTime) {
+		if hasNewDay && !startTimeIsMidnight && intervalTime.After(startTime.Add(-1 * time.Second)) {
 			hackathonIsOver = true
 		}
 
