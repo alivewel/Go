@@ -51,10 +51,14 @@ func main() {
 			TeamName:      req.TeamName,
 			HackedServers: make(map[string]struct{}),
 		}
-		if req.Result == "ACCESSED" && !req.HackathonIsOver {
+		if checkAccessed(req.Result) && !req.HackathonIsOver {
 			teamResults[req.TeamName].HackedServers[req.ServerID] = struct{}{}
 
 		}
+		if checkForbidden(req.Result) && !req.HackathonIsOver {
+			
+		}
+
 	}
 
 	for _, teamResult := range teamResults {
@@ -65,6 +69,14 @@ func main() {
 func parseTime(timeStr string) time.Time {
 	t, _ := time.Parse("15:04:05", timeStr)
 	return t
+}
+
+func checkAccessed(reqResult string) bool {
+	return reqResult == "ACCESSED" || reqResult == "ACCESED" || reqResult == "ACESSED" || reqResult == "ACESED"
+}
+
+func checkForbidden(reqResult string) bool {
+	return reqResult == "FORBIDEN" || reqResult == "FORBIDDEN"
 }
 
 func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
