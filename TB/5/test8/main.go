@@ -17,7 +17,8 @@ type TeamResult struct {
 	TeamName      string                // имя команды
 	Position      int                   // место команды
 	HackedServers map[string]ServerInfo // взломанные сервера (чтобы избежать дубликатов, потом вывводить len)
-	NumberPoints  string                // количество очков
+	NumberPoints  int                   // количество очков
+	LastActivity  time.Time             // время последнего взлома
 }
 
 type ServerInfo struct {
@@ -57,16 +58,19 @@ func main() {
 			teamResult = TeamResult{
 				TeamName:      req.TeamName,
 				HackedServers: make(map[string]ServerInfo),
+				LastActivity:  startTime,
 			}
 		}
 
 		if checkAccessed(req.Result) && !req.HackathonIsOver {
-			// создать структуру в качестве значения мапы с значениями
-			// bool - взломан сервер или нет
-			// количество неудачных попыток
+			// посчитать количество штрафных баллов
+			// для этого нужна отдельная функция, которая считает разницу в минутах между двумя временами
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.ServerIsHacked = true
+			teamResult.NumberPoints = calcDiffMinutes(teamResult.LastActivity, req.Time)
+			teamResult.LastActivity = req.Time
 			teamResult.HackedServers[req.ServerID] = serverInfo
+
 		}
 		if checkForbidden(req.Result) && !req.HackathonIsOver {
 			// прибавить по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
@@ -78,7 +82,7 @@ func main() {
 	}
 
 	for _, teamResult := range teamResults {
-		fmt.Printf("Команда: %s %v\n", teamResult.TeamName, teamResult.HackedServers)
+		fmt.Printf("Команда: %s %v %v %v\n", teamResult.TeamName, teamResult.HackedServers, teamResult.LastActivity, teamResult.NumberPoints)
 	}
 }
 
@@ -127,6 +131,17 @@ func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
 
 		prevDiff = diff
 	}
+}
+
+func calcDiffMinutes(date1, date2 time.Time) int {
+	if date2.Before(date1) {
+		date2 = date2.Add(24 * time.Hour)
+	}
+	// Вычисляем разницу между датами
+	difference := date2.Sub(date1)
+
+	// Получаем разницу в минутах
+	return int(difference.Minutes())
 }
 
 // краевой случай startTime == 23:55:00
