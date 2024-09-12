@@ -33,13 +33,11 @@ func main() {
 
 		if i == 0 && intervalTime.Before(startTime) && !startTimeIsMidnight {
 			hasNewDay = true
-			fmt.Printf("Первое время с переходом!\n")
 		}
 
 		diff = intervalTime.Sub(startTime).Seconds()
 
 		if !hasNewDay && i != 0 && diff < prevDiff && !startTimeIsMidnight {
-			fmt.Printf("Переход на новый день!\n")
 			hasNewDay = true
 		}
 		// fmt.Println(intervalTime, hasNewDay, !startTimeIsMidnight && intervalTime.Before(startTime))

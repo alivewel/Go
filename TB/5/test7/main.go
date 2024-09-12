@@ -1,0 +1,102 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+type Request struct {
+	TeamName        string
+	Time            time.Time
+	ServerID        string
+	Result          string
+	HackathonIsOver bool
+}
+
+type TeamResult struct {
+	TeamName      string              // имя команды
+	Position      int                 // место команды
+	HackedServers map[string]struct{} // взломанные сервера (чтобы избежать дубликатов, потом вывводить len)
+	NumberPoints  string              // количество очков
+}
+
+func main() {
+	// Example requests
+	// requests := []Request{
+	// 	{"T", parseTime("00:10:21"), "A", "FORBIDDEN", false},
+	// 	{"T", parseTime("00:30:22"), "A", "DENIED", false},
+	// 	{"YA", parseTime("00:00:01"), "A", "ACCESSED", false},
+	// 	{"VK", parseTime("00:30:23"), "A", "ACCESSED", false},
+	// 	{"YA", parseTime("00:40:23"), "A", "ACCESSED", false},
+	// }
+	requests := []Request{
+		{"T", parseTime("15:10:21"), "A", "FORBIDDEN", false},
+		{"T", parseTime("00:59:59"), "A", "DENIED", false},
+		{"YA", parseTime("01:00:00"), "A", "ACCESSED", false},
+		{"VK", parseTime("01:00:01"), "A", "ACCESSED", false},
+		{"YA", parseTime("00:40:23"), "A", "ACCESSED", false},
+	}
+
+	startTimeStr := "01:00:00"
+	startTime, _ := time.Parse("15:04:05", startTimeStr)
+
+	checkRequestsTimesOver(&requests, startTime)
+	// Print results
+	// for _, req := range requests {
+	// 	fmt.Printf("Request: %s at %s, HackathonIsOver: %v\n", req.TeamName, req.Time.Format("15:04:05"), req.HackathonIsOver)
+	// }
+
+	teamResults := make(map[string]TeamResult)
+	for _, req := range requests {
+		teamResults[req.TeamName] = TeamResult{
+			TeamName:      req.TeamName,
+			HackedServers: make(map[string]struct{}),
+		}
+		if req.Result == "ACCESSED" {
+			teamResults[req.TeamName].HackedServers[req.ServerID] = struct{}{}
+		}
+	}
+
+	for _, teamResult := range teamResults {
+		fmt.Printf("Команда: %s %s\n", teamResult.TeamName, teamResult.HackedServers)
+	}
+}
+
+func parseTime(timeStr string) time.Time {
+	t, _ := time.Parse("15:04:05", timeStr)
+	return t
+}
+
+func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
+	hasNewDay, startTimeIsMidnight := false, false
+	var diff, prevDiff float64
+
+	if startTime.Format("15:04:05") == "00:00:00" {
+		startTimeIsMidnight = true
+	}
+
+	for i := range *requests {
+		req := &(*requests)[i]
+		intervalTime := req.Time
+
+		if i == 0 && intervalTime.Before(startTime) && !startTimeIsMidnight {
+			hasNewDay = true
+		}
+
+		diff = intervalTime.Sub(startTime).Seconds()
+
+		if !hasNewDay && i != 0 && diff < prevDiff && !startTimeIsMidnight {
+			hasNewDay = true
+		}
+
+		if hasNewDay && !startTimeIsMidnight && intervalTime.After(startTime.Add(-1*time.Second)) {
+			req.HackathonIsOver = true
+		}
+
+		if startTimeIsMidnight && diff < prevDiff {
+			req.HackathonIsOver = true
+		}
+
+		prevDiff = diff
+	}
+}

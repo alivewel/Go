@@ -60,9 +60,9 @@ func checkTimeIntervals(startTime time.Time, timeIntervals []time.Time) {
 
 		// Проверяем, превышает ли разница 24 часа
 		if hackathonIsOver {
-			fmt.Printf("Время %s выходит за 24-часовой интервал. %v %v %v\n", intervalTime.Format("15:04:05"), diff, prevDiff, diff < prevDiff)
+			fmt.Printf("Время %s выходит за 24-часовой интервал.\n", intervalTime.Format("15:04:05"))
 		} else {
-			fmt.Printf("Время %s в пределах 24-часового интервала. %v %v %v\n", intervalTime.Format("15:04:05"), diff, prevDiff, diff < prevDiff)
+			fmt.Printf("Время %s в пределах 24-часового интервала.\n", intervalTime.Format("15:04:05"))
 		}
 
 		// Вычисляем разницу в секундах
