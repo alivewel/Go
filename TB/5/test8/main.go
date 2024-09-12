@@ -33,15 +33,25 @@ func main() {
 		{"VK", parseTime("00:30:23"), "A", "ACCESSED", false},
 		{"YA", parseTime("00:40:23"), "B", "ACCESSED", false},
 	}
+	// requests := []Request{
+	// 	{"T", parseTime("15:10:21"), "A", "FORBIDDEN", false},
+	// 	{"T", parseTime("00:59:59"), "A", "DENIED", false},
+	// 	{"YA", parseTime("01:00:00"), "A", "ACCESSED", false},
+	// 	{"VK", parseTime("01:00:01"), "A", "ACCESSED", false},
+	// 	{"YA", parseTime("00:40:23"), "A", "ACCESSED", false},
+	// }
 
 	startTimeStr := "01:00:00"
 	startTime, _ := time.Parse("15:04:05", startTimeStr)
 
 	checkRequestsTimesOver(&requests, startTime)
+	// Print results
+	// for _, req := range requests {
+	// 	fmt.Printf("Request: %s at %s, HackathonIsOver: %v\n", req.TeamName, req.Time.Format("15:04:05"), req.HackathonIsOver)
+	// }
 
 	teamResults := make(map[string]TeamResult)
 	for _, req := range requests {
-		// Проверяем, существует ли уже команда
 		teamResult, exists := teamResults[req.TeamName]
 		if !exists {
 			teamResult = TeamResult{
@@ -51,18 +61,19 @@ func main() {
 		}
 
 		if checkAccessed(req.Result) && !req.HackathonIsOver {
+			// создать структуру в качестве значения мапы с значениями
+			// bool - взломан сервер или нет
+			// количество неудачных попыток
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.ServerIsHacked = true
 			teamResult.HackedServers[req.ServerID] = serverInfo
 		}
-
 		if checkForbidden(req.Result) && !req.HackathonIsOver {
+			// прибавить по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.FailedAttemptsCount++
 			teamResult.HackedServers[req.ServerID] = serverInfo
 		}
-
-		// Обновляем карту с измененной информацией о команде
 		teamResults[req.TeamName] = teamResult
 	}
 
@@ -117,3 +128,6 @@ func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
 		prevDiff = diff
 	}
 }
+
+// краевой случай startTime == 23:55:00
+// посчитать количество баллов
