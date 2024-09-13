@@ -26,6 +26,11 @@ type ServerInfo struct {
 	FailedAttemptsCount int
 }
 
+type TimeInfo struct {
+	PrevDiff  int
+	HasNewDay bool
+}
+
 func main() {
 	requests := []Request{
 		{"VK", parseTime("00:10:21"), "A", "FORBIDDEN", false},
@@ -68,15 +73,20 @@ func main() {
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.ServerIsHacked = true
 			// fmt.Println(teamResult.LastActivity, req.Time, calcDiffMinutes(teamResult.LastActivity, req.Time))
-			teamResult.NumberPoints = calcDiffMinutes(teamResult.LastActivity, req.Time)
+
+			penaltyPoints := calcDiffMinutes(teamResult.LastActivity, req.Time)
+
+			teamResult.NumberPoints = penaltyPoints
 			teamResult.LastActivity = req.Time
 			teamResult.HackedServers[req.ServerID] = serverInfo
 
+			// прибавляем по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
+			failedCount := teamResult.HackedServers[req.ServerID].FailedAttemptsCount
+			if failedCount > 0 {
+				teamResult.NumberPoints = penaltyPoints + failedCount*20
+			}
 		}
-		// fmt.Println("Forbidden!", req.TeamName, req.Result, checkForbidden(req.Result), !req.HackathonIsOver)
 		if checkForbidden(req.Result) && !req.HackathonIsOver { //
-			// прибавить по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
-			fmt.Println("Forbidden", req.TeamName, req.Result)
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.FailedAttemptsCount++
 			teamResult.HackedServers[req.ServerID] = serverInfo
@@ -103,38 +113,45 @@ func checkForbidden(reqResult string) bool {
 }
 
 func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
-	hasNewDay, startTimeIsMidnight := false, false
-	var diff, prevDiff float64
+	startTimeIsMidnight := false
+	var diff int
 	// завести мапу с ключем название команды и значением prevDiff и hasNewDay
 	// записывать и проверять prevDiff и hasNewDay только для своей команды
 	if startTime.Format("15:04:05") == "00:00:00" {
 		startTimeIsMidnight = true
 	}
 
+	timesInfo := make(map[string]TimeInfo)
+
 	for i := range *requests {
 		req := &(*requests)[i]
 		intervalTime := req.Time
 
+		timeInfo, exists := timesInfo[req.TeamName]
+		if !exists {
+			timeInfo = TimeInfo{}
+		}
+
 		if i == 0 && intervalTime.Before(startTime) && !startTimeIsMidnight {
-			hasNewDay = true
+			timeInfo.HasNewDay = true
 		}
 
-		diff = intervalTime.Sub(startTime).Seconds()
+		diff = int(intervalTime.Sub(startTime).Seconds())
 
-		if !hasNewDay && i != 0 && diff < prevDiff && !startTimeIsMidnight {
-			hasNewDay = true
+		if !timeInfo.HasNewDay && i != 0 && diff < timeInfo.PrevDiff && !startTimeIsMidnight {
+			timeInfo.HasNewDay = true
 		}
 
-		if hasNewDay && !startTimeIsMidnight && intervalTime.After(startTime.Add(-1*time.Second)) {
+		if timeInfo.HasNewDay && !startTimeIsMidnight && intervalTime.After(startTime.Add(-1*time.Second)) {
 			req.HackathonIsOver = true
 		}
 
-		if startTimeIsMidnight && diff < prevDiff && int(prevDiff) != 0 {
-			fmt.Println("ag", diff, int(prevDiff))
+		if startTimeIsMidnight && diff < timeInfo.PrevDiff && int(timeInfo.PrevDiff) != 0 {
 			req.HackathonIsOver = true
 		}
 
-		prevDiff = diff
+		timeInfo.PrevDiff = diff
+		timesInfo[req.TeamName] = timeInfo
 	}
 }
 
