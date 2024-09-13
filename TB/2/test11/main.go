@@ -5,34 +5,6 @@ import (
 	"math"
 )
 
-// Функция для проверки арифметической прогрессии
-func isArithmetic(seq []int) bool {
-	if len(seq) < 2 {
-		return false
-	}
-	diff := seq[1] - seq[0]
-	for i := 2; i < len(seq); i++ {
-		if seq[i]-seq[i-1] != diff {
-			return false
-		}
-	}
-	return true
-}
-
-// Функция для проверки геометрической прогрессии
-func isGeometric(seq []int) bool {
-	if len(seq) < 2 || seq[0] == 0 {
-		return false
-	}
-	ratio := float64(seq[1]) / float64(seq[0])
-	for i := 2; i < len(seq); i++ {
-		if float64(seq[i])/float64(seq[i-1]) != ratio {
-			return false
-		}
-	}
-	return true
-}
-
 // Функция для проверки, является ли число треугольным
 func isTriangularNumber(x int) bool {
 	// Решаем уравнение n(n + 1)/2 = x для n
@@ -135,6 +107,51 @@ func isIncreasingByAtLeastOne(arr []int) bool {
 	return true
 }
 
+// Функция для нахождения двух подряд идущих чисел, которые не равны -1
+func findConsecutiveNonNegativeOnes(arr []int) ([]int, int) {
+	result := make([]int, len(arr))
+	diff := 0
+	for i := range result {
+		result[i] = -1
+	}
+
+	for i := 0; i < len(arr)-1; i++ {
+		if arr[i] != -1 && arr[i+1] != -1 {
+			result[i] = arr[i]
+			result[i+1] = arr[i+1]
+			if arr[i+1] > arr[i] {
+				diff = arr[i+1] - arr[i]
+			}
+			break
+		}
+	}
+
+	return result, diff
+}
+
+// Функция для замены -1 на вычисленные значения, используя разницу
+func fillMissingValues(arr []int, diff int) []int {
+
+	// Проход слева направо
+	for i := 0; i < len(arr); i++ {
+		if arr[i] == -1 && i > 0 && arr[i-1] != -1 {
+			arr[i] = arr[i-1] + diff
+		}
+	}
+
+	// Проход справа налево
+	for i := len(arr) - 1; i >= 0; i-- {
+		if arr[i] == -1 && i < len(arr)-1 && arr[i+1] != -1 {
+			arr[i] = arr[i+1] - diff
+			if arr[i] < 1 {
+				return nil
+			}
+		}
+	}
+
+	return arr
+}
+
 func main() {
 	// sequence := []int{1, 3, 6, 10, 15}
 	// sequence := []int{1, 3, 6}
@@ -149,7 +166,8 @@ func main() {
 	// sequence := []int{1, 3, -1}
 
 	// sequence := []int{-1, -1, 6, 11, -1}
-	sequence := []int{10, -1, 4}
+	// sequence := []int{10, -1, 4}
+	sequence := []int{-1, -1, 7, 9, 11}
 
 	// восстанавливаем пропуски и подставляем элементы треугольной последовательности
 	filledSequence := fillTriangularSequence(sequence)
@@ -163,10 +181,14 @@ func main() {
 		return
 	}
 
-	// функция для нахождения двух чисел подряд в массиве, которые не равны -1,
-	// вернуть слайс с длиной исходного массива, все остальные заполнить числами -1
-
-	// функция для проверки, возрастают ли числи
+	// арифметическая последовательность
+	replacingArray, diff := findConsecutiveNonNegativeOnes(sequence)
+	fillingMissingArray := fillMissingValues(replacingArray, diff)
+	if len(fillingMissingArray) > 0 && compareArrays(sequence, fillingMissingArray) {
+		fmt.Println("YES")
+		fmt.Println(calculateDifferences(fillingMissingArray))
+		return
+	}
 
 	replacingSequence := replaceNegativeOnes(sequence)
 
@@ -177,16 +199,6 @@ func main() {
 	}
 
 	fmt.Println("NO")
-
-	if isArithmetic(sequence) {
-		fmt.Println("Это арифметическая прогрессия")
-	} else if isGeometric(sequence) {
-		fmt.Println("Это геометрическая прогрессия")
-	} else if isTriangularSequence(sequence) {
-		fmt.Println("Последовательность является треугольной")
-	} else {
-		fmt.Println("Последовательность не является ни арифметической, ни геометрической прогрессией")
-	}
 }
 
 // []int{1, 3, -1}
