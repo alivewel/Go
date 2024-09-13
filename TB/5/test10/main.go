@@ -16,6 +16,7 @@ type TeamResult struct {
 	Position      int
 	HackedServers map[string]ServerInfo
 	NumberPoints  int
+	NumHackServ   int // количество взломанных серверов
 	LastActivity  time.Time
 }
 
@@ -30,6 +31,7 @@ func main() {
 		},
 		LastActivity: time.Date(1, 1, 1, 0, 30, 23, 0, time.UTC),
 		NumberPoints: 50,
+		NumHackServ:  1,
 	}
 
 	teamResults["T"] = TeamResult{
@@ -39,6 +41,7 @@ func main() {
 		},
 		LastActivity: time.Date(1, 1, 1, 0, 20, 23, 0, time.UTC),
 		NumberPoints: 40,
+		NumHackServ:  1,
 	}
 
 	teamResults["YA"] = TeamResult{
@@ -48,6 +51,7 @@ func main() {
 		},
 		LastActivity: time.Date(1, 1, 1, 0, 40, 23, 0, time.UTC),
 		NumberPoints: 40,
+		NumHackServ:  1,
 	}
 
 	// Преобразуем мапу в срез
@@ -65,12 +69,19 @@ func main() {
 	})
 
 	// Присваиваем позицию
+	var prevPosition int
 	for i := range teams {
-		teams[i].Position = i + 1
+		if i != 0 && len(teams[i].HackedServers) == len(teams[i-1].HackedServers) && teams[i].NumberPoints == teams[i-i].NumberPoints {
+			teams[i].Position = prevPosition
+		} else {
+			teams[i].Position = i + 1
+			prevPosition = i + 1
+		}
+		// teams[i].Position = i + 1
 	}
 
 	// Выводим результат
 	for _, teamResult := range teams {
-		fmt.Printf("Команда: %s %v %v %v %v\n", teamResult.TeamName, teamResult.HackedServers, teamResult.LastActivity, teamResult.NumberPoints, teamResult.Position)
+		fmt.Printf("%v \"%s\" %v %v\n", teamResult.Position, teamResult.TeamName, teamResult.NumHackServ, teamResult.NumberPoints)
 	}
 }
