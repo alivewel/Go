@@ -138,18 +138,44 @@ func compareArrays(arr1, arr2 []int) bool {
 	return true
 }
 
+// Функция для замены -1 на предыдущий элемент +1
+func replaceNegativeOnes(arr []int) []int {
+	if arr[0] == -1 {
+		arr[0] = 1
+	}
+	for i := 1; i < len(arr); i++ {
+		if arr[i] == -1 {
+			arr[i] = arr[i-1] + 1
+		}
+	}
+	return arr
+}
+
+// Функция для проверки, возрастают ли числа в массиве хотя бы на 1
+func isIncreasingByAtLeastOne(arr []int) bool {
+	for i := 1; i < len(arr); i++ {
+		if arr[i] <= arr[i-1] {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
 	// sequence := []int{1, 3, 6, 10, 15}
 	// sequence := []int{1, 3, 6}
 	// sequence := []int{1, -1, 6, 10, 15}
 	// sequence := []int{-1, -1, 6, 10, 15}
 	// sequence := []int{1, 3, -1, -1, -1}
-	sequence := []int{1, 3, -1, -1, 15}
+	// sequence := []int{1, 3, -1, -1, 15}
 	// sequence := []int{2, 5, 8, 11, 14}
 	// sequence := []int{2, 5, 8}
 	// sequence := []int{3, 9, 27, 81}
 	// sequence := []int{3, 9, 27}
 	// sequence := []int{1, 3, -1}
+
+	// sequence := []int{-1, -1, 6, 11, -1}
+	sequence := []int{10, -1, 4}
 
 	// восстанавливаем пропуски и подставляем элементы треугольной последовательности
 	filledSequence := fillTriangularSequence(sequence)
@@ -162,6 +188,21 @@ func main() {
 		fmt.Println(calculateDifferences(filledSequence))
 		return
 	}
+
+	// функция для нахождения двух чисел подряд в массиве, которые не равны -1,
+	// вернуть слайс с длиной исходного массива, все остальные заполнить числами -1
+
+	// функция для проверки, возрастают ли числи
+
+	replacingSequence := replaceNegativeOnes(sequence)
+
+	if isIncreasingByAtLeastOne(replacingSequence) {
+		fmt.Println("YES")
+		fmt.Println(calculateDifferences(replacingSequence))
+		return
+	}
+
+	fmt.Println("NO")
 
 	if isArithmetic(sequence) {
 		fmt.Println("Это арифметическая прогрессия")
