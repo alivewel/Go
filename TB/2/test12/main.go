@@ -98,13 +98,9 @@ func replaceNegativeOnes(arr []int) []int {
 }
 
 // Функция для проверки, возрастают ли числа в массиве хотя бы на 1
-// и еще проверяем нет ли нулей в массиве
 func isIncreasingByAtLeastOne(arr []int) bool {
-	if arr[0] == 0 {
-		return false
-	}
 	for i := 1; i < len(arr); i++ {
-		if arr[i] <= arr[i-1] || arr[i] == 0 {
+		if arr[i] <= arr[i-1] {
 			return false
 		}
 	}
@@ -171,29 +167,15 @@ func main() {
 
 	// sequence := []int{-1, -1, 6, 11, -1}
 	// sequence := []int{10, -1, 4}
-	// sequence := []int{-1, -1, 7, 9, 11}
-	// sequence := []int{10, 10, 10}
-	// sequence := []int{0, 10, 11}
-	// sequence := []int{1, 1, 11}
-
-	// Чтение количества записей
-	var n int
-	fmt.Scan(&n)
-
-	sequence := make([]int, 0, n)
-	// Чтение записей
-	for i := 0; i < n; i++ {
-		var value int
-		fmt.Scan(&value)
-		sequence = append(sequence, value)
-	}
-	// fmt.Println(sequence)
+	sequence := []int{-1, -1, 7, 9, 11}
 
 	// восстанавливаем пропуски и подставляем элементы треугольной последовательности
 	filledSequence := fillTriangularSequence(sequence)
-
+	// fmt.Println(sequence)
+	// fmt.Println(filledSequence)
+	// compareArrays(sequence, filledSequence) похоже бесполезная
 	// проверяем является ли восстановленная последовательность треугольной
-	if isTriangularSequence(filledSequence) && countNonNegativeOnes(sequence) > 2 {
+	if isTriangularSequence(filledSequence) {
 		fmt.Println("YES")
 		fmt.Println(calculateDifferences(filledSequence))
 		return
