@@ -30,7 +30,7 @@ func main() {
 	requests := []Request{
 		{"VK", parseTime("00:10:21"), "A", "FORBIDDEN", false},
 		{"T", parseTime("00:00:23"), "A", "DENIED", false},
-		{"T", parseTime("00:23:23"), "A", "ACCESSED", false},
+		{"T", parseTime("00:20:23"), "A", "ACCESSED", false},
 		{"VK", parseTime("00:30:23"), "A", "ACCESSED", false},
 		{"YA", parseTime("00:40:23"), "B", "ACCESSED", false},
 	}
@@ -42,7 +42,7 @@ func main() {
 	// 	{"YA", parseTime("00:40:23"), "A", "ACCESSED", false},
 	// }
 
-	startTimeStr := "01:00:00"
+	startTimeStr := "00:00:00"
 	startTime, _ := time.Parse("15:04:05", startTimeStr)
 
 	checkRequestsTimesOver(&requests, startTime)
@@ -67,13 +67,16 @@ func main() {
 			// для этого нужна отдельная функция, которая считает разницу в минутах между двумя временами
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.ServerIsHacked = true
+			// fmt.Println(teamResult.LastActivity, req.Time, calcDiffMinutes(teamResult.LastActivity, req.Time))
 			teamResult.NumberPoints = calcDiffMinutes(teamResult.LastActivity, req.Time)
 			teamResult.LastActivity = req.Time
 			teamResult.HackedServers[req.ServerID] = serverInfo
 
 		}
-		if checkForbidden(req.Result) && !req.HackathonIsOver {
+		// fmt.Println("Forbidden!", req.TeamName, req.Result, checkForbidden(req.Result), !req.HackathonIsOver)
+		if checkForbidden(req.Result) && !req.HackathonIsOver { //
 			// прибавить по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
+			fmt.Println("Forbidden", req.TeamName, req.Result)
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.FailedAttemptsCount++
 			teamResult.HackedServers[req.ServerID] = serverInfo
@@ -96,13 +99,14 @@ func checkAccessed(reqResult string) bool {
 }
 
 func checkForbidden(reqResult string) bool {
-	return reqResult == "FORBIDEN" || reqResult == "FORBIDDEN"
+	return reqResult == "FORBIDEN" || reqResult == "FORBIDDEN" || reqResult == "DENIED"
 }
 
 func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
 	hasNewDay, startTimeIsMidnight := false, false
 	var diff, prevDiff float64
-
+	// завести мапу с ключем название команды и значением prevDiff и hasNewDay
+	// записывать и проверять prevDiff и hasNewDay только для своей команды
 	if startTime.Format("15:04:05") == "00:00:00" {
 		startTimeIsMidnight = true
 	}
@@ -125,7 +129,8 @@ func checkRequestsTimesOver(requests *[]Request, startTime time.Time) {
 			req.HackathonIsOver = true
 		}
 
-		if startTimeIsMidnight && diff < prevDiff {
+		if startTimeIsMidnight && diff < prevDiff && int(prevDiff) != 0 {
+			fmt.Println("ag", diff, int(prevDiff))
 			req.HackathonIsOver = true
 		}
 
