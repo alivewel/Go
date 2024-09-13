@@ -62,37 +62,106 @@ func triangularNumber(n int) int {
 }
 
 // Функция для заполнения недостающих чисел в треугольной последовательности
+// func fillTriangularSequence(seq []int) []int {
+// 	filledSeq := make([]int, len(seq))
+// 	copy(filledSeq, seq)
+
+// 	for i, num := range filledSeq {
+// 		if num == -1 {
+// 			// Найти n, для которого T_n = num
+// 			for n := 1; ; n++ {
+// 				if isTriangularNumber(filledSeq[i-1]) && triangularNumber(n) > filledSeq[i-1] {
+// 					filledSeq[i] = triangularNumber(n)
+// 					break
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	return filledSeq
+// }
+
+// Функция для заполнения недостающих чисел в треугольной последовательности
 func fillTriangularSequence(seq []int) []int {
 	filledSeq := make([]int, len(seq))
 	copy(filledSeq, seq)
 
 	for i, num := range filledSeq {
 		if num == -1 {
-			// Найти n, для которого T_n = num
-			for n := 1; ; n++ {
-				if isTriangularNumber(filledSeq[i-1]) && triangularNumber(n) > filledSeq[i-1] {
-					filledSeq[i] = triangularNumber(n)
-					break
-				}
-			}
+			// Используем индекс i для вычисления треугольного числа
+			filledSeq[i] = triangularNumber(i + 1)
 		}
 	}
 
 	return filledSeq
 }
 
+// Функция для подсчета количества элементов, не равных -1
+func countNonNegativeOnes(arr []int) int {
+	count := 0
+	for _, value := range arr {
+		if value != -1 {
+			count++
+		}
+	}
+	return count
+}
+
+// Функция для вычисления разниц между элементами массива
+func calculateDifferences(arr []int) []int {
+	if len(arr) == 0 {
+		return []int{}
+	}
+
+	differences := make([]int, len(arr))
+	differences[0] = arr[0] // Первый элемент остается тем же
+
+	for i := 1; i < len(arr); i++ {
+		differences[i] = arr[i] - arr[i-1]
+	}
+
+	return differences
+}
+
+// Функция сравнения массивов
+func compareArrays(arr1, arr2 []int) bool {
+	if len(arr1) != len(arr2) {
+		return false
+	}
+
+	for i := 0; i < len(arr1); i++ {
+		if arr1[i] != -1 && arr1[i] != arr2[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
 func main() {
 	// sequence := []int{1, 3, 6, 10, 15}
 	// sequence := []int{1, 3, 6}
 	// sequence := []int{1, -1, 6, 10, 15}
-	sequence := []int{1, 3, -1, -1, -1}
+	// sequence := []int{-1, -1, 6, 10, 15}
+	// sequence := []int{1, 3, -1, -1, -1}
+	sequence := []int{1, 3, -1, -1, 15}
 	// sequence := []int{2, 5, 8, 11, 14}
 	// sequence := []int{2, 5, 8}
 	// sequence := []int{3, 9, 27, 81}
 	// sequence := []int{3, 9, 27}
+	// sequence := []int{1, 3, -1}
 
+	// восстанавливаем пропуски и подставляем элементы треугольной последовательности
 	filledSequence := fillTriangularSequence(sequence)
-	fmt.Println(filledSequence)
+	// fmt.Println(sequence)
+	// fmt.Println(filledSequence)
+	// compareArrays(sequence, filledSequence) похоже бесполезная
+	// проверяем является ли восстановленная последовательность треугольной
+	if isTriangularSequence(filledSequence) {
+		fmt.Println("YES")
+		fmt.Println(calculateDifferences(filledSequence))
+		return
+	}
 
 	if isArithmetic(sequence) {
 		fmt.Println("Это арифметическая прогрессия")
@@ -104,3 +173,7 @@ func main() {
 		fmt.Println("Последовательность не является ни арифметической, ни геометрической прогрессией")
 	}
 }
+
+// []int{1, 3, -1}
+// при таком случае тяжело определить тип последовательности
+// при таком случае тяжело точно определить следующий элемент
