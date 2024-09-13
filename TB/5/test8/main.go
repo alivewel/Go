@@ -175,16 +175,13 @@ func main() {
 
 			penaltyPoints := calcDiffMinutes(teamResult.LastActivity, req.Time)
 
-			teamResult.NumberPoints = penaltyPoints
+			// прибавляем по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
+			failedCount := teamResult.HackedServers[req.ServerID].FailedAttemptsCount
+
+			teamResult.NumberPoints = penaltyPoints + failedCount*20
 			teamResult.LastActivity = req.Time
 			teamResult.NumHackServ++
 			teamResult.HackedServers[req.ServerID] = serverInfo
-
-			// прибавляем по 20 штрафных минут за каждую неудачную попытку входа, если сервер удалось взломать
-			failedCount := teamResult.HackedServers[req.ServerID].FailedAttemptsCount
-			if failedCount > 0 {
-				teamResult.NumberPoints = penaltyPoints + failedCount*20
-			}
 		}
 		if checkForbidden(req.Result) && !req.HackathonIsOver { //
 			serverInfo := teamResult.HackedServers[req.ServerID]
