@@ -157,25 +157,6 @@ func fillMissingValues(arr []int, diff int) []int {
 }
 
 func main() {
-	// sequence := []int{1, 3, 6, 10, 15}
-	// sequence := []int{1, 3, 6}
-	// sequence := []int{1, -1, 6, 10, 15}
-	// sequence := []int{-1, -1, 6, 10, 15}
-	// sequence := []int{1, 3, -1, -1, -1}
-	// sequence := []int{1, 3, -1, -1, 15}
-	// sequence := []int{2, 5, 8, 11, 14}
-	// sequence := []int{2, 5, 8}
-	// sequence := []int{3, 9, 27, 81}
-	// sequence := []int{3, 9, 27}
-	// sequence := []int{1, 3, -1}
-
-	// sequence := []int{-1, -1, 6, 11, -1}
-	// sequence := []int{10, -1, 4}
-	// sequence := []int{-1, -1, 7, 9, 11}
-	// sequence := []int{10, 10, 10}
-	// sequence := []int{0, 10, 11}
-	// sequence := []int{1, 1, 11}
-
 	// Чтение количества записей
 	var n int
 	fmt.Scan(&n)
@@ -217,7 +198,3 @@ func main() {
 
 	fmt.Println("NO")
 }
-
-// []int{1, 3, -1}
-// при таком случае тяжело определить тип последовательности
-// при таком случае тяжело точно определить следующий элемент
