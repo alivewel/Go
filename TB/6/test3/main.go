@@ -7,15 +7,13 @@ import (
 // Структура для представления графа
 type Graph struct {
 	vertices int
-	// graph    map[int][]int
-	graph   map[int]GraphInfo
-	maxTime int
+	graph    map[int]GraphInfo
 }
 
+// Структура для хранения информации о графе
 type GraphInfo struct {
 	dependencies []int
 	time         int
-	totalTime    int
 }
 
 // Функция для создания нового графа
@@ -26,25 +24,23 @@ func NewGraph(vertices int) *Graph {
 	}
 }
 
+// Функция для получения графа
 func (g *Graph) getGraph() map[int]GraphInfo {
 	return g.graph
 }
 
 // Функция для добавления ребра в граф
 func (g *Graph) addEdge(u, v int) {
-	if u < g.vertices {
-		// Получаем текущую информацию о графе для вершины u
-		info := g.graph[u]
-		// Добавляем зависимость
-		info.dependencies = append(info.dependencies, v)
-		// Сохраняем обновленную информацию обратно в граф
-		g.graph[u] = info
-	}
+	// Получаем текущую информацию о графе для вершины u
+	info := g.graph[u]
+	// Добавляем зависимость
+	info.dependencies = append(info.dependencies, v)
+	// Сохраняем обновленную информацию обратно в граф
+	g.graph[u] = info
 }
 
-// Функция для добавления ребра в граф
+// Функция для добавления времени выполнения
 func (g *Graph) addTime(u, time int) {
-	// Получаем текущую информацию о графе для вершины u
 	info := g.graph[u]
 	// Добавляем время
 	info.time = time
@@ -52,7 +48,7 @@ func (g *Graph) addTime(u, time int) {
 	g.graph[u] = info
 }
 
-// Рекурсивная функция, используемая в topologicalSort
+// Рекурсивная функция для топологической сортировки
 func (g *Graph) topologicalSortUtil(v int, visited []bool, stack *[]int) {
 	// Помечаем текущий узел как посещенный
 	visited[v] = true
@@ -65,12 +61,7 @@ func (g *Graph) topologicalSortUtil(v int, visited []bool, stack *[]int) {
 	}
 
 	// Добавляем текущую вершину в стек с результатом
-	// if v != 0 {
-	// *stack = append([]int{v}, *stack...)
-	// }
 	*stack = append(*stack, v)
-
-	fmt.Println(*stack)
 }
 
 // Функция для поиска топологической сортировки
@@ -80,33 +71,23 @@ func (g *Graph) topologicalSort() {
 	var stack []int
 
 	// Вызываем рекурсивную вспомогательную функцию
-	// для поиска топологической сортировки для каждой вершины
 	for i := 1; i <= g.vertices; i++ {
 		if !visited[i] {
 			g.topologicalSortUtil(i, visited, &stack)
 		}
 	}
 
-	// Выводим содержимое стека
-	fmt.Println("Following is a Topological Sort of the given graph")
+	// Выводим содержимое стека в обратном порядке
+	fmt.Println("Следующая топологическая сортировка данного графа:")
+	// for i := len(stack) - 1; i >= 0; i-- {
+	// 	fmt.Print(stack[i], " ")
+	// }
+	// fmt.Println()
 	fmt.Println(stack)
 }
 
 func main() {
-	// g := NewGraph(6)
-	// g.addEdge(5, 2)
-	// g.addEdge(5, 0)
-	// g.addEdge(4, 0)
-	// g.addEdge(4, 1)
-	// g.addEdge(2, 3)
-	// g.addEdge(3, 1)
-
 	g := NewGraph(5)
-	// g.addTime(1, 10)
-	// g.addTime(2, 5)
-	// g.addTime(3, 0)
-	// g.addTime(4, 4)
-	// g.addTime(5, 15)
 
 	g.addEdge(1, 2)
 	g.addEdge(1, 3)
@@ -116,8 +97,5 @@ func main() {
 
 	fmt.Println(g.getGraph())
 
-	// fmt.Println("Following is a Topological Sort of the given graph")
 	g.topologicalSort()
 }
-
-// добавить вместо graph    map[int][]int с map[int]struct с массивом и временем выполнения
