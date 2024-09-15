@@ -30,7 +30,8 @@ func (g *Graph) getGraph() map[int]GraphInfo {
 
 // Функция для добавления ребра в граф
 func (g *Graph) addEdge(u, v int) {
-	if u < g.vertices {
+	u = u + 1
+	if u < g.vertices+1 {
 		// Получаем текущую информацию о графе для вершины u
 		info := g.graph[u]
 		// Добавляем зависимость
@@ -42,6 +43,7 @@ func (g *Graph) addEdge(u, v int) {
 
 // Функция для добавления ребра в граф
 func (g *Graph) addTime(u, time int) {
+	u = u + 1
 	// Получаем текущую информацию о графе для вершины u
 	info := g.graph[u]
 	// Добавляем время
@@ -63,7 +65,9 @@ func (g *Graph) topologicalSortUtil(v int, visited []bool, stack *[]int) {
 	}
 
 	// Добавляем текущую вершину в стек с результатом
-	*stack = append([]int{v}, *stack...)
+	if v != 0 {
+		*stack = append([]int{v}, *stack...)
+	}
 
 	fmt.Println(*stack)
 }
@@ -71,12 +75,12 @@ func (g *Graph) topologicalSortUtil(v int, visited []bool, stack *[]int) {
 // Функция для поиска топологической сортировки
 func (g *Graph) topologicalSort() {
 	// Помечаем все вершины как непосещенные
-	visited := make([]bool, g.vertices)
+	visited := make([]bool, g.vertices+1)
 	var stack []int
 
 	// Вызываем рекурсивную вспомогательную функцию
 	// для поиска топологической сортировки для каждой вершины
-	for i := 0; i < g.vertices; i++ {
+	for i := 1; i <= g.vertices; i++ {
 		if !visited[i] {
 			g.topologicalSortUtil(i, visited, &stack)
 		}
@@ -97,8 +101,17 @@ func main() {
 	// g.addEdge(3, 1)
 
 	g := NewGraph(5)
-	g.addEdge(5, 2)
-	// g.addEdge(5, 2)
+	// g.addTime(1, 10)
+	// g.addTime(2, 5)
+	// g.addTime(3, 0)
+	// g.addTime(4, 4)
+	// g.addTime(5, 15)
+
+	g.addEdge(1, 2)
+	g.addEdge(1, 3)
+	g.addEdge(1, 5)
+	g.addEdge(2, 4)
+	g.addEdge(5, 3)
 
 	fmt.Println(g.getGraph())
 

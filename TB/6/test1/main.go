@@ -65,13 +65,20 @@ func (g *Graph) topologicalSort() {
 }
 
 func main() {
-	g := NewGraph(6)
-	g.addEdge(5, 2)
-	g.addEdge(5, 0)
-	g.addEdge(4, 0)
-	g.addEdge(4, 1)
-	g.addEdge(2, 3)
-	g.addEdge(3, 1)
+	// g := NewGraph(6)
+	// g.addEdge(5, 2)
+	// g.addEdge(5, 0)
+	// g.addEdge(4, 0)
+	// g.addEdge(4, 1)
+	// g.addEdge(2, 3)
+	// g.addEdge(3, 1)
+
+	g := NewGraph(5)
+	g.addEdge(0, 1)
+	g.addEdge(0, 2)
+	g.addEdge(0, 4)
+	g.addEdge(1, 3)
+	g.addEdge(4, 2)
 
 	fmt.Println(g.getGraph())
 
@@ -79,4 +86,4 @@ func main() {
 	g.topologicalSort()
 }
 
-// добавить вместо graph map[int][]int с map[int]struct с массивом и временем выполнения
+// добавить вместо graph    map[int][]int с map[int]struct с массивом и временем выполнения
