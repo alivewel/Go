@@ -156,6 +156,18 @@ func fillMissingValues(arr []int, diff int) []int {
 	return arr
 }
 
+func printRes(result []int) {
+	for i, num := range result {
+		if i > 0 {
+			fmt.Print(" ")
+		}
+		fmt.Print(num)
+		if i == len(result)-1 {
+			fmt.Print("\n")
+		}
+	}
+}
+
 func main() {
 	// Чтение количества записей
 	var n int
@@ -175,7 +187,8 @@ func main() {
 	// проверяем является ли восстановленная последовательность треугольной
 	if isTriangularSequence(filledSequence) && countNonNegativeOnes(sequence) > 2 {
 		fmt.Println("YES")
-		fmt.Println(calculateDifferences(filledSequence))
+		// fmt.Println(calculateDifferences(filledSequence))
+		printRes(calculateDifferences(filledSequence))
 		return
 	}
 
@@ -184,7 +197,8 @@ func main() {
 	fillingMissingArray := fillMissingValues(replacingArray, diff)
 	if len(fillingMissingArray) > 0 && compareArrays(sequence, fillingMissingArray) && fillingMissingArray[0] != 0 {
 		fmt.Println("YES")
-		fmt.Println(calculateDifferences(fillingMissingArray))
+		// fmt.Println(calculateDifferences(fillingMissingArray))
+		printRes(calculateDifferences(filledSequence))
 		return
 	}
 
@@ -192,7 +206,8 @@ func main() {
 
 	if isIncreasingByAtLeastOne(replacingSequence) {
 		fmt.Println("YES")
-		fmt.Println(calculateDifferences(replacingSequence))
+		// fmt.Println(calculateDifferences(replacingSequence))
+		printRes(calculateDifferences(filledSequence))
 		return
 	}
 
