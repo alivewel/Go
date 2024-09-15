@@ -33,13 +33,8 @@ type TimeInfo struct {
 	HasNewDay bool
 }
 
-// func parseTime(timeStr string) time.Time {
-// 	t, _ := time.Parse("15:04:05", timeStr)
-// 	return t
-// }
-
 func parseTime(timeStr string) (time.Time, error) {
-    return time.Parse("15:04:05", timeStr)
+	return time.Parse("15:04:05", timeStr)
 }
 
 func checkAccessed(reqResult string) bool {
@@ -135,27 +130,13 @@ func processTeamResults(teamResults map[string]TeamResult) []TeamResult {
 }
 
 func main() {
-	// requests := []Request{
-	// 	{"VK", parseTime("00:10:21"), "A", "FORBIDDEN", false},
-	// 	{"T", parseTime("00:00:23"), "A", "DENIED", false},
-	// 	{"T", parseTime("00:20:23"), "A", "ACCESSED", false},
-	// 	{"VK", parseTime("00:30:23"), "A", "ACCESSED", false},
-	// 	{"YA", parseTime("00:40:23"), "B", "ACCESSED", false},
-	// }
-	// requests := []Request{
-	// 	{"T", parseTime("15:10:21"), "A", "FORBIDDEN", false},
-	// 	{"T", parseTime("00:59:59"), "A", "DENIED", false},
-	// 	{"YA", parseTime("01:00:00"), "A", "ACCESSED", false},
-	// 	{"VK", parseTime("01:00:01"), "A", "ACCESSED", false},
-	// 	{"YA", parseTime("00:40:23"), "A", "ACCESSED", false},
-	// }
-
-	// startTimeStr := "00:00:00"
-	// startTime, _ := time.Parse("15:04:05", startTimeStr)
-	
 	var startTimeStr string
 	fmt.Scan(&startTimeStr)
-	startTime, _ := time.Parse("15:04:05", startTimeStr)
+	startTime, err := parseTime(startTimeStr)
+	if err != nil {
+		fmt.Println("Ошибка парсинга времени старта:", err)
+		return
+	}
 
 	var lenRecord int
 	fmt.Scan(&lenRecord)
@@ -163,36 +144,30 @@ func main() {
 	requests := make([]Request, 0, lenRecord)
 	// Чтение записей
 	for i := 0; i < lenRecord; i++ {
-        var teamName, serverID, result string
-        var timeStr string
+		var teamName, serverID, result string
+		var timeStr string
 
-        // Считываем данные для каждой записи
-        fmt.Scan(&teamName, &timeStr, &serverID, &result)
+		// Считываем данные для каждой записи
+		fmt.Scan(&teamName, &timeStr, &serverID, &result)
 
-        // Парсим время
-        parsedTime, err := parseTime(timeStr)
-        if err != nil {
-            fmt.Println("Ошибка парсинга времени:", err)
-            return
-        }
+		// Парсим время
+		parsedTime, err := parseTime(timeStr)
+		if err != nil {
+			fmt.Println("Ошибка парсинга времени:", err)
+			return
+		}
 
-        // Создаем новую запись и добавляем ее в срез
-        request := Request{
-            TeamName:        teamName,
-            Time:            parsedTime,
-            ServerID:        serverID,
-            Result:          result,
-        }
-        requests = append(requests, request)
-    }
-
-	fmt.Println(requests)
+		// Создаем новую запись и добавляем ее в срез
+		request := Request{
+			TeamName: teamName,
+			Time:     parsedTime,
+			ServerID: serverID,
+			Result:   result,
+		}
+		requests = append(requests, request)
+	}
 
 	checkRequestsTimesOver(&requests, startTime)
-	// Print results
-	// for _, req := range requests {
-	// 	fmt.Printf("Request: %s at %s, HackathonIsOver: %v\n", req.TeamName, req.Time.Format("15:04:05"), req.HackathonIsOver)
-	// }
 
 	teamResults := make(map[string]TeamResult)
 	for _, req := range requests {
@@ -206,11 +181,8 @@ func main() {
 		}
 
 		if checkAccessed(req.Result) && !req.HackathonIsOver {
-			// посчитать количество штрафных баллов
-			// для этого нужна отдельная функция, которая считает разницу в минутах между двумя временами
 			serverInfo := teamResult.HackedServers[req.ServerID]
 			serverInfo.ServerIsHacked = true
-			// fmt.Println(teamResult.LastActivity, req.Time, calcDiffMinutes(teamResult.LastActivity, req.Time))
 
 			penaltyPoints := calcDiffMinutes(teamResult.LastActivity, req.Time)
 
@@ -230,18 +202,11 @@ func main() {
 		teamResults[req.TeamName] = teamResult
 	}
 
-	// for _, teamResult := range teamResults {
-	// 	fmt.Printf("Команда: %s %v %v %v %v\n", teamResult.TeamName, teamResult.HackedServers, teamResult.LastActivity, teamResult.NumberPoints, teamResult.NumHackServ)
-	// }
-
 	// Обработка и вывод результатов
 	teams := processTeamResults(teamResults)
 
 	// Выводим результат
 	for _, teamResult := range teams {
-		fmt.Printf("%v \"%s\" %v %v\n", teamResult.Position, teamResult.TeamName, teamResult.NumHackServ, teamResult.NumberPoints)
+		fmt.Printf("%v %s %v %v\n", teamResult.Position, teamResult.TeamName, teamResult.NumHackServ, teamResult.NumberPoints)
 	}
 }
-
-// краевой случай startTime == 23:55:00
-// посчитать количество баллов
