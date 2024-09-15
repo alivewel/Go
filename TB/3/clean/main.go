@@ -23,27 +23,6 @@ func containsAllChars(charsMap map[rune]int, substring string) bool {
 }
 
 func main() {
-	// bigString := "abcdefg"
-	// bigString := "abacba"
-	// bigString := "dacbacaba"
-	// bigString := "dabacaba"
-	// bigString := "abacaba"
-	// containsChar := "dac"
-	// containsChar := "abc"
-	// lenPass := 4
-
-	// bigString := "aacbabc"
-	// containsChar := "abc"
-	// lenPass := 4
-
-	// bigString := "xyzabcabcxyz"
-	// containsChar := "abc"
-	// lenPass := 4
-
-	// bigString := "abababab"
-	// containsChar := "abc"
-	// lenPass := 4
-
 	// Чтение количества записей
 	var bigString, containsChar string
 	var lenPass int
@@ -68,12 +47,9 @@ func main() {
 			if start < 0 {
 				break
 			}
-			// fmt.Println("отсуп", bigString[start:end], start, end)
 		}
 
 		substring := bigString[start:end]
-		// fmt.Println(substring)
-		// fmt.Println(bigString[start:start+1])
 		if len(substring) >= lenPass {
 			end--
 		}
@@ -90,11 +66,3 @@ func main() {
 	}
 
 }
-
-// В случае
-// bigString := "dcabacaba"
-// containsChar := "dac"
-// Выход
-// dcab
-// возможно должно выходить только dca
-// буквы b точно не должно быть
