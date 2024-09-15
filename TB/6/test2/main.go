@@ -140,9 +140,21 @@ func (g *Graph) calcTotalTime() int {
 		// 	totalTime += g.getTime(j)
 		// }
 		// for j := 0; j < len(dependencies); j++ {
-		for _, j := range dependencies {
-			fmt.Println(g.getTotalTime(j))
-			totalTime += g.getTotalTime(j)
+		for i, j := range dependencies {
+			// if i == 1 {
+			// 	fmt.Println(g.getTotalTime(j))
+			// }
+			currentTotalTime := g.getTotalTime(j)
+			if i == 0 {
+				maxValue = currentTotalTime
+			} else {
+				if currentTotalTime > maxValue {
+					maxValue = currentTotalTime
+				}
+			}
+		}
+		if len(dependencies) > 0{
+			totalTime += maxValue
 		}
 		g.setTotalTime(i, totalTime)
 
@@ -172,32 +184,32 @@ func main() {
 	// g.addEdge(2, 3)
 	// g.addEdge(3, 1)
 
-	g := NewGraph(5)
-	g.addTime(1, 10)
-	g.addTime(2, 5)
-	g.addTime(3, 0)
-	g.addTime(4, 4)
-	g.addTime(5, 15)
-
-	g.addEdge(1, 2)
-	g.addEdge(1, 3)
-	g.addEdge(1, 5)
-	g.addEdge(2, 4)
-	g.addEdge(5, 3)
-
-	// g := NewGraph(6)
-	// g.addTime(1, 2)
-	// g.addTime(2, 2)
-	// g.addTime(3, 15)
-	// g.addTime(4, 1)
-	// g.addTime(5, 2)
-	// g.addTime(6, 0)
+	// g := NewGraph(5)
+	// g.addTime(1, 10)
+	// g.addTime(2, 5)
+	// g.addTime(3, 0)
+	// g.addTime(4, 4)
+	// g.addTime(5, 15)
 
 	// g.addEdge(1, 2)
-	// g.addEdge(2, 3)
-	// g.addEdge(3, 4)
-	// g.addEdge(4, 5)
-	// g.addEdge(5, 6)
+	// g.addEdge(1, 3)
+	// g.addEdge(1, 5)
+	// g.addEdge(2, 4)
+	// g.addEdge(5, 3)
+
+	g := NewGraph(6)
+	g.addTime(1, 2)
+	g.addTime(2, 2)
+	g.addTime(3, 15)
+	g.addTime(4, 1)
+	g.addTime(5, 2)
+	g.addTime(6, 0)
+
+	g.addEdge(1, 2)
+	g.addEdge(2, 3)
+	g.addEdge(3, 4)
+	g.addEdge(4, 5)
+	g.addEdge(5, 6)
 
 	// fmt.Println(g.getGraph())
 
