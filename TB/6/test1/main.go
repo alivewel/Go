@@ -18,6 +18,10 @@ func NewGraph(vertices int) *Graph {
 	}
 }
 
+func (g *Graph) getGraph() map[int][]int {
+	return g.graph
+}
+
 // Функция для добавления ребра в граф
 func (g *Graph) addEdge(u, v int) {
 	g.graph[u] = append(g.graph[u], v)
@@ -37,6 +41,8 @@ func (g *Graph) topologicalSortUtil(v int, visited []bool, stack *[]int) {
 
 	// Добавляем текущую вершину в стек с результатом
 	*stack = append([]int{v}, *stack...)
+
+	fmt.Println(*stack)
 }
 
 // Функция для поиска топологической сортировки
@@ -54,6 +60,7 @@ func (g *Graph) topologicalSort() {
 	}
 
 	// Выводим содержимое стека
+	fmt.Println("Following is a Topological Sort of the given graph")
 	fmt.Println(stack)
 }
 
@@ -66,6 +73,10 @@ func main() {
 	g.addEdge(2, 3)
 	g.addEdge(3, 1)
 
-	fmt.Println("Following is a Topological Sort of the given graph")
+	fmt.Println(g.getGraph())
+
+	// fmt.Println("Following is a Topological Sort of the given graph")
 	g.topologicalSort()
 }
+
+// добавить вместо graph map[int][]int с map[int]struct с массивом и временем выполнения
