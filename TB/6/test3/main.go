@@ -83,6 +83,7 @@ func (g *Graph) topologicalSort() {
 	// 	fmt.Print(stack[i], " ")
 	// }
 	// fmt.Println()
+	
 	fmt.Println(stack)
 }
 

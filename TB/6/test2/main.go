@@ -8,8 +8,9 @@ import (
 type Graph struct {
 	vertices int
 	// graph    map[int][]int
-	graph   map[int]GraphInfo
-	maxTime int
+	graph      map[int]GraphInfo
+	maxTime    int
+	sortedList []int
 }
 
 type GraphInfo struct {
@@ -88,8 +89,18 @@ func (g *Graph) topologicalSort() {
 	}
 
 	// Выводим содержимое стека
+	g.sortedList = stack
 	fmt.Println("Following is a Topological Sort of the given graph")
 	fmt.Println(stack)
+}
+
+func (g *Graph) calcTotalTime() {
+	// for i := len(g.sortedList) - 1; i >= 0; i-- {
+	for i := 0; i <= g.vertices; i++ {
+		// 	fmt.Print(stack[i], " ")
+		info := g.graph[g.sortedList[i]]
+		info.time
+	}
 }
 
 func main() {
