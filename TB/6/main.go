@@ -8,99 +8,196 @@ import (
 	"strings"
 )
 
-// Структура для обозначения процесса
-type Process struct {
-	time         int
+// Структура для представления графа
+type Graph struct {
+	vertices   int
+	graph      map[int]GraphInfo
+	maxTime    int
+	sortedList []int
+}
+
+type GraphInfo struct {
 	dependencies []int
+	time         int
+	totalTime    int
+}
+
+// Функция для создания нового графа
+func NewGraph(vertices int) *Graph {
+	return &Graph{
+		vertices: vertices,
+		graph:    make(map[int]GraphInfo),
+	}
+}
+
+func (g *Graph) getGraph() map[int]GraphInfo {
+	return g.graph
+}
+
+// Функция для добавления ребра в граф
+func (g *Graph) addEdge(u, v int) {
+	if u < g.vertices {
+		// Получаем текущую информацию о графе для вершины u
+		info := g.graph[u]
+		// Добавляем зависимость
+		info.dependencies = append(info.dependencies, v)
+		// Сохраняем обновленную информацию обратно в граф
+		g.graph[u] = info
+	}
+}
+
+// Функция для добавления ребра в граф
+func (g *Graph) addTime(u, time int) {
+	// Получаем текущую информацию о графе для вершины u
+	info := g.graph[u]
+	// Добавляем время
+	info.time = time
+	// Сохраняем обновленную информацию обратно в граф
+	g.graph[u] = info
+}
+
+// Рекурсивная функция, используемая в topologicalSort
+func (g *Graph) topologicalSortUtil(v int, visited []bool, stack *[]int) {
+	// Помечаем текущий узел как посещенный
+	visited[v] = true
+
+	// Рекурсивно вызываем функцию для всех смежных вершин
+	for _, i := range g.graph[v].dependencies {
+		if !visited[i] {
+			g.topologicalSortUtil(i, visited, stack)
+		}
+	}
+
+	*stack = append(*stack, v)
+}
+
+// Функция для поиска топологической сортировки
+func (g *Graph) topologicalSort() {
+	// Помечаем все вершины как непосещенные
+	visited := make([]bool, g.vertices+1)
+	var stack []int
+
+	// Вызываем рекурсивную вспомогательную функцию
+	// для поиска топологической сортировки для каждой вершины
+	for i := 1; i <= g.vertices; i++ {
+		if !visited[i] {
+			g.topologicalSortUtil(i, visited, &stack)
+		}
+	}
+
+	// Выводим содержимое стека
+	g.sortedList = stack
+}
+
+// Функция для получения времени для заданной вершины
+func (g *Graph) getTime(vertex int) int {
+	if info, exists := g.graph[vertex]; exists {
+		return info.time
+	}
+	return -1 // Возвращаем -1, если вершина не существует
+}
+
+func (g *Graph) getTotalTime(vertex int) int {
+	if info, exists := g.graph[vertex]; exists {
+		return info.totalTime
+	}
+	return -1 // Возвращаем -1, если вершина не существует
+}
+
+func (g *Graph) getDependencies(vertex int) []int {
+	if info, exists := g.graph[vertex]; exists {
+		return info.dependencies
+	}
+	return []int{} // Возвращаем пустой слайс, если зависимостей нет
+}
+
+// Функция для установки totalTime для заданной вершины
+func (g *Graph) setTotalTime(u int, totalTime int) {
+	if u < g.vertices+1 {
+		// Получаем текущую информацию о графе для вершины u
+		info := g.graph[u]
+		// Устанавливаем новое значение totalTime
+		info.totalTime = totalTime
+		// Сохраняем обновленную информацию обратно в граф
+		g.graph[u] = info
+	}
+}
+
+func (g *Graph) calcTotalTime() int {
+	maxValue, totalTime := 0, 0
+	for _, i := range g.sortedList {
+		i := i
+		dependencies := g.getDependencies(i)
+		totalTime = g.getTime(i)
+		for i, j := range dependencies {
+			currentTotalTime := g.getTotalTime(j)
+			if i == 0 {
+				maxValue = currentTotalTime
+			} else {
+				if currentTotalTime > maxValue {
+					maxValue = currentTotalTime
+				}
+			}
+		}
+		if len(dependencies) > 0 {
+			totalTime += maxValue
+		}
+		g.setTotalTime(i, totalTime)
+
+		if totalTime > maxValue {
+			maxValue = totalTime
+		}
+	}
+	g.maxTime = maxValue
+	return maxValue
+}
+
+func (g *Graph) printTotalTime() {
+	for i := 1; i <= g.vertices; i++ {
+		fmt.Println(g.getTime(i))
+	}
+	fmt.Println("maxTime", g.maxTime)
+}
+
+func scanNums(n int) [][]int {
+
+	arrays := make([][]int, n) // Создаем срез для массивов
+
+	scanner := bufio.NewScanner(os.Stdin) // Создаем новый сканер для ввода
+
+	for i := 0; i < n; i++ {
+		scanner.Scan() // Считываем строку
+
+		line := scanner.Text()          // Получаем текст строки
+		numbers := strings.Fields(line) // Разбиваем строку на элементы
+
+		for _, num := range numbers {
+			value, err := strconv.Atoi(num) // Преобразуем строку в число
+			if err == nil {
+				arrays[i] = append(arrays[i], value) // Добавляем элемент в массив
+			}
+		}
+	}
+	return arrays
 }
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
+	var n int
+	fmt.Scan(&n) // количество массивов
 
-	// Чтение количества процессов
-	n, _ := strconv.Atoi(readLine(reader))
+	g := NewGraph(n)
+	nums := scanNums(n) // массивы
 
-	// Массив для хранения процессов
-	processes := make([]Process, n)
-	indegree := make([]int, n)
-
-	// Заполнение данных о процессах
-	for i := 0; i < n; i++ {
-		line := strings.Split(readLine(reader), " ")
-		time, _ := strconv.Atoi(line[0])
-		var dependencies []int
-		for _, dep := range line[1:] {
-			if dep != "" {
-				depIdx, _ := strconv.Atoi(dep)
-				dependencies = append(dependencies, depIdx-1)
-				indegree[depIdx-1]++
-			}
-		}
-		processes[i] = Process{time: time, dependencies: dependencies}
-	}
-	fmt.Println(processes)
-	fmt.Println()
-	fmt.Println(indegree)
-	// Очередь для топологической сортировки
-	queue := []int{}
-	for i := 0; i < n; i++ {
-		if indegree[i] == 0 {
-			queue = append(queue, i)
-		}
-	}
-
-	// Массив для хранения времени завершения каждого процесса
-	finishTime := make([]int, n)
-
-	// Топологическая сортировка и вычисление времени выполнения
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
-
-		// Обновление времени завершения для каждого зависимого процесса
-		for _, dep := range processes[current].dependencies {
-			if finishTime[dep] < finishTime[current]+processes[dep].time {
-				finishTime[dep] = finishTime[current] + processes[dep].time
-			}
-			indegree[dep]--
-			if indegree[dep] == 0 {
-				queue = append(queue, dep)
+	for i, num := range nums {
+		for j, array := range num {
+			if j == 0 {
+				g.addTime(i+1, array)
+			} else {
+				g.addEdge(i+1, array)
 			}
 		}
 	}
-	fmt.Println(indegree)
-	// Нахождение максимального времени завершения
-	maxTime := 0
-	for i := 0; i < n; i++ {
-		if maxTime < finishTime[i]+processes[i].time {
-			maxTime = finishTime[i] + processes[i].time
-		}
-	}
+	g.topologicalSort()
 
-	fmt.Println(maxTime)
+	fmt.Println(g.calcTotalTime())
 }
-
-// Функция для чтения строки
-func readLine(reader *bufio.Reader) string {
-	line, _, _ := reader.ReadLine()
-	return string(line)
-}
-
-// 5
-// 10 2 3 5
-// 5 4
-// 0
-// 4
-// 15 3
-
-// 30
-
-// 6
-// 2 2
-// 2 3
-// 15 4
-// 1 5
-// 2 6
-// 0
-
-// 32

@@ -113,7 +113,6 @@ func (g *Graph) getDependencies(vertex int) []int {
 
 // Функция для установки totalTime для заданной вершины
 func (g *Graph) setTotalTime(u int, totalTime int) {
-	// u = u + 1 // Если вы используете смещение на +1
 	if u < g.vertices+1 {
 		// Получаем текущую информацию о графе для вершины u
 		info := g.graph[u]
