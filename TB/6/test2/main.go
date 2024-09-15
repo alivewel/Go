@@ -64,13 +64,7 @@ func (g *Graph) topologicalSortUtil(v int, visited []bool, stack *[]int) {
 		}
 	}
 
-	// Добавляем текущую вершину в стек с результатом
-	// if v != 0 {
-	// *stack = append([]int{v}, *stack...)
-	// }
 	*stack = append(*stack, v)
-
-	// fmt.Println(*stack)
 }
 
 // Функция для поиска топологической сортировки
@@ -89,8 +83,6 @@ func (g *Graph) topologicalSort() {
 
 	// Выводим содержимое стека
 	g.sortedList = stack
-	// fmt.Println("Following is a Topological Sort of the given graph")
-	// fmt.Println(stack)
 }
 
 // Функция для получения времени для заданной вершины
@@ -130,20 +122,11 @@ func (g *Graph) setTotalTime(u int, totalTime int) {
 
 func (g *Graph) calcTotalTime() int {
 	maxValue, totalTime := 0, 0
-	// for i := 1; i <= g.vertices; i++ {
 	for _, i := range g.sortedList {
 		i := i
 		dependencies := g.getDependencies(i)
 		totalTime = g.getTime(i)
-		// fmt.Println(totalTime)
-		// for j := 1; j <= len(dependencies); j++ {
-		// 	totalTime += g.getTime(j)
-		// }
-		// for j := 0; j < len(dependencies); j++ {
 		for i, j := range dependencies {
-			// if i == 1 {
-			// 	fmt.Println(g.getTotalTime(j))
-			// }
 			currentTotalTime := g.getTotalTime(j)
 			if i == 0 {
 				maxValue = currentTotalTime
@@ -153,16 +136,14 @@ func (g *Graph) calcTotalTime() int {
 				}
 			}
 		}
-		if len(dependencies) > 0{
+		if len(dependencies) > 0 {
 			totalTime += maxValue
 		}
 		g.setTotalTime(i, totalTime)
 
-		fmt.Println(i, totalTime, "|", dependencies)
 		if totalTime > maxValue {
 			maxValue = totalTime
 		}
-		// fmt.Println(g.getTime(i))
 	}
 	g.maxTime = maxValue
 	return maxValue
@@ -184,43 +165,34 @@ func main() {
 	// g.addEdge(2, 3)
 	// g.addEdge(3, 1)
 
-	// g := NewGraph(5)
-	// g.addTime(1, 10)
-	// g.addTime(2, 5)
-	// g.addTime(3, 0)
-	// g.addTime(4, 4)
-	// g.addTime(5, 15)
-
-	// g.addEdge(1, 2)
-	// g.addEdge(1, 3)
-	// g.addEdge(1, 5)
-	// g.addEdge(2, 4)
-	// g.addEdge(5, 3)
-
-	g := NewGraph(6)
-	g.addTime(1, 2)
-	g.addTime(2, 2)
-	g.addTime(3, 15)
-	g.addTime(4, 1)
-	g.addTime(5, 2)
-	g.addTime(6, 0)
+	g := NewGraph(5)
+	g.addTime(1, 10)
+	g.addTime(2, 5)
+	g.addTime(3, 0)
+	g.addTime(4, 4)
+	g.addTime(5, 15)
 
 	g.addEdge(1, 2)
-	g.addEdge(2, 3)
-	g.addEdge(3, 4)
-	g.addEdge(4, 5)
-	g.addEdge(5, 6)
+	g.addEdge(1, 3)
+	g.addEdge(1, 5)
+	g.addEdge(2, 4)
+	g.addEdge(5, 3)
 
-	// fmt.Println(g.getGraph())
+	// g := NewGraph(6)
+	// g.addTime(1, 2)
+	// g.addTime(2, 2)
+	// g.addTime(3, 15)
+	// g.addTime(4, 1)
+	// g.addTime(5, 2)
+	// g.addTime(6, 0)
 
-	// fmt.Println("Following is a Topological Sort of the given graph")
+	// g.addEdge(1, 2)
+	// g.addEdge(2, 3)
+	// g.addEdge(3, 4)
+	// g.addEdge(4, 5)
+	// g.addEdge(5, 6)
+
 	g.topologicalSort()
 
-	// g.calcTotalTime()
 	fmt.Println(g.calcTotalTime())
-
-	// fmt.Println()
-	// g.printTotalTime()
 }
-
-// добавить вместо graph    map[int][]int с map[int]struct с массивом и временем выполнения
