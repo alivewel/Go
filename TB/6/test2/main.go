@@ -160,9 +160,7 @@ func (g *Graph) printTotalTime() {
 	fmt.Println("maxTime", g.maxTime)
 }
 
-func scanNums() [][]int {
-	var n int
-	fmt.Scan(&n) // Считываем количество массивов
+func scanNums(n int) [][]int {
 
 	arrays := make([][]int, n) // Создаем срез для массивов
 
@@ -220,24 +218,23 @@ func main() {
 	// g.addEdge(4, 5)
 	// g.addEdge(5, 6)
 
-	nums := scanNums()
+	var n int
+	fmt.Scan(&n) // Считываем количество массивов
 
-	g := NewGraph(len(nums))
+	g := NewGraph(n)
+	nums := scanNums(n)
+
 	// Выводим массивы для проверки
-	for _, num := range nums {
-		// fmt.Println(array)
-		for i, array := range num {
-			if i == 0 {
+	for i, num := range nums {
+		for j, array := range num {
+			if j == 0 {
 				g.addTime(i+1, array)
 			} else {
 				g.addEdge(i+1, array)
 			}
 		}
 	}
-
 	g.topologicalSort()
 
 	fmt.Println(g.calcTotalTime())
 }
-
-// to do: добавить считывание с файла
