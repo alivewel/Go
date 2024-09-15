@@ -1,7 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
 )
 
 // Структура для представления графа
@@ -156,6 +160,30 @@ func (g *Graph) printTotalTime() {
 	fmt.Println("maxTime", g.maxTime)
 }
 
+func scanNums() [][]int {
+	var n int
+	fmt.Scan(&n) // Считываем количество массивов
+
+	arrays := make([][]int, n) // Создаем срез для массивов
+
+	scanner := bufio.NewScanner(os.Stdin) // Создаем новый сканер для ввода
+
+	for i := 0; i < n; i++ {
+		scanner.Scan() // Считываем строку
+
+		line := scanner.Text()          // Получаем текст строки
+		numbers := strings.Fields(line) // Разбиваем строку на элементы
+
+		for _, num := range numbers {
+			value, err := strconv.Atoi(num) // Преобразуем строку в число
+			if err == nil {
+				arrays[i] = append(arrays[i], value) // Добавляем элемент в массив
+			}
+		}
+	}
+	return arrays
+}
+
 func main() {
 	// g := NewGraph(6)
 	// g.addEdge(5, 2)
@@ -165,18 +193,18 @@ func main() {
 	// g.addEdge(2, 3)
 	// g.addEdge(3, 1)
 
-	g := NewGraph(5)
-	g.addTime(1, 10)
-	g.addTime(2, 5)
-	g.addTime(3, 0)
-	g.addTime(4, 4)
-	g.addTime(5, 15)
+	// g := NewGraph(5)
+	// g.addTime(1, 10)
+	// g.addTime(2, 5)
+	// g.addTime(3, 0)
+	// g.addTime(4, 4)
+	// g.addTime(5, 15)
 
-	g.addEdge(1, 2)
-	g.addEdge(1, 3)
-	g.addEdge(1, 5)
-	g.addEdge(2, 4)
-	g.addEdge(5, 3)
+	// g.addEdge(1, 2)
+	// g.addEdge(1, 3)
+	// g.addEdge(1, 5)
+	// g.addEdge(2, 4)
+	// g.addEdge(5, 3)
 
 	// g := NewGraph(6)
 	// g.addTime(1, 2)
@@ -192,7 +220,24 @@ func main() {
 	// g.addEdge(4, 5)
 	// g.addEdge(5, 6)
 
+	nums := scanNums()
+
+	g := NewGraph(len(nums))
+	// Выводим массивы для проверки
+	for _, num := range nums {
+		// fmt.Println(array)
+		for i, array := range num {
+			if i == 0 {
+				g.addTime(i+1, array)
+			} else {
+				g.addEdge(i+1, array)
+			}
+		}
+	}
+
 	g.topologicalSort()
 
 	fmt.Println(g.calcTotalTime())
 }
+
+// to do: добавить считывание с файла
