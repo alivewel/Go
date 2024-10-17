@@ -13,7 +13,7 @@ func main() {
 	c := make(chan string)
 
 	go greet(c)
-
+	fmt.Println("main()")
 	c <- "John"
 	fmt.Println("main() stopped")
 }

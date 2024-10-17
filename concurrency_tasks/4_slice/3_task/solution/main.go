@@ -9,8 +9,8 @@ func main() {
 	first := []int{10, 20, 30, 40}
 	second := make([]*int, len(first))
 	for i, v := range first {
-		v := v
 		second[i] = &v
 	}
 	fmt.Println(*second[0], *second[1])
 }
+

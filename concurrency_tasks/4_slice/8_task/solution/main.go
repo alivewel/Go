@@ -26,3 +26,5 @@ func main() {
 		fmt.Println("nil")
 	}
 }
+
+// в обоих случаях распечатается Foo

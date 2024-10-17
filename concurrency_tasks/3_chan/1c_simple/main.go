@@ -1,15 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	// "time"
+)
 
 // Что здесь происходит?
 // Как можно сократить запись? Какой синтаксический сахар можно использовать здесь?
 
 func squares(c chan int) {
 	for i := 0; i <= 9; i++ {
+		// time.Sleep(time.Millisecond)
+		fmt.Println("squares", i)
 		c <- i * i
 	}
-
 	close(c) // close channel
 }
 

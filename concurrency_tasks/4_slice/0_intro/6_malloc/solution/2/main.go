@@ -9,8 +9,10 @@ func main() {
 
 func double(nums []int) []int {
 	res := make([]int, len(nums))
-	for i, num := range nums {
+	for i, _ := range nums {
+		// fmt.Println(res[i])
 		res[i] = num * 2
 	}
+	// _ = num
 	return res
 }
