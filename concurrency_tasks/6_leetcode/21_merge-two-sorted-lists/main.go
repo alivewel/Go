@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type ListNode struct {
@@ -11,17 +12,27 @@ type ListNode struct {
 
 func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 	res := &ListNode{}
-	for list1 != nil || list2 != nil {
-		fmt.Println("!")
-		if list1 != nil {
-			res.Next = &ListNode{Val: list1.Val}
+	head := res
+	for list1 != nil && list2 != nil {
+		dummy := &ListNode{}
+		if list2.Val > list1.Val {
+			dummy = &ListNode{Val: list1.Val}
 			list1 = list1.Next
-		} else if list2 != nil {
-			res.Next = &ListNode{Val: list2.Val}
+		} else {
+			dummy = &ListNode{Val: list2.Val}
 			list2 = list2.Next
 		}
+		res.Next = dummy
+		res = res.Next
 	}
-	return res.Next
+	if list1 != nil {
+		res.Next = list1
+	}
+	if list2 != nil {
+		res.Next = list2
+	}
+
+	return head.Next
 }
 
 func main() {
@@ -31,4 +42,14 @@ func main() {
 	second := &ListNode{1, &ListNode{3, &ListNode{4, nil}}}
 
 	fmt.Println(mergeTwoLists(first, second)) // Список: 1->1->2->3->4->4
+}
+
+func (it *ListNode) String() (result string) {
+	for cur := it; cur != nil; cur = cur.Next {
+		if cur == cur.Next {
+			return "CYCLE DETECTED"
+		}
+		result += strconv.Itoa(cur.Val) + " "
+	}
+	return result
 }
