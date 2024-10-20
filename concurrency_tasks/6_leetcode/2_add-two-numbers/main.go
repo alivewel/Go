@@ -5,17 +5,17 @@ import (
 	"strconv"
 )
 
-type Item struct {
-	val  int
-	next *Item
+type ListNode struct {
+	Val  int
+	Next *ListNode
 }
 
-func (it *Item) String() (result string) {
-	for cur := it; cur != nil; cur = cur.next {
-		if cur == cur.next {
+func (it *ListNode) String() (result string) {
+	for cur := it; cur != nil; cur = cur.Next {
+		if cur == cur.Next {
 			return "CYCLE DETECTED"
 		}
-		result += strconv.Itoa(cur.val) + " "
+		result += strconv.Itoa(cur.Val) + " "
 	}
 	return result
 }
@@ -23,44 +23,42 @@ func (it *Item) String() (result string) {
 func main() {
 
 	// Список: 2->4->3 Число:342
-	first := &Item{2, &Item{4, &Item{3, nil}}}
-	// Список: 5->6->4 Число:465
-	second := &Item{5, &Item{6, &Item{4, nil}}}
+	// first := &ListNode{2, &ListNode{4, &ListNode{3, nil}}}
+	// // Список: 5->6->4 Число:465
+	// second := &ListNode{5, &ListNode{6, &ListNode{4, nil}}}
 
-	// zero := &Item{0, nil}
-	// // Список: 9->9->9->9->9->9->9 Число: 9999999
-	// third := &Item{9, &Item{9, &Item{9, &Item{9, &Item{9, &Item{9, &Item{9, nil}}}}}}}
-	// // Список: 9->9->9->9 Число: 9999
-	// fourth := &Item{9, &Item{9, &Item{9, &Item{9, nil}}}}
+	// zero := &ListNode{0, nil}
+	// Список: 9->9->9->9->9->9->9 Число: 9999999
+	// third := &ListNode{9, &ListNode{9, &ListNode{9, &ListNode{9, &ListNode{9, &ListNode{9, &ListNode{9, nil}}}}}}}
+	// Список: 9->9->9->9 Число: 9999
+	// fourth := &ListNode{9, &ListNode{9, &ListNode{9, &ListNode{9, nil}}}}
 
-	fmt.Println(addTwoNumbers(first, second)) // Список: 7->0->8  Число: 342+465=807
+	third := &ListNode{9, &ListNode{9, nil}}
+	fourth := &ListNode{9, &ListNode{}}
+
+	// fmt.Println(addTwoNumbers(first, second)) // Список: 7->0->8  Число: 342+465=807
 	// fmt.Println(addTwoNumbers(zero, zero))    // 0
-	// fmt.Println(addTwoNumbers(third, fourth)) // Список: 8->9->9->9->0->0->0->1 Число: 10009998
+	fmt.Println(addTwoNumbers(third, fourth)) // Список: 8->9->9->9->0->0->0->1 Число: 10009998
 }
 
-func addTwoNumbers(a, b *Item) *Item {
-	res := &Item{}
+func addTwoNumbers(a, b *ListNode) *ListNode {
+	res := &ListNode{}
 	head := res
-	temp := 0
-	over := false
-	for a != nil && b != nil {
-		temp = a.val + b.val
-		if over {
-			temp += 1
-			over = false
+	sum, carry := 0, 0
+	for a != nil || b != nil || carry != 0 {
+		sum = carry
+		if a != nil {
+			sum += a.Val
+			a = a.Next
 		}
-		if temp > 9 {
-			over = true
-			temp = temp % 10
+		if b != nil {
+			sum += b.Val
+			b = b.Next
 		}
-		res.val = temp
-		a = a.next
-		b = b.next
-
-		if a != nil || b != nil {
-			res.next = &Item{}
-			res = res.next
-		}
+		carry = sum / 10
+		res.Next = &ListNode{sum % 10, nil}
+		res = res.Next
 	}
-	return head
+
+	return head.Next
 }
