@@ -11,14 +11,15 @@ type ListNode struct {
 }
 
 func reverseList(head *ListNode) *ListNode {
-	var prev *ListNode = nil // чтобы избавиться от пустого значения в начале списка
+	var prev *ListNode = nil     // чтобы избавиться от пустого узла в начале списка
 	current := head
 	for current != nil {
-		tempNext := current.Next // предыдущий узел
-		current.Next = prev
-		prev = current
-		current = tempNext
+		tempNext := current.Next // следующий узел
+		current.Next = prev      // меняем направление у текущего
+		prev = current           // сохраняем в prev текущий узел
+		current = tempNext       // двигаемся к следующему узлу
 	}
+
 	return prev
 }
 
