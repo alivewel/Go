@@ -1,16 +1,18 @@
 package main
 
-// что выведет программа?
+import (
+	"math/rand"
+)
 
-func main() {
-	var m map[string]struct{}
-	for k := range m {
-		println(k)
-	}
-	println("end!")
+func randomInt(max int) int {
+	return rand.Intn(max) // Возвращает случайное число от 0 до max-1
 }
 
-// программа выведет end!
-// мапа пустая, мы ничего туда не положили
+func hash1() int {
+	return randomInt(100)
+}
 
-// что такое мапа в го?
+func hash2() int {
+	return 1
+}
+
