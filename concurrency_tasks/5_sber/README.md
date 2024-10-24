@@ -49,7 +49,7 @@
 
 Все задачи можно найти в моем [GitHub](https://github.com/alivewel/sber-tasks).
 
-![stop](images/stop.png)
+<img src="images/stop.png" alt="stop" width="600"/>
 
 <details>
 <summary>Задача №1 (concurrency)</summary>
