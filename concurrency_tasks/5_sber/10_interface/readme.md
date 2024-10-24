@@ -21,5 +21,16 @@ type iface struct {
 
 ### Что выведет программа?
 
+```go
+func main() {
+	var ptr *struct{}
+	var iface interface{}
+	iface = ptr
+	if iface == nil {
+		println("It's nil!")
+	}
+} 
+```
+
 Ничего не распечается потому что `interface != nil`, в нем хранится информация о типе данных (`struct{}` - пустая структура).
 Если убрать присвоение `iface = ptr`, то интерфейс станет равным `nil`.
