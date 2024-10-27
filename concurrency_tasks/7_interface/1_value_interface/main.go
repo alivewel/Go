@@ -20,6 +20,6 @@ func main() {
 	var i I
 
 	i = &T{"Hello"}
-	fmt.Printf("Value %v, type %T\n", i, i)
+	fmt.Printf("Value %v, type %T)\n", i, i)
 	i.M()
 }

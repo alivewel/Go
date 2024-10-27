@@ -4,37 +4,37 @@ import (
 	"fmt"
 )
 
-type Runner interface {
-	Run() string
+type Animal interface {
+	Speak() string
 }
 
-type Human struct {
+type Dog struct {
 	Name string
 }
 
-func (h Human) Run() string {
-	return fmt.Sprintf("Человек %s бегает", h.Name)
+func (d Dog) Speak() string {
+	return fmt.Sprintf("Собака %s лает", d.Name)
 }
 
 func main() {
-	var runner Runner
-	fmt.Printf("Value %v, type %T\n", runner, runner) // Выведем значение и тип данной структуры
-	if runner != nil {
-		fmt.Println("runner is not nil")
+	var animal Animal
+	fmt.Printf("Value %v, type %T\n", animal, animal) // Выведем значение и тип данной структуры
+	if animal != nil {
+		fmt.Println("animal is not nil")
 	}
 
-	// runner.Run() // паника при попытке вызвать
-	// runner = "asf" // не скомпилируется, string does not implement Runner (missing method Run)
+	// animal.Speak() // паника при попытке вызвать
+	// animal = "asf" // не скомпилируется, string does not implement Animal (missing method Speak)
 
-	// var unnamedRunner *Human // если создаем таким образом, то ловим сегу при попытке заполнить поле Name
-	unnamedRunner := &Human{}
+	// var dog *Dog // если создаем таким образом, то ловим сегу при попытке заполнить поле Name
+	dog := &Dog{}
 
-	runner = unnamedRunner
-	runner.Run() // OK
-	fmt.Printf("Type: %T Value: %#v\n", runner, runner)
-	if runner != nil {
-		fmt.Println("runner is not nil")
+	animal = dog
+	animal.Speak() // OK
+	fmt.Printf("Type: %T Value: %#v\n", animal, animal)
+	if animal != nil {
+		fmt.Println("animal is not nil")
 	}
-	unnamedRunner.Name = "Peter"
-	fmt.Printf("Type: %T Value: %#v\n", runner, runner)
+	dog.Name = "Шайтан"
+	fmt.Printf("Type: %T Value: %#v\n", animal, animal)
 }
