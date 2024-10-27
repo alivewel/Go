@@ -31,10 +31,10 @@ func main() {
 
 	animal = dog
 	animal.Speak() // OK
-	fmt.Printf("Type: %T Value: %#v\n", animal, animal)
+	fmt.Printf("Value %v, type %T\n", animal, animal)
 	if animal != nil {
 		fmt.Println("animal is not nil")
 	}
 	dog.Name = "Шайтан"
-	fmt.Printf("Type: %T Value: %#v\n", animal, animal)
+	fmt.Printf("Value %v, type %T\n", animal, animal)
 }
