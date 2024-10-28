@@ -16,6 +16,14 @@ func (d Dog) Speak() string {
 	return fmt.Sprintf("Собака %s лает", d.Name)
 }
 
+type Cat struct {
+	Name string
+}
+
+func (c Cat) Speak() string {
+	return fmt.Sprintf("Кошка %s мяукает", c.Name)
+}
+
 func main() {
 	var animal Animal
 	fmt.Printf("Value %v, type %T\n", animal, animal) // Выведем значение и тип данной структуры
