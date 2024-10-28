@@ -148,6 +148,7 @@ Value 11001000, type main.Binary
 
 Полиморфизм — это концепция, позволяющая объектам разных типов быть обработанными через единый интерфейс. В данном примере полиморфизм проявляется в том, что функция MakeAnimalSpeak может принимать любой тип, который реализует интерфейс Animal, и вызывать метод Speak, не зная конкретного типа объекта.
 Это позволяет писать более гибкий и расширяемый код, так как вы можете добавлять новые типы, реализующие интерфейс Animal, без необходимости изменять существующий код, который работает с этим интерфейсом.
+С помощью интерфейсов мы можем обстрагироваться от конкретных типов.
 
 ### Пример
 
@@ -189,5 +190,73 @@ func main() {
 	// Вызов функции MakeAnimalSpeak для каждого животного
 	MakeAnimalSpeak(dog)
 	MakeAnimalSpeak(cat)
+}
+```
+
+### Type Assertion
+Type Assertion позволяет нам вызывать только те методы, которые существуют у данного конкретного типа. Она возвращает две переменные: значение конкретного типа и флаг, указывающий на успешность преобразования значения интерфейсного типа в конкретный тип. После успешного преобразования мы можем вызывать методы, специфичные для этого конкретного типа.
+
+Для каждой структуры `Dog` и `Cat` мы добавили уникальные методы:
+```go
+func (d Dog) Bark() string {
+	return fmt.Sprintf("%s громко лает!", d.Name)
+}
+
+func (c Cat) Purr() string {
+	return fmt.Sprintf("%s мурлычет.", c.Name)
+}
+```
+
+Создадим функцию `processAnimalTypeAssertion`, которая принимает на вход интерфейс `Animal` и выполняет `type assertion` для проверки конкретного типа, чтобы вызвать его уникальные методы:
+
+```go
+func processAnimalTypeAssertion(animal Animal) {
+	if dog, ok := animal.(*Dog); ok {
+		fmt.Printf("Type: %T Value: %#v\n", dog, dog)
+		fmt.Println(dog.Bark())
+	}
+	if cat, ok := animal.(*Cat); ok {
+		fmt.Printf("Type: %T Value: %#v\n", cat, cat)
+		fmt.Println(cat.Purr())
+	}
+}
+```
+
+Вызовем функцию `processAnimalTypeAssertion` в `main`.
+
+```go
+func main() {
+	dog := &Dog{Name: "Шайтан"}
+	cat := &Cat{Name: "Тайсон"}
+
+	processAnimalTypeAssertion(dog)
+	processAnimalTypeAssertion(cat)
+}
+```
+
+При выполнении этого кода получим следующий вывод:
+```go
+Type: *main.Dog Value: &main.Dog{Name:"Шайтан"}
+Шайтан громко лает!
+Type: *main.Cat Value: &main.Cat{Name:"Тайсон"}
+Тайсон мурлычет.
+```
+
+### Type Switch
+
+Type Switch предоставляет синтаксический сахар для работы с Type Assertion. Таким образом можем заменить функцию processAnimalTypeAssertion функцией processAnimalTypeSwitch:
+
+```go
+func processAnimalTypeSwitch(animal Animal) {
+	switch v := animal.(type) {
+	case *Dog:
+		fmt.Printf("Type: %T Value: %#v\n", v, v)
+		fmt.Println(v.Bark())
+	case *Cat:
+		fmt.Printf("Type: %T Value: %#v\n", v, v)
+		fmt.Println(v.Purr())
+	default:
+		fmt.Printf("Type: %T Value: %#v\n", v, v)
+	}
 }
 ```
