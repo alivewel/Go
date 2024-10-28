@@ -23,7 +23,7 @@ func main() {
 		fmt.Println("animal is not nil")
 	}
 
-	// animal.Speak() // паника при попытке вызвать
+	// animal.Speak() // паника при попытке вызвать (interface == nil)
 	// animal = "asf" // не скомпилируется, string does not implement Animal (missing method Speak)
 
 	// var dog *Dog // если создаем таким образом, то ловим сегу при попытке заполнить поле Name
