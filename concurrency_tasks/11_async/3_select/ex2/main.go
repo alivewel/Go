@@ -11,7 +11,7 @@ func main() {
 	for tickTime := range ticker.C {
 		i++
 		fmt.Println("step", i, "time", tickTime)
-		if i > 5 {
+		if i >= 5 {
 			// надо останавливать, иначе потечет
 			ticker.Stop()
 			break

@@ -24,7 +24,7 @@ func main() {
 
 	// не может быть остановлен и собран сборщиком мусора
 	// используйте если должен работать вечно
-	for tickTime := range c {
+	for tickTime := range c { // короткий алиас ticker.C
 		i++
 		fmt.Println("step", i, "time", tickTime)
 		if i >= 5 {

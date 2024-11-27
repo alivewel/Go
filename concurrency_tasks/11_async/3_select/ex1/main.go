@@ -7,7 +7,10 @@ import (
 
 func longSQLQuery() chan string {
 	ch := make(chan string)
-	ch <- "str"
+	go func() {
+		time.Sleep(2 * time.Second)
+		ch <- "str" // Send data in a goroutine
+	}()
 	return ch
 }
 
