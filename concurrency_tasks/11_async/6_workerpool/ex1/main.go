@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"runtime"
-	"strings"
+	// "runtime"
+	// "strings"
 	"time"
 )
 
 func startWorker(workerNum int, in <-chan string) {
 	for input := range in {
 		fmt.Printf(formatWork(workerNum, input))
-		runtime.Gosched() // попробуйте закомментировать
+		// runtime.Gosched() // попробуйте закомментировать
 	}
 	printFinishWork(workerNum)
 }
@@ -35,17 +35,9 @@ func main() {
 }
 
 func formatWork(workerNum int, input string) string {
-	return fmt.Sprintf("%s %s\n", strings.Repeat(" ", workerNum), input) // Используем Sprintf для форматирования
+	return fmt.Sprintf("workerNum %d %s\n", workerNum, input)
 }
 
 func printFinishWork(workerNum int) {
-	fmt.Printf("Worker %d finished\n", workerNum) // Более информативное сообщение
+	fmt.Printf("Worker %d finished\n", workerNum)
 }
-
-// func formatWork(in int, input string) string {
-// 	return fmt.Sprintln(strings.Repeat(" ", in), " ", input)
-// }
-
-// func printFinishWork(in int) {
-// 	fmt.Printf("%d finish\n", in)
-// }
