@@ -30,7 +30,7 @@ func main() {
 	wg := &sync.WaitGroup{} // wait_2.go инициализируем группу
 	quotaCh := make(chan struct{}, quotaLimit)
 	for i := 0; i < goroutinesNum; i++ {
-		wg.Add(1) // wait_2.go дбавляем воркер
+		wg.Add(1) // wait_2.go добавляем воркер
 		go startWorker(i, wg, quotaCh)
 	}
 	wg.Wait() // wait_2.go ожидаем, пока waiter.Done() не приведет счетчик к 0
