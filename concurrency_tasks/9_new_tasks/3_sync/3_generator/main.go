@@ -21,7 +21,12 @@ func generator(ctx context.Context, in ...int) <-chan int {
 		wg.Add(1)
 		go func(ch chan int, num int) {
 			defer wg.Done()
-			ch <- num
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				ch <- num
+			}
 		}(ch, num)
 	}
 	go func(chan int) {
@@ -38,7 +43,13 @@ func squarer(ctx context.Context, in <-chan int) <-chan int {
 		wg.Add(1)
 		go func(ch chan int, num int) {
 			defer wg.Done()
-			ch <- num * num
+			// ch <- num * num
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				ch <- num * num
+			}
 		}(ch, num)
 	}
 	go func(chan int) {
