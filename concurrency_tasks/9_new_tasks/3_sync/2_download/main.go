@@ -12,7 +12,7 @@ import (
 // timeoutLimit = 100 - ошибок не будет;
 // timeoutLImit = 0 - всегда будет возвращаться ошибка.
 // Можете "поиграть" с этим параметром, для проверки случаев с возвращением ошибки.
-const timeoutLimit = 0
+const timeoutLimit = 90
 
 type Result struct {
 	msg string
@@ -37,29 +37,33 @@ func fakeDownload(url string) Result {
 // download - параллельно скачивает данные из urls
 func download(urls []string) ([]string, error) {
 	wg := sync.WaitGroup{}
-	ch := make(chan string)
+	ch := make(chan Result)
 	res := make([]string, 0)
+	var err error
 	for _, url := range urls {
 		wg.Add(1)
 		go func(url string) {
 			defer wg.Done()
 			res := fakeDownload(url)
+			ch <- res
 			if res.err == nil {
-				ch <- res.msg
+				
 			} else {
 				fmt.Println(res.err)
 			}
 		}(url)
 	}
 
-	go func(chan string) {
+	go func(chan Result) {
 		wg.Wait()
 		close(ch)
 	}(ch)
 
-	for in := range ch {
-		// fmt.Println(in)
-		res = append(res, in)
+	for r := range ch {
+		if r.err != nil {
+			err = errors.Join(err, r.err)
+		}
+		res = append(res, r.msg)
 
 	}
 	return res, nil
