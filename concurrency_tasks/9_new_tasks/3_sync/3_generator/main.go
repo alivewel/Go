@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"sync"
 )
 
 func main() {
@@ -15,47 +14,36 @@ func main() {
 }
 
 func generator(ctx context.Context, in ...int) <-chan int {
-	wg := sync.WaitGroup{}
 	ch := make(chan int)
-	for _, num := range in {
-		wg.Add(1)
-		go func(ch chan int, num int) {
-			defer wg.Done()
+	go func(ch chan int) {
+		defer close(ch)
+		for _, num := range in {
 			select {
 			case <-ctx.Done():
 				return
-			default:
-				ch <- num
+			case ch <- num: // если канал заблокирован, выполнение не будет продолжаться, пока не освободится место в канале.
+				// default: // если канал ch заблокирован (например, если никто не читает из него), это приведет к блокировке горутины.
+				// 	ch <- num
 			}
-		}(ch, num)
-	}
-	go func(chan int) {
-		wg.Wait()
-		close(ch)
+		}
 	}(ch)
 	return ch
 }
 
 func squarer(ctx context.Context, in <-chan int) <-chan int {
 	ch := make(chan int)
-	wg := sync.WaitGroup{}
-	for num := range in {
-		wg.Add(1)
-		go func(ch chan int, num int) {
-			defer wg.Done()
-			// ch <- num * num
+
+	go func(ch chan int) {
+		defer close(ch)
+		for num := range in {
 			select {
 			case <-ctx.Done():
 				return
-			default:
-				ch <- num * num
+			case ch <- num * num:
 			}
-		}(ch, num)
-	}
-	go func(chan int) {
-		wg.Wait()
-		close(ch)
+		}
 	}(ch)
+
 	return ch
 }
 
