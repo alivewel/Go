@@ -9,6 +9,7 @@ func mergeSorted(a, b <-chan int) <-chan int {
 		val1, ok1 := <-a
 		val2, ok2 := <-b
 		for ok1 && ok2 {
+			// отправляем меньшее значение в канал и читаем из этого же канала еще одно значение
 			if val1 < val2 {
 				out <- val1
 				val1, ok1 = <-a
@@ -17,10 +18,12 @@ func mergeSorted(a, b <-chan int) <-chan int {
 				val2, ok2 = <-b
 			}
 		}
+		// если канал a длинее чем канал b
 		for ok1 {
 			out <- val1
 			val1, ok1 = <-a
 		}
+		// если канал b длинее чем канал a
 		for ok2 {
 			out <- val2
 			val2, ok2 = <-b
