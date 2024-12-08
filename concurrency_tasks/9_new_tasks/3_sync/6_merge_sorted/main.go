@@ -3,7 +3,28 @@ package main
 import "fmt"
 
 func mergeSorted(a, b <-chan int) <-chan int {
-	// напишите ваш код здесь
+	out := make(chan int)
+	go func(out chan int) {
+		defer close(out)
+		res1, ok1 := <-a
+		res2, ok2 := <-b
+		if ok1 && ok2 {
+			if res1 > res2 {
+				out <- res2
+				out <- res1
+			} else {
+				out <- res1
+				out <- res2
+			}
+		}
+		if ok1 {
+			out <- res1
+		}
+		if ok2 {
+			out <- res2
+		}
+	}(out)
+	return out
 }
 
 func fillChanA(c chan int) {
