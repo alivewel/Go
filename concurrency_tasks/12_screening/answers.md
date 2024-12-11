@@ -15,11 +15,7 @@ https://ru.hexlet.io/courses/complex-sql-queries/lessons/join/theory_unit
 
 ## Уровни изоляции транзакций
 
-Чем отличается «фантомное чтение» (Phantom Read)  и  «неповторяющееся чтение» (Non‑repeatable Read)?
-
-#### Различия между "фантомным чтением" и "неповторяющимся чтением"
-
-
+### Различия между "фантомным чтением" (Phantom Read) и "неповторяющимся чтением" (Non‑repeatable Read).
 
 ### Фантомное чтение (Phantom Read)
 
