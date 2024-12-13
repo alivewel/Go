@@ -6,11 +6,19 @@ import (
 )
 
 // Реализовать функцию, выполняющую батчинг значений из канала с.
-// Для возврата использовать выходной канал chan[]any
+// Для возврата использовать выходной канал chan []any
 // * с - входной канал значений. Из этих значений должны формироваться батчи
 // * batchSize - размер канала
 func doBatching(c chan any, batchSize int) chan []any {
-	return nil
+	out := make(chan []any)
+	go func() {
+		arr := make([]any, batchSize)
+		for value := range c {
+			out <- value
+		}
+	}()
+	
+	return out
 }
 
 func main() {
