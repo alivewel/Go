@@ -9,16 +9,40 @@ import (
 // Для возврата использовать выходной канал chan []any
 // * с - входной канал значений. Из этих значений должны формироваться батчи
 // * batchSize - размер канала
+// func doBatching(c chan any, batchSize int) chan []any {
+// 	out := make(chan []any)
+// 	go func() {
+// 		arr := make([]any, batchSize)
+// 		for value := range c {
+// 			out <- value
+// 		}
+// 	}()
+	
+// 	return out
+// }
+
 func doBatching(c chan any, batchSize int) chan []any {
-	out := make(chan []any)
+	cOut := make(chan []any)
+
 	go func() {
-		arr := make([]any, batchSize)
+		defer close(cOut) // Закрываем выходной канал после завершения работы горутины
+		batch := make([]any, 0, batchSize)
+
 		for value := range c {
-			out <- value
+			batch = append(batch, value) // Добавляем значение в текущий батч
+			if len(batch) == batchSize {  // Если батч достиг нужного размера
+				cOut <- batch              // Отправляем батч в выходной канал
+				batch = make([]any, 0, batchSize) // Сбрасываем батч
+			}
+		}
+
+		// Отправляем оставшиеся элементы, если они есть
+		if len(batch) > 0 {
+			cOut <- batch
 		}
 	}()
-	
-	return out
+
+	return cOut
 }
 
 func main() {
