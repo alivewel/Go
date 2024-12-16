@@ -43,6 +43,7 @@ func (s *OrderService) HandleBookingOrder(user User) *Receipt {
 		log.Logger.Err(err)
 		return nil
 	}
+LOOP:
 	for {
 		bookingCode, err := s.BookingService.BookFlight()
 
@@ -52,9 +53,11 @@ func (s *OrderService) HandleBookingOrder(user User) *Receipt {
 			receipt.BookingCode = bookingCode
 			return &receipt
 		case err.TryAgain:
+			// continue
+			// нет обработки TryAgain
 		default:
 			log.Logger.Err(err)
-			break
+			break LOOP
 		}
 	}
 
@@ -65,3 +68,7 @@ func (s *OrderService) HandleBookingOrder(user User) *Receipt {
 
 	return &receipt
 }
+
+// 1. Метод BookFlight() не имеет вводных параметров.
+// 2. Метод HandleBookingOrder не возвращает ошибку на уровень выше.
+// 3. Добавить для OrderService возврат его специфической ошибки.
