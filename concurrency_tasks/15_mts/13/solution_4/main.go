@@ -12,51 +12,39 @@ type Node struct {
 }
 
 func NewNode(data int) *Node {
-
 	node := new(Node)
-
 	node.Data = data
 	node.Left = nil
 	node.Right = nil
-
 	return node
 }
 
 func (n *Node) Traversal(result *[]int, uniqueValues map[int]struct{}, wg *sync.WaitGroup) {
-	defer wg.Done() // Уменьшаем счетчик WaitGroup при завершении функции
+	defer wg.Done()
 	if n == nil {
 		return
 	}
 	*result = append(*result, n.Data)
-
-	var leftWg, rightWg sync.WaitGroup
 	uniqueValues[n.Data] = struct{}{}
-	// Запускаем обход левого поддерева в отдельной горутине
-	if n.Left != nil {
-		leftWg.Add(1)
-		go n.Left.Traversal(result, uniqueValues, &leftWg)
-	}
-
-	// Запускаем обход правого поддерева в отдельной горутине
-	if n.Right != nil {
-		rightWg.Add(1)
-		go n.Right.Traversal(result, uniqueValues, &rightWg)
-	}
-
-	// Ждем завершения обхода левого и правого поддеревьев
+	leftWg := sync.WaitGroup{}
+	leftWg.Add(1)
+	rightWg := sync.WaitGroup{}
+	rightWg.Add(1)
+	go n.Left.Traversal(result, uniqueValues, &leftWg)
+	go n.Right.Traversal(result, uniqueValues, &rightWg)
 	leftWg.Wait()
 	rightWg.Wait()
 }
+	
 
 // Написать функцию для обхода дерева в глубину
 func (n *Node) DFS() {
+	wg := sync.WaitGroup{}
 	var result []int
 	var uniqueValues = make(map[int]struct{}) 
-	var wg sync.WaitGroup
-	wg.Add(1) // Добавляем основную горутину
+	wg.Add(1)
 	go n.Traversal(&result, uniqueValues, &wg)
-	wg.Wait() // Ждем завершения обхода
-	// Подсчет суммы уникальных значений
+	wg.Wait()
 	sum := 0
 	for value := range uniqueValues {
 		sum += value
