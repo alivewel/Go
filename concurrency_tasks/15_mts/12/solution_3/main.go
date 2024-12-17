@@ -19,16 +19,21 @@ func NewNode(data int) *Node {
 	return node
 }
 
-// 1. Добавить в текущую функцию многопоточность
-// 2. Вывести сумму всех неуникальных элементов.
+func (n *Node) Traversal(result *[]int) {
+	if n == nil {
+		return
+	}
+	*result = append(*result, n.Data)
+	n.Left.Traversal(result)
+	n.Right.Traversal(result)
+}
+	
+
+// Написать функцию для обхода дерева в глубину
 func (n *Node) DFS() {
-	fmt.Println(n.Data)
-	if n.Left != nil {
-		n.Left.DFS()
-	}
-	if n.Right != nil {
-		n.Right.DFS()
-	}
+	var result []int
+	n.Traversal(&result)
+	fmt.Println(result)
 }
 
 func main() {

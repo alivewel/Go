@@ -65,7 +65,7 @@ func main() {
 	root.DFS(&wg)
 	wg.Wait()
 	
-	var sums int  = 0
+	var sums int = 0
 	for k := range Sum {
 		sums += k
 	}
