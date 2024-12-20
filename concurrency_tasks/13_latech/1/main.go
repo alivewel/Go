@@ -19,9 +19,9 @@ func main() {
 	wg := &sync.WaitGroup{}
 	ctx, cancel := context.WithCancel(context.Background())
 	for _, url := range urls {
-		url := url
+		// url := url
 		wg.Add(1)
-		go func() {
+		go func(url string) {
 			defer wg.Done()
 			select {
 			case <-ctx.Done():
@@ -40,7 +40,7 @@ func main() {
 				return
 			}
 			fmt.Printf("Fetched %s\n", url)
-		}()
+		}(url)
 	}
 
 	fmt.Println("All requests launched!")
