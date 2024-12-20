@@ -3,14 +3,28 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"sync"
 	"time"
 )
 
 func merge(ch ...<-chan int) <-chan int {
 	out := make(chan int)
+	wg := &sync.WaitGroup{}
 	// Имеется 2 входных канала in1 и in2 и один выходной out.
 	// Требуется реализовать функцию merge, которая будет сливать данные из входных каналов в один выходной.
-
+	for _, c := range ch {
+		wg.Add(1)
+		go func(c <-chan int) {
+			defer wg.Done()
+			for ch := range c {
+				out <- ch
+			}
+		}(c)
+	}
+	go func() {
+		wg.Wait()
+		close(out)
+	}()
 	return out
 }
 
