@@ -61,6 +61,11 @@ WHERE u.id IN (
     HAVING COUNT(p.id) > 1
 );
 
+1) Используем JOIN, а не LEFT JOIN потому что нам требуется вернуть users с существующими профилями profiles (без NULL)
+2) В WHERE используем IN, а не = , чтобы соответствовать нескольким идентификаторам пользователей, возвращаемым подзапросом. Хотя = тоже работает.
+3) Порядок операторов: сначала GROUP BY, потом HAVING.
+4) Используем COUNT(p.id), а не COUNT(*).
+
 2 способ:
 
 SELECT p.user_id, p.id as p_id
@@ -71,3 +76,5 @@ JOIN (
     GROUP BY user_id
     HAVING COUNT(*) > 1
 ) subquery ON p.user_id = subquery.user_id;
+
+1) Здесь для JOIN используем подзапрос.
