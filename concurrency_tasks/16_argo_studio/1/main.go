@@ -36,6 +36,12 @@ func merge(ctx context.Context, ch ...<-chan int) <-chan int {
 	return out
 }
 
+// в select я проверяю на ctx.Done() при старте горутины,
+// но у нас может быть ситуация при которой цикл может заблокироваться
+// как это исправить?
+
+// ctrl + D interrupt
+
 func Run() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel() // Ensure that the context is cancelled when Run exits
