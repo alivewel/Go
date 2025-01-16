@@ -52,11 +52,15 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 		cur = cur.Next
 	}
 
-    if length == n {
-        dummy = dummy.Next
-    } else {
-       cur.Next = cur.Next.Next
-    }
+	if length == n {
+		dummy = dummy.Next
+	} else {
+		cur.Next = cur.Next.Next
+	}
 
 	return dummy
 }
+
+// Решать задачу на яндекс код, а запускать на литкоде.
+// Потому что литкод обесценивает цену запуска.
+// Очень легко написать и запустить. На интервью такого не будет.
