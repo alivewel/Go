@@ -36,6 +36,7 @@ func main() {
 				&ListNode{4,
 					&ListNode{5,
 						&ListNode{6, nil}}}}}}
+	// Создание списка [1, 2, 11, 21, 25, 31]
 	list3 := &ListNode{1,
 		&ListNode{2,
 			&ListNode{11,
@@ -44,29 +45,6 @@ func main() {
 						&ListNode{31, nil}}}}}}
 
 	fmt.Println(mergeKLists([]*ListNode{list1, list2, list3}))
-}
-
-func getVal(list *ListNode) int {
-	if list == nil {
-		return math.MaxInt
-	}
-	return list.Val
-}
-
-func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
-	dummy := &ListNode{}
-	res := dummy
-	for list1 != nil || list2 != nil {
-		if getVal(list1) > getVal(list2) {
-			dummy.Next = list2
-			list2 = list2.Next
-		} else {
-			dummy.Next = list1
-			list1 = list1.Next
-		}
-		dummy = dummy.Next
-	}
-	return res.Next
 }
 
 func mergeKLists(lists []*ListNode) *ListNode {
