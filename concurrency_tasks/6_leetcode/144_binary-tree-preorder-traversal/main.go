@@ -20,8 +20,8 @@ func createTree(nodes []interface{}, index int) *TreeNode {
 }
 
 func main() {
-	// Input: root = [1,2,3,4,5,null,8,null,null,6,7,9]
-	nodes := []interface{}{1, 2, 3, 4, 5, nil, 8, nil, nil, 6, 7, 9}
+	// nodes := []interface{}{1, 2, 3, 4, 5, nil, 8, nil, nil, 6, 7, 9}
+	nodes := []interface{}{1, 2, 3, 4, 5, 6, 7}
 	root := createTree(nodes, 0)
 
 	// Call the preorderTraversal function
