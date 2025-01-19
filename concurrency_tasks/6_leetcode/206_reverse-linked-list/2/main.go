@@ -40,7 +40,7 @@ func main() {
 
 func reverseList(head *ListNode) *ListNode {
 	curr := head
-	prev := &ListNode{}
+	var prev *ListNode = nil
 	for curr != nil {
 		tmp := curr
 		curr = curr.Next
