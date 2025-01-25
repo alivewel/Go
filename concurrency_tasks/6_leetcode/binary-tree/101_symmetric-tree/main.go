@@ -25,29 +25,23 @@ func main() {
 	root := createTree(nodes, 0)
 
 	// Call the preorderTraversal function
-	result := levelOrder(root)
+	result := isSymmetric(root)
 	fmt.Println(result) // Output the result
 }
 
 func isSymmetric(root *TreeNode) bool {
-	
-	return true 
-}
-
-func levelOrder(root *TreeNode) [][]int {
-	result := [][]int{}
-	return preOrder(root, 0, &result)
-}
-
-func preOrder(root *TreeNode, level int, result *[][]int) [][]int {
 	if root == nil {
-		return *result
+		return true
 	}
-	if level == len(*result) {
-		*result = append(*result, []int{})
+	return check(root.Left, root.Right)
+}
+
+func check(left, right *TreeNode) bool {
+	if left == nil || right == nil {
+		return left == nil && right == nil
 	}
-	(*result)[level] = append((*result)[level], root.Val)
-	*result = preOrder(root.Left, level+1, result)
-	*result = preOrder(root.Right, level+1, result)
-	return *result
+	if left.Val != right.Val {
+		return false
+	}
+	return check(left.Left, right.Right) && check(left.Right, right.Left)
 }
