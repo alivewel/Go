@@ -21,7 +21,8 @@ func createTree(nodes []interface{}, index int) *TreeNode {
 
 func main() {
 	// nodes1 := []interface{}{1, 2, 3, 4, 5, nil, 8, nil, nil, 6, 7, 9}
-	nodes := []interface{}{5, 4, 8, 11, nil, 13, 4, 7, 2, nil, nil, nil, 1}
+	// nodes := []interface{}{5, 4, 8, 11, nil, 13, 4, 7, 2, nil, nil, nil, 1}
+	nodes := []interface{}{}
 	root := createTree(nodes, 0)
 
 	// Call the preorderTraversal function
@@ -30,11 +31,11 @@ func main() {
 }
 
 func hasPathSum(root *TreeNode, targetSum int) bool {
-	return checkSum(root, root.Val, targetSum)
+	return checkSum(root, 0, targetSum)
 }
 
 func checkSum(root *TreeNode, curSum, targetSum int) bool {
-	if root == nil { // очень важное условие - без него паника.
+	if root == nil { // очень важное условие - без него паника из-за того, что дошли до конца дерева и пытаемся идти дальше
 		return false
 	}
 	if isLeaf(root) && targetSum == curSum+root.Val {
