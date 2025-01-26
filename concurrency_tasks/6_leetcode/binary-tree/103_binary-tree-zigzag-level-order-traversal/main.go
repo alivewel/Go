@@ -25,13 +25,14 @@ func main() {
 	root := createTree(nodes, 0)
 
 	// Call the preorderTraversal function
-	result := levelOrder(root)
+	result := zigzagLevelOrder(root)
 	fmt.Println(result) // Output the result
 }
 
-func levelOrder(root *TreeNode) [][]int {
+func zigzagLevelOrder(root *TreeNode) [][]int {
 	result := [][]int{}
 	preOrder(root, 0, &result)
+	revertTwoArray(&result)
 	return result
 }
 
@@ -45,4 +46,23 @@ func preOrder(root *TreeNode, level int, result *[][]int) {
 	(*result)[level] = append((*result)[level], root.Val)
 	preOrder(root.Left, level+1, result)
 	preOrder(root.Right, level+1, result)
+}
+
+func revertTwoArray(array *[][]int) {
+	for i, a := range *array {
+		if i % 2 != 0 {
+			revertArray(&a)
+		}
+	}
+}
+
+func revertArray(array *[]int) {
+	length := len(*array)
+	if length > 0 {
+		for i := 0; i < length/2; i++ {
+			temp := (*array)[i]
+			(*array)[i] = (*array)[length-i-1]
+			(*array)[length-i-1] = temp
+		}
+	}
 }
