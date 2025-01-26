@@ -31,18 +31,18 @@ func main() {
 
 func levelOrder(root *TreeNode) [][]int {
 	result := [][]int{}
-	return preOrder(root, 0, &result)
+	preOrder(root, 0, &result)
+	return result
 }
 
-func preOrder(root *TreeNode, level int, result *[][]int) [][]int {
+func preOrder(root *TreeNode, level int, result *[][]int) {
 	if root == nil {
-		return *result
+		return
 	}
 	if level == len(*result) {
 		*result = append(*result, []int{})
 	}
 	(*result)[level] = append((*result)[level], root.Val)
-	*result = preOrder(root.Left, level+1, result)
-	*result = preOrder(root.Right, level+1, result)
-	return *result
+	preOrder(root.Left, level+1, result)
+	preOrder(root.Right, level+1, result)
 }
