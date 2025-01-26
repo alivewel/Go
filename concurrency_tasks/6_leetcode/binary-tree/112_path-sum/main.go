@@ -20,22 +20,31 @@ func createTree(nodes []interface{}, index int) *TreeNode {
 }
 
 func main() {
-	nodes1 := []interface{}{1, 2, 3, 4, 5, nil, 8, nil, nil, 6, 7, 9}
-	nodes2 := []interface{}{1, 2, 3, 4, 5, 6, 7}
-	root1 := createTree(nodes1, 0)
-	root2 := createTree(nodes2, 0)
+	// nodes1 := []interface{}{1, 2, 3, 4, 5, nil, 8, nil, nil, 6, 7, 9}
+	nodes := []interface{}{5, 4, 8, 11, nil, 13, 4, 7, 2, nil, nil, nil, 1}
+	root := createTree(nodes, 0)
 
 	// Call the preorderTraversal function
-	result := isSameTree(root1, root2)
+	result := hasPathSum(root, 22)
 	fmt.Println(result) // Output the result
 }
 
-func isSameTree(p *TreeNode, q *TreeNode) bool {
-	if p == nil || q == nil {
-		return p == nil && q == nil 
-	}
-	if p.Val != q.Val {
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	return checkSum(root, root.Val, targetSum)
+}
+
+func checkSum(root *TreeNode, curSum, targetSum int) bool {
+	if root == nil { // очень важное условие - без него паника.
 		return false
 	}
-	return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+	if isLeaf(root) && targetSum == curSum+root.Val {
+		return true
+	}
+	resLeft := checkSum(root.Left, curSum+root.Val, targetSum)
+	resRight := checkSum(root.Right, curSum+root.Val, targetSum)
+	return resLeft || resRight
+}
+
+func isLeaf(root *TreeNode) bool {
+	return root.Left == nil && root.Right == nil
 }
