@@ -20,6 +20,6 @@
 rows := make(map[[2]int]struct{})
 
 Как мы будем хранить индекс блока (см. подробное объяснение в readme_block_idx.md):
-blockIdx = i / 3 * 3 + j + 3
+blockIdx = i / 3 * 3 + j / 3
 
 ![2](<2.png>)
