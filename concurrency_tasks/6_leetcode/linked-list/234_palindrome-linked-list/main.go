@@ -48,14 +48,10 @@ func main() {
 }
 
 func isPalindrome(head *ListNode) bool {
-	fmt.Println(head)
 	firstHalfEndCode := middleNode(head)
-	fmt.Println(firstHalfEndCode)
 	secondHalfBeginCode := reverseList(firstHalfEndCode)
-	fmt.Println(secondHalfBeginCode)
 	p1 := head
 	p2 := secondHalfBeginCode
-	// for p1 != nil && p2 != nil {
 	for p2 != nil {
 		if p1.Val != p2.Val {
 			return false

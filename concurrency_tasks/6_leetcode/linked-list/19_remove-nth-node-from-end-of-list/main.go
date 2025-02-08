@@ -22,11 +22,13 @@ func (it *ListNode) String() (result string) {
 
 func main() {
 	// Создание первого списка [1, 2, 3, 4, 5]
-	list := &ListNode{1,
-		&ListNode{2,
-			&ListNode{3,
-				&ListNode{4,
-					&ListNode{5, nil}}}}}
+	// list := &ListNode{1,
+	// 	&ListNode{2,
+	// 		&ListNode{3,
+	// 			&ListNode{4,
+	// 				&ListNode{5, nil}}}}}
+	list := &ListNode{Val:1, Next: &ListNode{2, nil}}
+
 
 	// Создание второго списка [1, 2, 3, 5]
 	res := &ListNode{1,
