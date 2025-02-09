@@ -15,6 +15,7 @@ func isReflected(points [][]int) bool {
 		pointsMap[[2]int{point[0], point[1]}] = struct{}{}
 	}
 	avgLine := maxX - minX
+	fmt.Println(avgLine)
 	for _, point := range points {
 		pointX := 0
 		if point[0] > avgLine {
@@ -22,6 +23,7 @@ func isReflected(points [][]int) bool {
 		} else {
 			pointX = avgLine + (avgLine - point[0])
 		}
+		fmt.Println(point[0], pointX)
 		if _, found := pointsMap[[2]int{pointX, point[1]}]; !found {
 			return false
 		}
