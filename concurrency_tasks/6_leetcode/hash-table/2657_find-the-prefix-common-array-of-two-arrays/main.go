@@ -26,7 +26,7 @@ func findThePrefixCommonArray(A []int, B []int) []int {
 }
 
 func main() {
-	A := []int{1,3,2,4}
-	B := []int{3,1,2,4}
+	A := []int{1, 3, 2, 4}
+	B := []int{3, 1, 2, 4}
 	fmt.Println(findThePrefixCommonArray(A, B))
 }
