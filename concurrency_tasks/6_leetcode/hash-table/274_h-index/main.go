@@ -5,7 +5,7 @@ import "fmt"
 func hIndex(citations []int) int {
 	length := len(citations)
 	// count := make([]int, 0, length + 1)
-	count := make([]int, length+1) // правильно создавать таким образом, мы обращаемся по индексу
+	count := make([]int, length+1) // правильно создавать таким образом, мы обращаемся по индексу (см. correct_array_creation.md)
 	for _, cit := range citations { 
 		if cit > length {
 			count[length]++
@@ -13,7 +13,6 @@ func hIndex(citations []int) int {
 			count[cit]++
 		}
 	}
-	fmt.Println(count)
 	cnt := 0
 	for i := len(count) - 1; i >= 0; i-- {
 		cnt += count[i]
