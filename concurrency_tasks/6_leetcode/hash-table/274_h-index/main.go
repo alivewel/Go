@@ -5,23 +5,23 @@ import "fmt"
 func hIndex(citations []int) int {
 	length := len(citations)
 	// count := make([]int, 0, length + 1)
-	count := make([]int, length + 1)
-	for _, cit := range citations {
+	count := make([]int, length+1) // правильно создавать таким образом, мы обращаемся по индексу
+	for _, cit := range citations { 
 		if cit > length {
-			count[length-1]++
+			count[length]++
 		} else {
 			count[cit]++
 		}
 	}
 	fmt.Println(count)
 	cnt := 0
-	for i := len(count)-1; i >= 0; i-- {
-		cnt += count[i] 
+	for i := len(count) - 1; i >= 0; i-- {
+		cnt += count[i]
 		if cnt >= i {
-			return cnt
+			return i // Возвращаем i, так как это h-индекс
 		}
 	}
-    return cnt
+	return 0
 }
 
 func main() {
