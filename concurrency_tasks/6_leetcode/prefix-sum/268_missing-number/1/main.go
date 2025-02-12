@@ -20,3 +20,6 @@ func main() {
 	nums = []int{0,1}
 	fmt.Println(missingNumber(nums)) // 2
 }
+
+// time: O(n)
+// mem: O(1)
