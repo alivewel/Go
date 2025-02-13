@@ -9,15 +9,10 @@ import (
 func minimumDifference(nums []int, k int) int {
 	sort.Ints(nums)
 	result := math.MaxInt
-	for i := range nums {
-		l := i
-		r := i + k - 1
-		curResult := nums[r] - nums[l]
+	for i := 0; i <= len(nums)-k; i++ { // нужно вовремя выйти из цикла, чтобы не выйти за границы массива
+		curResult := nums[i+k-1] - nums[i]
 		if curResult < result {
 			result = curResult
-		}
-		if i == len(nums) - k {
-			break
 		}
 	}
 	return result
