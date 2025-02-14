@@ -1,7 +1,7 @@
 package main
 
 import "fmt"
-
+ 
 func maxProduct(nums []int) int {
 	maxVal1, maxVal2 := 0, 0
 	for _, num := range nums {
