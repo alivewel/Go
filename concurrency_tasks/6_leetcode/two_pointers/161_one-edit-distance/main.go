@@ -29,13 +29,10 @@ func isOneEditDistance(s string, t string) bool {
 		}
 	}
 	// обработать случай, когда не до конца какой-то строки дошли
-	if p1 < len(s) - 1 || p2 < len(t) - 1 {
+	if p1 < len(s) || p2 < len(t) {
 		countDiff++
 	}
-	if countDiff > 1 {
-		return false
-	}
-	return true
+	return countDiff == 1
 }
 
 func getLongerString(s string, t string) int {
@@ -53,13 +50,6 @@ func abs(num int) int {
 	}
 	return -num
 }
-
-// func abs(num1, num2 int) int {
-// 	if num1 > num2 {
-// 		return num1 - num2
-// 	}
-// 	return num2 - num1
-// }
 
 // func main() {
 // 	// s := "ab"
@@ -110,6 +100,3 @@ func main() {
             i+1, test.s, test.t, result, test.expected)
     }
 }
-
-// minLen := min(len(s) - len(t))
-// for i := 0; i < minLen; i++ {
