@@ -85,3 +85,25 @@ if p1 < len(s) || p2 < len(t) {
 	countDiff++
 }
 ```
+
+4) Еще GPT посоветовал убрать функцию и условие с largerStr. Сравнивать длины строк сразу.
+
+largerStr := getLongerString(s, t)
+
+if largerStr == 1 {
+	p1++
+} else if largerStr == 2 {
+	p2++
+} else {
+	p1++
+	p2++
+}
+
+func getLongerString(s string, t string) int {
+	if len(s) == len(t) {
+		return 0
+	} else if len(s) > len(t) {
+		return 1
+	}
+	return 2
+}

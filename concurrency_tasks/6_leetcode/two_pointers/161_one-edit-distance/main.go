@@ -9,14 +9,13 @@ func isOneEditDistance(s string, t string) bool {
 	}
 
 	countDiff := 0
-	largerStr := getLongerString(s, t)
 	
 	p1, p2 := 0, 0
 	for p1 < len(s) && p2 < len(t) {
 		if s[p1] != t[p2] {
-			if largerStr == 1 {
+			if len(s) > len(t) {
 				p1++
-			} else if largerStr == 2 {
+			} else if len(s) < len(t){
 				p2++
 			} else {
 				p1++
@@ -33,15 +32,6 @@ func isOneEditDistance(s string, t string) bool {
 		countDiff++
 	}
 	return countDiff == 1
-}
-
-func getLongerString(s string, t string) int {
-	if len(s) == len(t) {
-		return 0
-	} else if len(s) > len(t) {
-		return 1
-	}
-	return 2
 }
 
 func abs(num int) int {
