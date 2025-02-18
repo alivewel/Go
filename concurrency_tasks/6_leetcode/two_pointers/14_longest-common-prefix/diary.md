@@ -46,3 +46,26 @@ func main() {
 	fmt.Println(longestCommonPrefix(strs)) // "fl"
 }
 ```
+
+2) GPT предложил такое решение:
+Оно действительно крутое 
+``` go
+func longestCommonPrefix(strs []string) string {
+    if len(strs) == 0 {
+        return ""
+    }
+
+    index := 0
+
+    for {
+        // Проверяем, не вышли ли за пределы длины одной из строк
+        for i := range strs {
+            if index >= len(strs[i]) || strs[i][index] != strs[0][index] {
+                return strs[0][:index]
+            }
+        }
+        // Если символы совпадают во всех строках, переходим к следующему индексу
+        index++
+    }
+}
+```

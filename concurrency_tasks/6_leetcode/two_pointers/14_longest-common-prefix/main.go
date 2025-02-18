@@ -23,7 +23,6 @@ func longestCommonPrefix(strs []string) string {
 			}
 		}
 		if flagExit {
-			fmt.Println("1")
 			break
 		}
 		index++
