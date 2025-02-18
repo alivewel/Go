@@ -8,7 +8,7 @@ func longestCommonPrefix(strs []string) string {
 	flagExit := false
 	for {
 		for i := range strs {
-			if index >= len(strs[i]) - 1 {
+			if index > len(strs[i]) - 1 {
 				flagExit = true
 				break
 			}
@@ -23,6 +23,7 @@ func longestCommonPrefix(strs []string) string {
 			}
 		}
 		if flagExit {
+			fmt.Println("1")
 			break
 		}
 		index++
@@ -31,6 +32,7 @@ func longestCommonPrefix(strs []string) string {
 }
 
 func main() {
-	strs := []string{"flower","flow","flight"}
+	// strs := []string{"flower","flow","flight"}
+	strs := []string{"a"}
 	fmt.Println(longestCommonPrefix(strs)) // "fl"
 }

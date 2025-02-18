@@ -3,6 +3,11 @@ Input strs = ["a"]
 Output ""
 Expected "a"
 
+Была проблема в условии:
+if index >= len(strs[i]) - 1
+Исправил на:
+if index > len(strs[i]) - 1 
+
 ``` go
 package main
 
