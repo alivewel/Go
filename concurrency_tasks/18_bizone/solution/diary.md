@@ -94,7 +94,7 @@ func NewManager(reader Reader, processors []Processor, writer Writer) Manager
 2) Забыл ООП.
 Ресивер пишется вот так (m *manager).
 
-3) Метод Manage() не обязательно б
+3) Метод Manage() не нужен в структуре SomeManager. Методы не объявляются внутри `struct` в Go. Методы определяются снаружи `struct`, а не внутри. Вот так: func (m *SomeManager) Manage().
 
 Моя структура и какая должны быть
 ``` go
