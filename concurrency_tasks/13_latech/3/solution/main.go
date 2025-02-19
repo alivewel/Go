@@ -19,7 +19,7 @@ func main() {
 				fmt.Println("got panic", v)
 			}
 		}()
-
+		getByIndex(1)
 	}()
 	wg.Wait()
 }
