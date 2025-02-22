@@ -9,28 +9,17 @@ func maxDistToClosest(seats []int) int {
 		for r < len(seats) - 1 && seats[r] == seats[r+1] {
 			r++
 		}
-		fmt.Println(l, r)
 		if seats[l] == 0 {
-			if l == 0 {
-				res = r - l + 1
-			} else if r == len(seats) - 1 {
-				// curRes := 0
-				// diff := r - l + 1
-				// if diff % 2 != 0 {
-				// 	curRes = (diff + 1) / 2
-				// } else {
-				// 	curRes = diff / 2 // при diff == 2 не сходится 
-				// }
-				
-				// 3 - 0 + 1 / 2 == 2
-				// 2 - 0 + 1 / 2 == 1
-				// 1 - 0 + 1 / 2 == 1
-				
-
-				curRes := r - l + 1 // неправильно определил при первом запуске
+			if l == 0 || r == len(seats) - 1 { // если с левого или правого края свободные места 
+				curRes = r - l + 1
 				res = max(curRes, res)
 			} else {
-				curRes := r - l + 1 / 2
+				curRes := r - l + 2 / 2 // идеальая формула
+				// (4 - 0 + 2) / 2 == 3
+				// 3 - 0 + 2 / 2 == 2
+				// 2 - 0 + 2 / 2 == 2
+				// 1 - 0 + 2 / 2 == 1
+				// curRes := r - l + 1 / 2
 				res = max(curRes, res)
 			}
 		}
