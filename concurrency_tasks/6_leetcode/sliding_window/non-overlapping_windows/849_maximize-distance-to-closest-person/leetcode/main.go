@@ -15,10 +15,10 @@ func maxDistToClosest(seats []int) int {
 				res = max(curRes, res)
 			} else {
 				curRes := r - l + 2 / 2 // идеальая формула
-				// (4 - 0 + 2) / 2 == 3
-				// 3 - 0 + 2 / 2 == 2
-				// 2 - 0 + 2 / 2 == 2
-				// 1 - 0 + 2 / 2 == 1
+				// (4 - 1 + 2) / 2 == 2
+				// (3 - 1 + 2) / 2 == 2
+				// (2 - 1 + 2) / 2 == 1
+				// (1 - 1 + 2) / 2 == 1
 				// curRes := r - l + 1 / 2
 				res = max(curRes, res)
 			}
