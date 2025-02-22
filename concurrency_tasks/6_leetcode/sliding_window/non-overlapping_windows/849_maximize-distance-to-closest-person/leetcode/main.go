@@ -15,11 +15,6 @@ func maxDistToClosest(seats []int) int {
 				res = max(curRes, res)
 			} else {
 				curRes := r - l + 2 / 2 // идеальая формула
-				// (4 - 1 + 2) / 2 == 2
-				// (3 - 1 + 2) / 2 == 2
-				// (2 - 1 + 2) / 2 == 1
-				// (1 - 1 + 2) / 2 == 1
-				// curRes := r - l + 1 / 2
 				res = max(curRes, res)
 			}
 		}
@@ -30,17 +25,8 @@ func maxDistToClosest(seats []int) int {
 }
 
 func main() {
-	// seats := []int{1,0,0,0}
-	// seats := []int{1,0,0,0,1,0,1}
-	seats := []int{0,1}
-	         //   [1,0,0,0,1,0,1]
+	// spots := []int{1,0,0,0}
+	// spots := []int{0,1}
+	spots := []int{1,0,0,0,1,0,1} // res = 2
 	fmt.Println(maxDistToClosest(seats))
 }
-
-// нужно посчитать группы нулей
-// может быть 3 случая:
-// в самом начале - от левого бортика (l == 0),
-// в середине, здесь нужно определить количество
-// и посчитать по формуле для четных и нечетных чисел
-// в самом конце - от правого бортика r == len(seats)
-//
