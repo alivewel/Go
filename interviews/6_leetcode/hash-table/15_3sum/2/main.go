@@ -9,18 +9,19 @@ import (
 func threeSum(nums []int) [][]int {
 	sort.Ints(nums)
 	res := make([][]int, 0)
-	for i := 0; i < len(nums); i++ {
+	for i := 0; i < len(nums)-2; i++ {
+		if i > 0 && nums[i] == nums[i-1] {
+			continue
+		}
 		target := -nums[i]
-		// mapSum := make(map[[3]int]struct{}) 
 		mapSum := make(map[int]struct{}) 
-		for j := 0; j < len(nums); j++ {
-			if i == j {
-				continue
-			}
+		for j := i+1; j < len(nums); j++ {
 			complement := target - nums[j] // complement - дополнение
 			if _, found := mapSum[complement]; found {
-				// mapSum[[3]int{nums[i], complement, nums[j]}] = struct{}{}
 				res = append(res, []int{nums[i], complement, nums[j]})
+				for j < len(nums) - 1 && nums[j] == nums[j+1] {
+					j++	
+				}
 			}
 			mapSum[nums[j]] = struct{}{}
 		}	
