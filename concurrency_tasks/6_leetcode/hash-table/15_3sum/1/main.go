@@ -7,7 +7,6 @@ import (
 
 // решение с помощью двух указателей
 func threeSum(nums []int) [][]int {
-    // отсортировать массив
 	sort.Ints(nums)
 	res := make([][]int, 0)
 	for i := 0; i < len(nums)-1; i++ {
