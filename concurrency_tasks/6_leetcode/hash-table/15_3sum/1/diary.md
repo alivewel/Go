@@ -1,11 +1,6 @@
-package main
+1) Забыл сдвинуть указатели в else случае
 
-import (
-	"fmt"
-	"sort"
-)
-
-// решение с помощью двух указателей
+``` go
 func threeSum(nums []int) [][]int {
     // отсортировать массив
 	sort.Ints(nums)
@@ -27,10 +22,4 @@ func threeSum(nums []int) [][]int {
 	}
 	return res
 }
-
-func main() {
-	nums := []int{-1, 0, 1, 2, -1, -4}
-	//      sort: -4, -1, -1, 0, 1, 2
-	fmt.Println(threeSum(nums))
-}
-
+```
