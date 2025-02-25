@@ -1,9 +1,10 @@
-package main
+1) Второй тестовый случай не прошел
 
-import "fmt"
+Input: s = "abab", p = "ab"
+Output: [0,1]
+Expected: [0,1,2]
 
-// фунция для заполнения мапы
-// для первого запуска по другому нужно заполнять
+```
 func fillMapFirst(strMap map[rune]int, str string) {
 	for _, ch := range str {
 		strMap[ch]++
@@ -45,19 +46,4 @@ func findAnagrams(s string, p string) []int {
 	}
 	return res
 }
-
-func main() {
-	// s := "badc"
-	// t := "baba"
-
-	// s := "anagram"
-	// t := "nagaram"
-
-	// s := "cbaebabacd"
-	// p := "abc"
-
-	s := "abab"
-	p := "ab"
-
-	fmt.Println(findAnagrams(s, p))
-}
+```
