@@ -33,7 +33,7 @@ func findAnagrams(s string, p string) []int {
 		mapStrP[ch]++
 	}
 	mapStrS := make(map[rune]int, len(p))
-	for i := 0; i < len(s) - len(p); i++ {
+	for i := 0; i < len(s) - len(p) + 1; i++ {
 		if i == 0 {
 			fillMapFirst(mapStrS, s[:len(p)])
 		} else {
@@ -53,11 +53,11 @@ func main() {
 	// s := "anagram"
 	// t := "nagaram"
 
-	// s := "cbaebabacd"
-	// p := "abc"
+	s := "cbaebabacd"
+	p := "abc"
 
-	s := "abab"
-	p := "ab"
+	// s := "abab"
+	// p := "ab"
 
 	fmt.Println(findAnagrams(s, p))
 }

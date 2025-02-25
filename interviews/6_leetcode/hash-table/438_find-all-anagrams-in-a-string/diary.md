@@ -4,6 +4,12 @@ Input: s = "abab", p = "ab"
 Output: [0,1]
 Expected: [0,1,2]
 
+Проблема была в условии выхода из цикла. Добавил +1 итерацию.
+Имеется:
+for i := 0; i < len(s) - len(p); i++ 
+Нужно:
+for i := 0; i < len(s) - len(p) + 1; i++ 
+
 ```
 func fillMapFirst(strMap map[rune]int, str string) {
 	for _, ch := range str {
