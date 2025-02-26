@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
-	// "strconv"
+	// "fmt"
+	"strconv"
 )
 
 func compress(chars []rune) []rune {
@@ -15,14 +15,14 @@ func compress(chars []rune) []rune {
 		countChars := r - l + 1
 		res = append(res, rune(chars[l]))
 		if countChars > 1 && countChars < 10 {
-			// res = append(res, rune(countChars))
-		res = append(res, rune('0' + countChars))
+			res = append(res, rune('0' + countChars))
 		} else if countChars > 9 {
-			for countChars != 0 {
-				// res = append(res, rune(countChars % 10))
-				res = append(res, rune('0' + countChars % 10))
-				countChars /= 10
-			} 
+			strCountChars := strconv.Itoa(countChars)
+			arrRuneStrCountChars := []rune(strCountChars)
+			for _, ch := range arrRuneStrCountChars {
+				res = append(res, ch)
+			}
+
 		}
 		// если символ встречается 1 раз ничего не делаем
 		l = r + 1
@@ -32,6 +32,9 @@ func compress(chars []rune) []rune {
 }
 
 func main() {
-	chars := []rune{'a','a','b','b','c','c','c'}
-	fmt.Println(string(compress(chars)))
+	// chars := []rune{'a','a','b','b','c','c','c'}
+	chars := []rune{'y','y','x','x','x','x','x','x','x','x','x','x','x','x','y','y'}
+	res := string(compress(chars))
+	_ = res
+	// fmt.Println(res)
 }
