@@ -11,9 +11,9 @@ func maxQueenSum(board [][]int) int {
 
 func main() {
 	board := []int{
-		{3,2,5,1},
-		{4,9,1,3},
-		{2,9,2,1}
+		{2,2,1,1},
+		{1,2,1,1},
+		{1,2,2,1}
 	}
 	fmt.Println(maxQueenSum(board))
 }
