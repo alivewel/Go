@@ -2,35 +2,37 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
-func findDifference(nums1 []int, nums2 []int) []int {
-	p1, p2 := 0, 0
-	result := make([]int, 0)
-	for p1 < len(nums1) && p2 < len(nums2) {
-		if nums1[p1] < nums2[p2] {
-			result = append(result, nums1[p1])
-			p1++
-		} else if nums1[p1] > nums2[p2] {
-			result = append(result, nums2[p2])
-			p2++
-		} else {
-			p1++
-			p2++
+func findDifference(nums1 []int, nums2 []int) [][]int {
+	set1, set2 := make(map[int]struct{}), make(map[int]struct{})
+	for _, val := range nums1 {
+		set1[val] = struct{}{}
+	}
+	for _, val := range nums2 {
+		set2[val] = struct{}{}
+	}
+	diff1 := []int{} // Элементы, которые есть в nums1, но не в nums2
+    diff2 := []int{} 
+	for key, _ := range set1 {
+		if _, found := set2[key]; !found {
+            diff1 = append(diff1, key)
 		}
 	}
-	if p1 < len(nums1) {
-		for p1 < len(nums1) {
-			result = append(result, nums1[p1])
-			p1++
+	for key, _ := range set2 {
+		if _, found := set1[key]; !found {
+            diff2 = append(diff2, key)
 		}
 	}
-	if p2 < len(nums2) {
-		for p2 < len(nums2) {
-			result = append(result, nums2[p2])
-			p2++
-		}
-	}
+	// Сортируем оба среза
+    sort.Ints(diff1)
+    sort.Ints(diff2)
+
+    // Добавляем diff1 и diff2 в result
+    result := make([][]int, 0)
+    result = append(result, diff1)
+    result = append(result, diff2)
 	return result
 }
 
