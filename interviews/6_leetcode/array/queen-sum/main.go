@@ -21,10 +21,18 @@ func maxQueenSum(board [][]int) int {
 			d2Sum[i + j] += board[i][j]
 		}
 	}
-	fmt.Println(rows)
-	fmt.Println(cols)
-	fmt.Println(d1Sum)
-	fmt.Println(d2Sum)
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[0]); j++ {
+			row, col := rows[i], cols[j]
+			d1 := d1Sum[i - j + m - 1]
+			d2 := d2Sum[i + j]
+			curSum := row + col + d1 + d2
+			curSum -= 3 * board[i][j]
+			if curSum > maxRes {
+				maxRes = curSum
+			}
+		}
+	}
 	return maxRes
 }
 
