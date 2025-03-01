@@ -1,19 +1,12 @@
-package main
+1) 
 
-import "fmt"
+Нужно начинать с r = -1. Понять почему так.
 
-func max(a, b int) int {
-    if a > b {
-        return a
-    }
-    return b
-}
+Левый указатель всегда двигается на 1 (l++). До этого было l = r + 1, с других задач взял этот способ движения указателя.
 
-func isMapContaine(m map[rune]int, key rune) bool {
-    _, found := m[key]
-    return found
-}
 
+
+```
 func longestGeneSequence(gene string, k int) int {
     countMap := make(map[rune]int, k) // можно использовать byte
     // l, r := 0, 0
@@ -37,9 +30,4 @@ func longestGeneSequence(gene string, k int) int {
     }
     return maxCount
 }
-
-func main() {
-	gene := "YYxxXXXyyy"
-	k := 3
-	fmt.Println(longestGeneSequence(gene, k))
-}
+```
