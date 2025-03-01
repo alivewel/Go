@@ -28,6 +28,9 @@ func maxQueenSum(board [][]int) int {
 			d2 := d2Sum[i + j]
 			curSum := row + col + d1 + d2
 			curSum -= 3 * board[i][j]
+			if i == 0 && j == 0 { // костыль, чтобы отрицательные числа в начале проходили
+				maxRes = curSum
+			}
 			if curSum > maxRes {
 				maxRes = curSum
 			}
@@ -37,10 +40,13 @@ func maxQueenSum(board [][]int) int {
 }
 
 func main() {
+	// board := [][]int{
+    //     {2, 2, 1, 1},
+    //     {1, 2, 1, 1},
+    //     {1, 2, 2, 1},
+    // }
 	board := [][]int{
-        {2, 2, 1, 1},
-        {1, 2, 1, 1},
-        {1, 2, 2, 1},
+        {-5},
     }
 	fmt.Println(maxQueenSum(board))
 }
