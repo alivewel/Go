@@ -1,28 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
-
-func isValid(brackets string) bool {
-    stackOpen := Stack{}
-    for _, ch := range brackets {
-        if ch == '{' || ch == '(' || ch == '[' {
-            stackOpen.Push(ch)
-        } else {
-            prevBrackets, _ := stackOpen.Pop()
-            if prevBrackets == '{' && ch != '}' {
-                return false 
-            } else if prevBrackets == '(' && ch != ')' {
-                return false 
-            } else if prevBrackets == '[' && ch != ']' {
-                return false 
-            }
-        }
-    }
- 
-    return stackOpen.Size() == 0
-}
+import "fmt"
 
 // Структура для стека
 type Stack struct {
@@ -56,7 +34,22 @@ func (s *Stack) Size() int {
 }
 
 func main() {
-	s := "()[]{}"
-	fmt.Println(isValid(s))
-}
+    stack := Stack{}
 
+    // Добавляем символы в стек
+    stack.Push('A')
+    stack.Push('B')
+    stack.Push('C')
+
+    // Выводим количество элементов
+    fmt.Println("Количество элементов в стеке:", stack.Size())
+
+    // Извлекаем символы
+    for !stack.IsEmpty() {
+        value, _ := stack.Pop()
+        fmt.Printf("Извлечен символ: %c\n", value)
+    }
+
+    // Проверяем количество элементов после извлечения
+    fmt.Println("Количество элементов в стеке:", stack.Size())
+}
