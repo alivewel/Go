@@ -56,7 +56,8 @@ func (s *Stack) Size() int {
 }
 
 func main() {
-	s := "()[]{}"
+	// s := "()[]{}"
+	s := "]" // Expected false
 	fmt.Println(isValid(s))
 }
 
