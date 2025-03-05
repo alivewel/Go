@@ -26,7 +26,6 @@ func findCompetitionWinners(statistics [][][]int) []int {
 			}
 		}
 	}
-	fmt.Println(ustats)
 	return res
 }
 
