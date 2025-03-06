@@ -36,9 +36,14 @@ func calculate(s []string) int {
                   if oper == "+" {
                       res := strconv.Atoi(num1) + strconv.Atoi(num2)
                       stackNums.Push(strconv.Itoa(res))
+                  } else if oper == "*" {
+                      res := strconv.Atoi(num1) * strconv.Atoi(num2)
+                      stackNums.Push(strconv.Itoa(res))
                   }
+              } else {
+                stackOper.Push(str)  
               }
-              stackOper.Push(str) 
+              
             }
             if str == "*" {
                 
