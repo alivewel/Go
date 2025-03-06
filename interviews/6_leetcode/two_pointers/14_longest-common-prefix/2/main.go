@@ -1,23 +1,35 @@
+package main
+
+import "fmt"
 
 func longestCommonPrefix(strs []string) string {
-    length := len(strs)
     index := 0
-    var rune prevCh
-    // for i, str := strs {
+    var prevCh byte // var prevCh rune // var rune prevCh
+    flagExit := false
     for {
-        for i := 0; i < length; i++ {
-            if index < len(str) {
+        for i := 0; i < len(strs); i++ {
+            if index >= len(strs[i]) {
+                flagExit = true // flagExit := true
                 break
             }
+            curCh := strs[i][index]
             if i == 0 {
-                prevCh = strs[i][index]
+                prevCh = curCh
             }
             if prevCh != curCh {
+                flagExit = true // flagExit := true
 				break
-			}
-            if i == length - 1 {
-                index++
-            } 
-        } 
-    }    
+			} 
+        }
+        if flagExit {
+            break
+        }
+        index++
+    }
+    return strs[0][:index]
+}
+
+func main() {
+    strs := []string{"flower","flow","flight"}
+    fmt.Println(longestCommonPrefix(strs))
 }
