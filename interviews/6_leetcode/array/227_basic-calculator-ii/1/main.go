@@ -30,27 +30,25 @@ func calculate(s []string) int {
     stackNums := Stack{}
     stackOper := Stack{}
     for _, str := range s {
-        if isNum(str) {
+        if str == "+" || str == "*" {
+            if stackOper.Size() > 0 && stackNums.Size() > 1 {
+                num1, _ := stackNums.Pop()
+                num2, _ := stackNums.Pop()
+                oper, _ := stackOper.Pop()
+                if oper == "+" {
+                    res, _ := strconv.Atoi(num1) + strconv.Atoi(num2)
+                    stackNums.Push(strconv.Itoa(res))
+                } else if oper == "*" {
+                    res := strconv.Atoi(num1) * strconv.Atoi(num2)
+                    stackNums.Push(strconv.Itoa(res))
+                }
+            }
+            stackOper.Push(str)  
+        } else {
             stackNums.Push(str)
         }
-        if isOper(str) {
-            if str == "+" || str == "*" {
-              if stackOper.Size > 0 && stackNums.Size > 1 {
-                  num1, num2 := stackNums.Pop(), stackNums.Pop()
-                  oper := stackOper.Pop()
-                  if oper == "+" {
-                      res := strconv.Atoi(num1) + strconv.Atoi(num2)
-                      stackNums.Push(strconv.Itoa(res))
-                  } else if oper == "*" {
-                      res := strconv.Atoi(num1) * strconv.Atoi(num2)
-                      stackNums.Push(strconv.Itoa(res))
-                  }
-              }
-              stackOper.Push(str)  
-            }
-        }
     }
-    if stackOper.Size > 0 && stackNums.Size > 1 {
+    if stackOper.Size() > 0 && stackNums.Size() > 1 {
       num1, num2 := stackNums.Pop(), stackNums.Pop()
       oper := stackOper.Pop()
       if oper == "+" {
