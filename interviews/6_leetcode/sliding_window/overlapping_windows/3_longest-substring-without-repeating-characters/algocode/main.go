@@ -19,7 +19,6 @@ func longestGeneSequence(gene string) int {
 			r++
 		}
 		delete(chars, gene[l])
-		fmt.Println(l, r)
 		sizeWindow := r - l + 1
 		if sizeWindow > maxCountCh {
 			maxCountCh = sizeWindow
