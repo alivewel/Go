@@ -2,33 +2,57 @@ package main
 
 import "fmt"
 
-func containsMap(chars map[byte]struct{}, ch byte) bool {
-	if _, found := chars[ch]; found {
-		return true
-	}
-	return false
+func checkEqualMap(mapVirus, window map[byte]int) bool {
+    if len(window) != len(virus) {
+        return false
+    }
+    for k, v := range mapVirus {
+        if val, found := window[k]; found {
+            if v != val {
+                return false
+            }
+        }
+    }
+    return true
 }
 
-func lengthOfLongestSubstring(s string) int {
-    l, r := 0, -1 // -1
-	chars := make(map[byte]struct{})
-	maxCountCh := 0
-	for l < len(s) {
-		for r + 1 < len(s) && !containsMap(chars, s[r+1]) { // containsMap(chars, s[r]) 
-			chars[s[r+1]] = struct{}{} // struct{}
-			r++
-		}
-		delete(chars, s[l])
-		sizeWindow := r - l + 1
-		if sizeWindow > maxCountCh {
-			maxCountCh = sizeWindow
-		}
-		l++
-	}
-	return maxCountCh
+func containsMap(mapVirus map[byte]int, ch byte) bool {
+    if val, found := mapVirus[ch]; found {
+        return true 
+    }
+    return false
+}
+
+func checkForVirus(gene, virus string) bool {
+    mapVirus := make(map[byte]int)
+    for _, val := range virus {
+        mapVirus[val]++
+    }
+    l, r := 0, -1
+    window := make(map[byte]int)
+    for l < len(gene) {
+        // при формировании окна смотреть есть ли элемент в mapVirus
+        for r + 1 < len(gene) && r - l + 1 != len(virus) && containsMap(mapVirus, ch) {
+            r++ 
+            window[gene[r]]++
+        }
+        sizeWindow := r - l + 1
+        if sizeWindow == len(virus) && checkEqualMap(mapVirus, window) {
+            return true
+        }
+        window[gene[l]]--
+		// если элементов window[gene[l]] == 0, тоже нужно удалять элементы из окна скорее всего
+        if val, _ := window[gene[l]]; val == -1 {
+            delete(window, gene[l])
+            r++
+        }
+        l++
+    }
+    return false
 }
 
 func main() {
-	s := "yxyabcxyx" // Вывод: 5
-	fmt.Println(checkInclusion(s))
+	gene := "cdeebba"
+	virus := "abb"
+	fmt.Println(checkForVirus(gene, virus))
 }
