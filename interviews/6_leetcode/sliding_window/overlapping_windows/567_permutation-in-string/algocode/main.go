@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func checkEqualMap(mapVirus, window map[byte]int) bool {
-    if len(window) != len(virus) {
+    if len(window) != len(mapVirus) {
         return false
     }
     for k, v := range mapVirus {
@@ -17,7 +17,7 @@ func checkEqualMap(mapVirus, window map[byte]int) bool {
 }
 
 func containsMap(mapVirus map[byte]int, ch byte) bool {
-    if val, found := mapVirus[ch]; found {
+    if _, found := mapVirus[ch]; found {
         return true 
     }
     return false
@@ -25,14 +25,14 @@ func containsMap(mapVirus map[byte]int, ch byte) bool {
 
 func checkForVirus(gene, virus string) bool {
     mapVirus := make(map[byte]int)
-    for _, val := range virus {
-        mapVirus[val]++
+    for i := range virus {
+        mapVirus[virus[i]]++
     }
     l, r := 0, -1
     window := make(map[byte]int)
     for l < len(gene) {
         // при формировании окна смотреть есть ли элемент в mapVirus
-        for r + 1 < len(gene) && r - l + 1 != len(virus) && containsMap(mapVirus, ch) {
+        for r + 1 < len(gene) && r - l + 1 != len(virus) && containsMap(mapVirus, gene[r+1]) {
             r++ 
             window[gene[r]]++
         }

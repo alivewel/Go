@@ -2,33 +2,57 @@ package main
 
 import "fmt"
 
-func containsMap(chars map[byte]struct{}, ch byte) bool {
-	if _, found := chars[ch]; found {
-		return true
-	}
-	return false
+func checkEqualMap(mapVirus, window map[byte]int) bool {
+    if len(window) != len(mapVirus) {
+        return false
+    }
+    for k, v := range mapVirus {
+        if val, found := window[k]; found {
+            if v != val {
+                return false
+            }
+        }
+    }
+    return true
 }
 
-func lengthOfLongestSubstring(s string) int {
-    l, r := 0, -1 // -1
-	chars := make(map[byte]struct{})
-	maxCountCh := 0
-	for l < len(s) {
-		for r + 1 < len(s) && !containsMap(chars, s[r+1]) { // containsMap(chars, s[r]) 
-			chars[s[r+1]] = struct{}{} // struct{}
-			r++
-		}
-		delete(chars, s[l])
-		sizeWindow := r - l + 1
-		if sizeWindow > maxCountCh {
-			maxCountCh = sizeWindow
-		}
-		l++
-	}
-	return maxCountCh
+func containsMap(mapVirus map[byte]int, ch byte) bool {
+    if _, found := mapVirus[ch]; found {
+        return true 
+    }
+    return false
+}
+
+func checkInclusion(s1, s2 string) bool {
+    mapVirus := make(map[byte]int)
+    for i := range s2 {
+        mapVirus[s2[i]]++
+    }
+    l, r := 0, -1
+    window := make(map[byte]int)
+    for l < len(s1) {
+        // при формировании окна смотреть есть ли элемент в mapVirus
+        for r + 1 < len(s1) && r - l + 1 != len(s2) && containsMap(mapVirus, s1[r+1]) {
+            r++ 
+            window[s1[r]]++
+        }
+        sizeWindow := r - l + 1
+        if sizeWindow == len(s2) && checkEqualMap(mapVirus, window) {
+            return true
+        }
+        window[s1[l]]--
+		// если элементов window[s1[l]] == 0, тоже нужно удалять элементы из окна скорее всего
+        if val, _ := window[s1[l]]; val == -1 {
+            delete(window, s1[l])
+            r++
+        }
+        l++
+    }
+    return false
 }
 
 func main() {
-	s := "yxyabcxyx" // Вывод: 5
-	fmt.Println(checkInclusion(s))
+	s1 := "cdeebba"
+	s2 := "abb"
+	fmt.Println(checkInclusion(s1, s2))
 }
