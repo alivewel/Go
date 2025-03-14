@@ -7,7 +7,6 @@ func longestOnes(nums []int, k int) int {
     maxCount := 0
     countZero := 0
     for l < len(nums) {
-		// fmt.Println(l, r)
         for r + 1 < len(nums) && (countZero < k || nums[r+1] == 1) {
             if nums[r+1] == 0 {
                 countZero++
@@ -15,8 +14,7 @@ func longestOnes(nums []int, k int) int {
             r++
         }
 		windowSize := r - l + 1
-        maxCount = max(windowSize, maxCount) //  // 
-        fmt.Println(windowSize, maxCount)
+        maxCount = max(windowSize, maxCount)
 		if nums[l] == 0 {
             countZero--
         }
