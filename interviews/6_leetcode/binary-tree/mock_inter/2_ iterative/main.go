@@ -17,7 +17,7 @@ func traverseTree(node *TreeNode) {
         return // Проверка на наличие узла
     }
 
-    res := make(string[], 0)
+    res := make([]string, 0)
 
     queue := NewQueue()
     queue.Enqueue(node)
@@ -26,26 +26,12 @@ func traverseTree(node *TreeNode) {
     for !queue.IsEmpty() {
         node := queue.Dequeue()
         res = append(res, node.Value)
-        for _, child := range root.children {
+        for _, child := range node.Children {
 			queue.Enqueue(child)
 		}
     }
     fmt.Println(res)
 }
-
-// func main() {
-//     
-    
-//     queue.Enqueue("a")
-//     queue.Enqueue("b")
-//     queue.Enqueue("c")
-
-//     fmt.Println("Size of queue:", queue.Size()) // Output: Size of queue: 3
-
-//     for !queue.IsEmpty() {
-//         fmt.Println(queue.Dequeue()) // Output: a b c
-//     }
-// }
 
 func main() {
     // Создаем структуру дерева
@@ -95,9 +81,6 @@ func main() {
     traverseTree(tree)
 }
 
-
-
-
 // Queue представляет собой структуру очереди
 type Queue struct {
     items *list.List
@@ -111,18 +94,18 @@ func NewQueue() *Queue {
 }
 
 // Enqueue добавляет элемент в конец очереди
-func (q *Queue) Enqueue(item interface{}) {
+func (q *Queue) Enqueue(item *TreeNode) {
     q.items.PushBack(item)
 }
 
 // Dequeue удаляет и возвращает элемент из начала очереди
-func (q *Queue) Dequeue() interface{} {
+func (q *Queue) Dequeue() *TreeNode {
     if q.items.Len() == 0 {
         return nil // Возвращаем nil, если очередь пуста
     }
     front := q.items.Front()
     q.items.Remove(front)
-    return front.Value
+    return front.Value.(*TreeNode)
 }
 
 // IsEmpty проверяет, пуста ли очередь
