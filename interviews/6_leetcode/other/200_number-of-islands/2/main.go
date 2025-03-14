@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+// обход в глубину (DFS)
 func dfs(grid [][]byte, x, y int) {
     if x < 0 || x >= len(grid) || y < 0 || y >= len(grid[0]) || grid[x][y] == '0' {
         return
