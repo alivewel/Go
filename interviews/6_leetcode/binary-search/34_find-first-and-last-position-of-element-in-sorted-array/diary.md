@@ -65,3 +65,16 @@ func search(nums []int, target int) []int {
 	return []int{-1, -1}
 }
 ```
+
+3) Для второго бнарного поиска указатели нужно инициализировать вот так:
+
+l2, r2 := -1, len(nums) - 1
+
+4) Если подать пустой массив программа крашиться
+
+nums = [] target = 0
+
+Имеется:
+if nums[l] == target && nums[r2] == target
+Должно быть:
+if l < len(nums) && nums[l] == target && r2 < len(nums) && nums[r2] == target
