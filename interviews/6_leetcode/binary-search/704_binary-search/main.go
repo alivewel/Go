@@ -23,6 +23,7 @@ func search(nums []int, target int) int {
 
 func main() {
 	arr := []int{-1, 0, 3, 5, 9, 12}
+	
 	target := 9
 	index := search(arr, target)
 	fmt.Println("index:", index)
