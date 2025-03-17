@@ -15,10 +15,10 @@ func search(matrix [][]int, target int) bool {
 		middle := (r + l) / 2
 		i := middle / len(matrix[0])
 		j := middle % len(matrix[0])
-		if (matrix[i][j] >= target) {
-			l = middle
+		if (matrix[i][j] > target) { // (matrix[i][j] >= target)
+			r = middle // l = middle
 		} else {
-			r = middle
+			l = middle // r = middle
 		}
 	}
 	if matrix[middle / len(matrix[0])][middle % len(matrix[0])] == target {
