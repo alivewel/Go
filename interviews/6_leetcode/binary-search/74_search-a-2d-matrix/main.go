@@ -21,7 +21,8 @@ func search(matrix [][]int, target int) bool {
 			l = middle // r = middle
 		}
 	}
-	if matrix[middle / len(matrix[0])][middle % len(matrix[0])] == target {
+	// if matrix[middle / len(matrix[0])][middle % len(matrix[0])] == target {
+	if matrix[l / len(matrix[0])][l % len(matrix[0])] == target {
 		return true
 	}
 	return false
