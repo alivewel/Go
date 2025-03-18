@@ -29,8 +29,9 @@ func search(nums []int, target int) int {
 			l = m // уточнить
 		}
 	}
-	if nums[l] == target {
-		return l
+	fmt.Println(l)
+	if nums[l % len(nums)] == target {
+		return l % len(nums) // return l
 	}
 	return -1
 }
