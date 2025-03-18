@@ -25,3 +25,15 @@ func search(matrix [][]int, target int) bool {
 	return false
 }
 ```
+
+2) Не до конца понимаю это условие. Методом тыка пытался нащупать его.
+
+```
+if (matrix[i][j] <= target)
+```
+
+3) 
+Имется:
+if matrix[middle / len(matrix[0])][middle % len(matrix[0])] == target
+Должно быть:
+if matrix[l / len(matrix[0])][l % len(matrix[0])] == target
