@@ -16,17 +16,18 @@ func search(nums []int, target int) int {
 				l = m // уточнить
 			}
 		}
-		offset = l
+		offset = r // offset = l
+		fmt.Println(r, l)
 	}
-
+	
 	l, r := offset, len(nums) + offset
 	for r - l > 1 {
 		m := (r + l) / 2
 		index := m % len(nums)
 		if nums[index] <= target {
-			r = m // уточнить
-		} else {
 			l = m // уточнить
+		} else {
+			r = m // уточнить
 		}
 	}
 	if nums[l] == target {
