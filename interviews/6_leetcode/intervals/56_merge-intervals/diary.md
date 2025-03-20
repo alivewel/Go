@@ -46,3 +46,9 @@ sort.Slice(intervals, func(i, j int) bool {
 Входные данные: intervals = [1,4][0,2][3,5];
 Ожидаемый результат: [0,5]
 Результат исполнения: [0,4][3,5]
+
+Ошибка из-за невнимательности
+Имеется:
+if max(res[len(res)-1][0], intervals[i][0]) <= min(intervals[len(res)-1][1], intervals[i][1])
+Должно быть:
+if max(res[len(res)-1][0], intervals[i][0]) <= min(res[len(res)-1][1], intervals[i][1])
