@@ -12,7 +12,7 @@ func intervalIntersection(firstList [][]int, secondList [][]int) [][]int {
 			intersect := []int{max(firstList[p1][0], secondList[p2][0]), min(firstList[p1][1], secondList[p2][1])}
 			res = append(res, intersect)
 		}
-		if firstList[p1][0] > secondList[p2][0] {
+		if firstList[p1][1] > secondList[p2][1] {
 			p2++
 		} else {
 			p1++
