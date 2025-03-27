@@ -71,24 +71,24 @@ func main() {
 
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
     head := &ListNode{}
+	current := head
     carry := 0
-    for l1 != nil && l2 != nil {
-        sum := l1.Val + l2.Val + carry
-        if sum > 9 {
-            carry = sum / 10
-        } else {
-            carry = 0
-        }
-        // temp := &ListNode{Val: sum % 10}
-        head.Next = &ListNode{Val: sum % 10}
-        // head.Val = sum % 10
-        head = head.Next
-        if l1 != nil { //
+    for l1 != nil || l2 != nil || carry != 0 { // l1 != nil && l2 != nil
+        val1 := 0
+		if l1 != nil {
+			val1 = l1.Val
             l1 = l1.Next
         }
+		val2 := 0
         if l2 != nil {
+			val2 = l2.Val
             l2 = l2.Next
         }
+		sum := val1 + val2 + carry
+		carry = sum / 10
+        current.Next = &ListNode{Val: sum % 10}
+        current = current.Next
+        
     }
     return head.Next
 }
