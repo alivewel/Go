@@ -8,23 +8,23 @@ import (
 func simplifyPath(path string) string {
     stack := []string{}
     pathArray := strings.Split(path[1:], "/")
-	// проверить что будет если в пути // или ///
 	for _, s := range pathArray {
 		if s == ".." && len(stack) > 0 {
 			stack = stack[:len(stack)-1]
-		} else if s == "." {
+		} else if s == "." || s == "" { // s == "" случая не было
 			continue
-		} else {
+		} else if s != ".." { // s != ".. случая не было
 			stack = append(stack, s)
 		}
 	}
-	// fmt.Println(pathArray)
-	result := "/" + strings.Join(stack, "/")
-	return result
+	return "/" + strings.Join(stack, "/")
 }
 
 func main() {
-	s := "/home/user/Documents/../Pictures"
+	// s := "/home/user/Documents/../Pictures"
+	// s := "/home/"
+	// s := "/home//foo/"
+	s := "/../"
 	fmt.Println(simplifyPath(s))
 }
 
