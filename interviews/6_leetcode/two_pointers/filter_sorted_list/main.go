@@ -17,3 +17,7 @@ func filterSortedList(a, b []int) []int {
 	}
 	return result
 }
+
+// a := []int{1, 2, 2, 3, 5, 6}
+// b := []int{2, 4, 6}
+// res [1, 3, 5]
