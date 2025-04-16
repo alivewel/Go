@@ -26,23 +26,19 @@ import (
 
 func maxSlidingWindow(nums []int, k int) []int {
     queue := make([]int, 0)
-    res := make([]int, 0, len(nums) - k) // len(nums) - k + 1 // res := make([]int, len(nums) - k + 1)
+    res := make([]int, 0, len(nums) - k)
     l, r := 0, -1
     for l + k - 1 < len(nums) {
         for r + 1 < len(nums) && r - l + 1 < k {
-            for len(queue) > 0 && nums[r+1] > queue[0] {
-                fmt.Println(nums[r+1])
-                queue = queue[1:]
+            for len(queue) > 0 && nums[r+1] > queue[len(queue)-1] { 
+                queue = queue[:len(queue)-1]
             }
             queue = append(queue, nums[r+1])
             r++
         }
-        fmt.Println(l, r, queue)
         // самый первый элемент в очереди должен быть максимум окна
-        // вытаскиваем из очереди элемент
         if len(queue) > 0 {
             res = append(res, queue[0])
-            fmt.Println(queue[0])
         }
         if len(queue) > 0 && queue[0] == nums[l] {
             queue = queue[1:] // вытаскиваем элемент из очереди

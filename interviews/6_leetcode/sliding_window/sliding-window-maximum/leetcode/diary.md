@@ -58,3 +58,13 @@ for r + 1 < len(nums) && r - l + 1 < k
 5) Поменял местами 2 if
 if len(queue) > 0 && queue[0] == nums[l]
 if len(queue) > 0
+
+6) Нужно вытаскивать из конца очереди, а не из начала.
+Имеется:
+for len(queue) > 0 && nums[r+1] > queue[0] {
+    queue = queue[1:]
+}
+Должно быть:
+for len(queue) > 0 && nums[r+1] > queue[len(queue)-1] {
+    queue = queue[:len(queue)-1]
+}
