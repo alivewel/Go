@@ -97,3 +97,10 @@ func (s *Server) SearchBywords (ctx context.Context, request *GetRequest) (*GetR
   return &GetResponse{ProductWithComplitations: result}, nil
 }
 ```
+
+**p.s. моменты которые собеседуемый обнаружил:**
+- Пофиксить поля структуры
+- Дата в uint8
+- Пофиксить канал, добавить вейтгрупп
+- Закрыть канал
+- Пофиксить в конце слайс, поставить ему кап и лен
