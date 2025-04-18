@@ -1,8 +1,10 @@
 package main
 
+import "fmt"
+
 func bruteForce(nums []int, curComb []int, allComb *[][]int) {
     if len(nums) == 0 {
-        copyComb := make([]int, 0, len(curComb))
+        copyComb := make([]int, len(curComb)) // copyComb := make([]int, 0, len(curComb))
         // copy(curComb, copyComb)
         copy(copyComb, curComb) // забыл про это
         *allComb = append(*allComb, copyComb)
@@ -31,4 +33,9 @@ func permutations(nums []int) [][]int {
     res := make([][]int, 0)
     bruteForce(nums, []int{}, &res)
     return res
+}
+
+func main() {
+    digits := []int{1,2,3}
+	fmt.Println(permutations(digits))
 }
