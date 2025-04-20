@@ -3,10 +3,11 @@ package main
 import "fmt"
 
 func bruteForce(n, balance int, curComb []rune, allComb *[]string) {
+    // fmt.Println(n, len(curComb))
     if balance < 0 || balance > n {
         return
     }
-    if len(curComb) == n * 2 {
+    if len(curComb) == n * 2 { // balance == 0 && 
         *allComb = append(*allComb, string(curComb))
         return
     }
@@ -26,6 +27,7 @@ func bruteForce(n, balance int, curComb []rune, allComb *[]string) {
     for _, bracket := range brackets {
         curComb = append(curComb, bracket.brack)
         bruteForce(n, balance + bracket.count, curComb, allComb)
+        curComb = curComb[:len(curComb)-1] // забыл про это
     }
 }
 
