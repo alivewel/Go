@@ -5,6 +5,25 @@ import (
 	"reflect"
 )
 
+// **Чемпионат по шагам.**  
+// Недавно мы устроили чемпионат по шагам. И вот настало время подводить итоги! Необходимо определить `userids` участников, которые прошли наибольшее количество шагов `steps` за все дни, не пропустив ни одного дня соревнований.
+
+// #Пример 1 # ввод
+// statistics = [
+//     [{ userId: 1, steps: 1000 }, { userId: 2, steps: 1500 }],
+//     [{ userId: 2, steps: 1000 }],
+// ]
+// # вывод
+// champions = { userIds: [2], steps: 2500 }
+
+// #Пример 2
+// statistics = [
+//     [{ userId: 1, steps: 2000 }, { userId: 2, steps: 1500 }],
+//     [{ userId: 2, steps: 4000 }, { userId: 1, steps: 3500 }],
+// ]
+// # вывод
+// champions = { userIds: [1, 2], steps: 5500 }
+
 type Result struct {
 	UserIds []int
 	Steps   int
@@ -17,6 +36,9 @@ type Statistics struct {
 
 func getChampions(Statistics [][]Statistics) Result {
 	res := Result{}
+	if len(Statistics) == 0 {
+		return res
+	}
 	// 1 создаем мапу key - UserId, value - кол-во шагов и кол-во дней участия
 	userStat := make(map[int][2]int, 0)
 	for _, stat := range Statistics {
@@ -35,7 +57,8 @@ func getChampions(Statistics [][]Statistics) Result {
 			if stat[0] > maxSteps {
 				maxSteps = stat[0]
 				res.Steps = stat[0]
-				res.UserIds = append(res.UserIds, userId)
+				res.UserIds = []int{userId}
+				// res.UserIds = append(res.UserIds, userId)
 			}
 		}
 	}
@@ -44,10 +67,11 @@ func getChampions(Statistics [][]Statistics) Result {
 }
 
 func main() {
-	stats := [][]Statistics{
-		{{UserId: 3, Steps: 100}, {UserId: 7, Steps: 400}, {UserId: 2, Steps: 150}},
-		{{UserId: 2, Steps: 200}, {UserId: 3, Steps: 200}},
-	}
+	// stats := [][]Statistics{
+	// 	{{UserId: 3, Steps: 100}, {UserId: 7, Steps: 400}, {UserId: 2, Steps: 150}},
+	// 	{{UserId: 2, Steps: 200}, {UserId: 3, Steps: 200}},
+	// }
+	stats := [][]Statistics{{}}
 	result := getChampions(stats)
 	fmt.Printf("Champions: %+v\n", result)
 
@@ -68,8 +92,8 @@ func runTests() {
 				{{UserId: 2, Steps: 200}, {UserId: 3, Steps: 200}},
 			},
 			expected: Result{
-				UserIds: []int{3},
-				Steps:   300,
+				UserIds: []int{2},
+				Steps:   350,
 			},
 		},
 		{
