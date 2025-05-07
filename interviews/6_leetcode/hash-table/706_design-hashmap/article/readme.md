@@ -107,11 +107,15 @@ func (this *MyHashMap) Remove(key int) {
 }
 ```
 Недостатки этой реализации:
-1) В этой задаче от нас не требуется увеличение количества бакетов. Мы один раз создали значение в конструкторе. 
+1) В этой задаче от нас не требуется увеличение количества бакетов по ходу заполнения мапы. Мы один раз создали мапу с фиксированным количеством бакетов в конструкторе и далее с ней работаем. 
 2) Здесь мы никак не боремся с коллизиями. 
+3) Мы не учитываем дублирующиеся ключи, только в пределах одного бакета.
+4) Нет ограничения по размеру бакета. Это может нам снизить алгоритмическую сложность получения элемента в мапе с О(1) до О(К), где К - количество элементов в бакете.
+5) Нет равномерного распределения ключей по мапе. Мы просто берем ключ и вычисляем от него остаток от деления от количества бакетов. В реальной мапе вычисляется хэш (какое-то большое число int) и от него берется остаток от деления и количества бакетов.
 
 Данное решение с бакетами, а интервьюрер хотел увидеть решение без бакетов. Вот как бы я сейчас ответил на этот вопрос:
 
+Реализация с бакетами:
 ``` Go
 type Pair struct {
     key, value int
@@ -126,14 +130,45 @@ func (m OurSuperMap) OurSuperHashFunc(value any) int64 {...}
 
 // Реализовать функцию вставки в мапу (можно просто словами).
 func (m OurSuperMap) Add(key any, value any) {
+    index := m.OurSuperHashFunc(key)
+    bucket := m.buckets[index]
+
     // сначала пытаемся найти ключ в бакете и изменить значение по ключу
-	for i, pair := range bucket {
-		if pair.key == key {
-			this.buckets[index][i].value = value
-			return
-		}
-	}
-    // если не нашли элемент в мапе добавляем его
-	this.buckets[index] = append(this.buckets[index], Pair{key: key, value: value})
+    for i, pair := range bucket {
+        if pair.key == key {
+            m.buckets[index][i].value = value
+            return
+        }
+    }
+
+    // если ключ не найден — добавляем новую пару
+    m.buckets[index] = append(m.buckets[index], Pair{key: key.(int), value: value.(int)})
+}
+```
+
+Реализация без бакетов:
+``` Go
+type Pair struct {
+    key, value int
+}
+
+type OurSuperMap struct {
+    elements []Pair // без бакетов
+}
+
+func (m OurSuperMap) OurSuperHashFunc(value any) int64 {...}
+
+// Реализовать функцию вставки в мапу (можно просто словами).
+func (m OurSuperMap) Add(key any, value any) {
+    // сначала пытаемся найти ключ в бакете и изменить значение по ключу
+    for i, pair := range m.elements {
+        if pair.key == key {
+            m.elements[i].value = value
+            return
+        }
+    }
+
+    // если ключ не найден — добавляем новую пару
+    m.elements = append(m.elements, Pair{key: key.(int), value: value.(int)})
 }
 ```
