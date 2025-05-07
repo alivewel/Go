@@ -56,6 +56,19 @@ func (this *MyHashMap) Remove(key int) {
 	this.buckets[index] = newBucket
 }
 
+func (this *MyHashMap) Remove(key int)  {
+    bKey := hash(key)
+    bucket := this.buckets[bKey]
+
+    for index, node := range bucket {
+        if node.key == key {
+            bucket[index], bucket[len(bucket)-1] = bucket[len(bucket)-1], bucket[index]
+            bucket = bucket[:len(bucket)-1]
+            this.buckets[bKey] = bucket
+            return
+        }
+    }
+}
 
 // имеется: backet должно быть: bucket
 
