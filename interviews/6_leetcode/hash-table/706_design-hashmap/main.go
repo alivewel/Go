@@ -1,7 +1,7 @@
 package main
 
 type MyHashMap struct {
-    backets [][]Pair
+    buckets [][]Pair
 }
 
 type Pair struct {
@@ -9,50 +9,55 @@ type Pair struct {
 }
 
 func Constructor() MyHashMap {
-    
+    size := 8
+	return MyHashMap{
+		buckets: make([][]Pair, size),
+	}
 }
 
 
 func (this *MyHashMap) Put(key int, value int) {
     // определяем номер бакета
-	index := key % len(this.backets)
+	index := key % len(this.buckets)
 	// определяем бакет
-	backet := this.backets[index]
+	bucket := this.buckets[index]
 	// пытаемся найти ключ в бакете
-	for _, pair := range backet {
+	for i, pair := range bucket {
 		if pair.key == key {
-			pair.value = value
+			this.buckets[index][i].value = value
 			return
 		}
 	}
-	this.backets[index] = append(this.backets[index], Pair{key: key, value: value})
+	this.buckets[index] = append(this.buckets[index], Pair{key: key, value: value})
 }
 
-
 func (this *MyHashMap) Get(key int) int {
-    index := key % len(this.backets)
+    index := key % len(this.buckets)
 	// определяем бакет
-	backet := this.backets[index]
+	bucket := this.buckets[index]
 	// пытаемся найти ключ в бакете
-	for _, pair := range backet {
+	for _, pair := range bucket {
 		if pair.key == key {
-			return value
+			return pair.value
 		}
 	}
 	return -1
 }
 
-
 func (this *MyHashMap) Remove(key int) {
     newBucket := []Pair{}
+    index := key % len(this.buckets) // определяем бакет
+	bucket := this.buckets[index] // пытаемся найти ключ в бакете
 	for _, p := range bucket {
-		if p.key != targetKey {
+		if p.key != key {
 			newBucket = append(newBucket, p)
 		}
 	}
-	bucket = newBucket
+	this.buckets[index] = newBucket
 }
 
+
+// имеется: backet должно быть: bucket
 
 /**
  * Your MyHashMap object will be instantiated and called as such:
