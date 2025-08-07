@@ -3,10 +3,11 @@ package main
 import (
     "fmt"
     "sync"
+    "sync/atomic"
 )
 
 // что не нравится в коде?
-var counter int
+var counter int64
 
 func main() {
     var wg sync.WaitGroup
@@ -14,7 +15,8 @@ func main() {
         wg.Add(1)
         go func() {
             defer wg.Done()
-            counter++
+            // counter++
+            atomic.AddInt64(&counter, 1)
         }()
     }
     wg.Wait()
