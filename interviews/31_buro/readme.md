@@ -661,3 +661,44 @@ HAVING COUNT(*) > 3;
 ---
 
 Хочешь, я сгенерирую полную SQL-задачу с `JOIN`, `GROUP BY`, `HAVING`, и несколькими таблицами, как на собесе?
+
+package main
+
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+
+const (
+    workerCount = 3
+    jobCount    = 10
+)
+
+func worker(id int, jobs <-chan int, wg *sync.WaitGroup) {
+    for job := range jobs {
+        fmt.Printf("Worker %d started job %d\n", id, job)
+        time.Sleep(time.Second) // имитация работы
+        fmt.Printf("Worker %d finished job %d\n", id, job)
+        wg.Done()
+    }
+}
+
+func main() {
+    jobs := make(chan int, jobCount)
+    var wg sync.WaitGroup
+
+    // запускаем воркеров
+    for i := 1; i <= workerCount; i++ {
+        go worker(i, jobs, &wg)
+    }
+
+    // отправляем задачи
+    for j := 1; j <= jobCount; j++ {
+        wg.Add(1)
+        jobs <- j
+    }
+
+    close(jobs) // сигнал, что задач больше не будет
+    wg.Wait()   // ждём завершения всех задач
+}
